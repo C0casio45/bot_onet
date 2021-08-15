@@ -1,0 +1,45 @@
+{
+    "810471003855519754": {
+        "name": "Chaudard",
+        "ban": {
+            "https://www.faceit.com/fr/players/Lelouch299": [
+                30,
+                1628436978000
+            ],
+            "https://www.faceit.com/fr/players-modal/REAZZONN": [
+                7,
+                1628447756471
+            ]
+        }
+    },
+    "272361822965858308": {
+        "name": "RedXxSpookyyy |OnlyRedXx.tv|",
+        "ban": {
+            "https://www.faceit.com/fr/players-modal/CMD1232222": [
+                60,
+                1628506278107
+            ],
+            "https://www.faceit.com/fr/players/fissou": [
+                120,
+                1628506488510
+            ],
+            "https://www.faceit.com/fr/players/DuckNCover": [
+                30,
+                1629014160000
+            ],
+            "https://www.faceit.com/fr/players/KiwIsABird": [
+                30,
+                1628507105579
+            ]
+        }
+    },
+    "282190750001922048": {
+        "name": "COcasio45",
+        "ban": {
+            "https://www.faceit.com/fr/players-modal/REAZZONN": [
+                1,
+                1629014160000
+            ]
+        }
+    }
+}
