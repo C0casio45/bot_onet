@@ -3,7 +3,7 @@ const { folder } = require("./config.json");
 const { token } = require(`${folder}config.json`);
 const sending = require(`${folder}bot_modules/sendFunction.js`)
 const { Client, Collection, Intents } = require('discord.js');
-const wait = require('util').promisify(setTimeout);
+//const wait = require('util').promisify(setTimeout);
 
 
 
@@ -89,10 +89,6 @@ client.on('interactionCreate', async interaction => {
         console.error(error);
         return interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
     }
-});
-
-client.on('messageCreate', msg => {
-	console.log(msg.content);
 });
 
 function sendUnBan()

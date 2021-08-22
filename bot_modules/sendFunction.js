@@ -15,17 +15,17 @@ module.exports = {
                 let unix_unban = that.ban[bans][1] + that.ban[bans][0]*86400000;
                 let full_unban = new Date(unix_unban);
                 let unban = `${full_unban.getFullYear()}-${full_unban.getMonth()+1}-${full_unban.getDate()}`;
-                console.log(unban);
+                //console.log(unban);
                 if(unban == today){
                     let linkSp = bans.split("/");
                     let pseudo = linkSp[linkSp.length -1];
-                    console.log(pseudo+that.ban[bans][0]+unban+mod+client+interaction)
-                    embedsArr.push(sendEmbed(pseudo,that.ban[bans][0],unban,mod,client,interaction));
+                    //console.log(pseudo+that.ban[bans][0]+unban+mod+client+interaction)
+                    embedsArr.push(sendEmbed(pseudo,that.ban[bans][0],unban,mod));
                 }
                 
             }
         }
-        console.log(embedsArr);
+        //console.log(embedsArr);
         delete require.cache[require.resolve(`${folder}logs/ban.json`)];
         if(interaction == "none"){
             client.channels.cache.find(channel => channel.name == "rappel-unban").send({embeds: embedsArr});
@@ -39,7 +39,7 @@ module.exports = {
 }
 
 
-function sendEmbed(pseudo,duree,date,auteur,client,q){
+function sendEmbed(pseudo,duree,date,auteur){
     
     const embed = new MessageEmbed()
         .setColor('#e34c3b')
