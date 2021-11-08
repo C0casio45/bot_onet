@@ -1,13 +1,14 @@
 const fs = require('fs');
 const { folder } = require("./config.json");
 const { token } = require(`${folder}config.json`);
-const sending = require(`${folder}bot_modules/sendFunction.js`)
+//const close = require(`${folder}bot_modules/closeFunction.js`);
+const sending = require(`${folder}bot_modules/sendFunction.js`);
+const btn = require(`${folder}bot_modules/unbanFunction.js`);
 const { Client, Collection, Intents } = require('discord.js');
-const wait = require('util').promisify(setTimeout);
 
 
 
-const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] });
+const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES,Intents.FLAGS.DIRECT_MESSAGES], partials: ['MESSAGE', 'CHANNEL', 'REACTION'] });
 client.commands = new Collection();
 
 const commandFiles = fs.readdirSync(`${folder}commands`).filter(file => file.endsWith('.js'));
@@ -18,81 +19,38 @@ for (const file of commandFiles) {
 }
 
 client.once('ready', () => {
-    console.log('Ready!');
+    let now = new Date();
+    console.log('Launched at : ' + now);
+    //sending.send("none",client);
 });
 
 client.on('messageCreate', async message => {
+    
 	if (!client.application?.owner) await client.application?.fetch();
 
-	if (message.content.toLowerCase() === '!deploy' && message.author.id === client.application?.owner.id) {
-		const data = [{
-			name : 'ban',
-            description : "Méthode pour bannir les gens",
-            options: [
-                {
-                    name: 'jours-et-lien-faceit',
-                    description: 'Nombre de jours que le joueur est banni et son lien faceit',
-                    type: 'STRING',
-                    required:true
-                }
-            ]
-		},
-        {
-            name : 'stats',
-            description : "Méthode pour voir le nombre de tickets pris en charge par les différents modérateurs",
-            options: [
-                {
-                    "name": "user",
-                    "description": "Name of the moderator",
-                    "type": "USER",
-                    "required": false
-                }
-            ]
-        },
-        {
-            name : 'take',
-            description : "Méthode pour prendre un ticket discord",
-            options: [
-                {
-                    "name": "channel",
-                    "description": "the ticket channel",
-                    "type": "CHANNEL",
-                    "required": true
-                }
-            ]
-        },
-        {
-            name : 'send',
-            description : "envoie des unban a effectuer"
-        }];
-
-		const commands = await client.guilds.cache.get('870319455115284481')?.commands.set(data);
-		console.log(commands);
+	if (message.content.toLowerCase().split(" ")[0] == '!deploy' && message.author.id === client.application?.owner.id) {
+		const dp = require(`${folder}bot_modules/deploy.js`);
+        param = message.content.split(" ");
+        dp.dply(client,param[1],param[2]);
+        console.log("deployed");
 	}
 });
 
 client.on('interactionCreate', async interaction => {
+    if (interaction.isButton()){
+        btn.unban(interaction,client);
+    }
+
     if (!interaction.isCommand()) return;
 
     if (!client.commands.has(interaction.commandName)) return;
-
-    // if (interaction.commandName === 'ban') {
-	// 	await interaction.reply('Pong!');
-    //     const embed = await client.commands.get("ban").execute(interaction,client);
-	// 	await wait(2000);
-	// 	return await interaction.editReply(embed);
-    // }
 
     try {
         await client.commands.get(interaction.commandName).execute(interaction,client);
     } catch (error) {
         console.error(error);
-        return interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
+        return interaction.reply({ content: 'Il y a eu une erreur lors de l\'exécution de ta commande (redx be like)', ephemeral: true });
     }
-});
-
-client.on('messageCreate', msg => {
-	console.log(msg.content);
 });
 
 function sendUnBan()
@@ -100,10 +58,13 @@ function sendUnBan()
     const actualDate = new Date();
     let h = actualDate.getHours();
     if(h == 9){
-      sending.send("none",client);
+        sending.send("none",client);
+        //close.ticket()
     }
 }
 
 setInterval(sendUnBan, 60*60*1000);
+
+
 
 client.login(token);

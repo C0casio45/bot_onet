@@ -1,45 +1,70 @@
-const { MessageEmbed } = require('discord.js');
-const { folder } = require("../config.json");
+const { MessageActionRow,MessageButton,MessageEmbed } = require('discord.js');
+const con = require("../commands/dbconnect.js");
+const db = con.database();
 
 module.exports = {
-    send : function(interaction,client) { 
-        const data = require(`${folder}logs/ban.json`);
-        let unix_today = new Date().getTime();
-        let full_today = new Date(unix_today);
-        let today = `${full_today.getFullYear()}-${full_today.getMonth()+1}-${full_today.getDate()}`;
+    send : function(interaction,client) {        
+        
+        
 
-        let embedsArr = [];
-        for(const mod in data){
-            let that = data[mod];
-            for(const bans in that.ban){
-                let unix_unban = that.ban[bans][1] + that.ban[bans][0]*86400000;
-                let full_unban = new Date(unix_unban);
-                let unban = `${full_unban.getFullYear()}-${full_unban.getMonth()+1}-${full_unban.getDate()}`;
-                console.log(unban);
-                if(unban == today){
-                    let linkSp = bans.split("/");
-                    let pseudo = linkSp[linkSp.length -1];
-                    console.log(pseudo+that.ban[bans][0]+unban+mod+client+interaction)
-                    embedsArr.push(sendEmbed(pseudo,that.ban[bans][0],unban,mod,client,interaction));
+        db.connect(function(err) {
+            if (err) throw err;
+            db.query(`call bot_onet.rappel_unban();`, function (err, result) {
+                if (err) throw err;
+                let embedsArr = [];
+                let months = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
+
+                if(interaction == "none"){
+                    result[0].forEach(unban => {
+                        var a = new Date(unban.timecode * 1000);
+    
+                        let year = a.getFullYear();
+                        let month = months[a.getMonth()];
+                        let date = a.getDate();
+    
+                        let Fdate = date + ' ' + month + ' ' + year;
+                        const row = new MessageActionRow()
+                        .addComponents(
+                            new MessageButton()
+                                .setCustomId(`${unban.id} ${unban.idT}`)
+                                .setLabel(`A faire`)
+                                .setStyle('DANGER'),
+                        );
+                        const link = new MessageActionRow()
+                        .addComponents(
+                            new MessageButton()
+                                .setURL('https://www.faceit.com/fr/hub/f3150918-521a-4664-b430-4e4713b91495/OneT%20Community/admin/bans/hub')
+                                .setLabel(`Panel de banissement`)
+                                .setStyle('LINK'),
+                        );
+                        client.channels.cache.find(channel => channel.name == "rappel-unban").send({embeds: [sendEmbed(unban.Pseudo,unban.duree,Fdate,unban.mod)], components: [row,link]});
+                    });
+                    return;
+                } else if(result[0].length == 0){
+                    return interaction.reply("Il n'y a pas d'unban a effectuer aujourd'hui");
+                } else {
+                    result[0].forEach(unban => {
+                        var a = new Date(unban.timecode * 1000);
+    
+                        let year = a.getFullYear();
+                        let month = months[a.getMonth()];
+                        let date = a.getDate();
+    
+                        let Fdate = date + ' ' + month + ' ' + year;
+    
+                        embedsArr.push(sendEmbed(unban.Pseudo,unban.duree,Fdate,unban.mod));
+                    });
+                    
+                    return interaction.reply({embeds: embedsArr});
                 }
-                
-            }
-        }
-        console.log(embedsArr);
-        delete require.cache[require.resolve(`${folder}logs/ban.json`)];
-        if(interaction == "none"){
-            client.channels.cache.find(channel => channel.name == "rappel-unban").send({embeds: embedsArr});
-            return;
-        } else if(embedsArr.length == 0){
-            return interaction.reply("Il n'y a pas d'unban a effectuer aujourd'hui");
-        } else {
-            return interaction.reply({embeds: embedsArr});
-        }
+            });
+        });
+        
     }
 }
 
 
-function sendEmbed(pseudo,duree,date,auteur,client,q){
+function sendEmbed(pseudo,duree,date,auteur){
     
     const embed = new MessageEmbed()
         .setColor('#e34c3b')
@@ -49,6 +74,8 @@ function sendEmbed(pseudo,duree,date,auteur,client,q){
         .addField('Lien vers le pannel faceit de banissement','https://www.faceit.com/fr/hub/f3150918-521a-4664-b430-4e4713b91495/OneT%20Community/admin/tickets',false)
         .setFooter('Créé et hébergé par COcasio45#2406')
         .setTimestamp();
+
+    
     return embed
     
 }
