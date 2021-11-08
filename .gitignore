@@ -2,3 +2,5 @@ config.json
 config-run.json
 node_modules/
 package-lock.json
+commands/dbconnect.js
+bordel/

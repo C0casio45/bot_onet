@@ -2,6 +2,7 @@
 
 const Base = require('./Base');
 const { InteractionTypes, MessageComponentTypes } = require('../util/Constants');
+const Permissions = require('../util/Permissions');
 const SnowflakeUtil = require('../util/SnowflakeUtil');
 
 /**
@@ -67,6 +68,12 @@ class Interaction extends Base {
      * @type {number}
      */
     this.version = data.version;
+
+    /**
+     * The permissions of the member, if one exists, in the channel this interaction was executed in
+     * @type {?Readonly<Permissions>}
+     */
+    this.memberPermissions = data.member?.permissions ? new Permissions(data.member.permissions).freeze() : null;
   }
 
   /**
@@ -114,11 +121,35 @@ class Interaction extends Base {
   }
 
   /**
+   * Indicates whether or not this interaction is both cached and received from a guild.
+   * @returns {boolean}
+   */
+  inCachedGuild() {
+    return Boolean(this.guild && this.member);
+  }
+
+  /**
+   * Indicates whether or not this interaction is received from an uncached guild.
+   * @returns {boolean}
+   */
+  inRawGuild() {
+    return Boolean(this.guildId && !this.guild && this.member);
+  }
+
+  /**
    * Indicates whether this interaction is a {@link CommandInteraction}.
    * @returns {boolean}
    */
   isCommand() {
-    return InteractionTypes[this.type] === InteractionTypes.APPLICATION_COMMAND;
+    return InteractionTypes[this.type] === InteractionTypes.APPLICATION_COMMAND && typeof this.targetId === 'undefined';
+  }
+
+  /**
+   * Indicates whether this interaction is a {@link ContextMenuInteraction}
+   * @returns {boolean}
+   */
+  isContextMenu() {
+    return InteractionTypes[this.type] === InteractionTypes.APPLICATION_COMMAND && typeof this.targetId !== 'undefined';
   }
 
   /**

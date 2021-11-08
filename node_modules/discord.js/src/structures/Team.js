@@ -22,24 +22,33 @@ class Team extends Base {
      */
     this.id = data.id;
 
-    /**
-     * The name of the Team
-     * @type {string}
-     */
-    this.name = data.name;
+    if ('name' in data) {
+      /**
+       * The name of the Team
+       * @type {string}
+       */
+      this.name = data.name;
+    }
 
-    /**
-     * The Team's icon hash
-     * @type {?string}
-     */
-    this.icon = data.icon ?? null;
+    if ('icon' in data) {
+      /**
+       * The Team's icon hash
+       * @type {?string}
+       */
+      this.icon = data.icon;
+    } else {
+      this.icon ??= null;
+    }
 
-    /**
-     * The Team's owner id
-     * @type {?Snowflake}
-     */
-    this.ownerId = data.owner_user_id ?? null;
-
+    if ('owner_user_id' in data) {
+      /**
+       * The Team's owner id
+       * @type {?Snowflake}
+       */
+      this.ownerId = data.owner_user_id;
+    } else {
+      this.ownerId ??= null;
+    }
     /**
      * The Team's members
      * @type {Collection<Snowflake, TeamMember>}
@@ -80,7 +89,7 @@ class Team extends Base {
   }
 
   /**
-   * A link to the teams's icon.
+   * A link to the team's icon.
    * @param {StaticImageURLOptions} [options={}] Options for the Image URL
    * @returns {?string}
    */

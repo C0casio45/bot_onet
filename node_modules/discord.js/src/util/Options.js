@@ -81,9 +81,17 @@
  */
 
 /**
+ * HTTPS Agent options.
+ * @typedef {Object} AgentOptions
+ * @see {@link https://nodejs.org/api/https.html#https_class_https_agent}
+ * @see {@link https://nodejs.org/api/http.html#http_new_agent_options}
+ */
+
+/**
  * HTTP options
  * @typedef {Object} HTTPOptions
  * @property {number} [version=9] API version to use
+ * @property {AgentOptions} [agent={}] HTTPS Agent options
  * @property {string} [api='https://discord.com/api'] Base url of the API
  * @property {string} [cdn='https://cdn.discordapp.com'] Base url of the CDN
  * @property {string} [invite='https://discord.gg'] Base url of invites
@@ -102,27 +110,13 @@ class Options extends null {
   static createDefault() {
     return {
       shardCount: 1,
-      makeCache: this.cacheWithLimits({
-        MessageManager: 200,
-        ChannelManager: {
-          sweepInterval: 3600,
-          sweepFilter: require('./Util').archivedThreadSweepFilter(),
-        },
-        GuildChannelManager: {
-          sweepInterval: 3600,
-          sweepFilter: require('./Util').archivedThreadSweepFilter(),
-        },
-        ThreadManager: {
-          sweepInterval: 3600,
-          sweepFilter: require('./Util').archivedThreadSweepFilter(),
-        },
-      }),
+      makeCache: this.cacheWithLimits(this.defaultMakeCacheSettings),
       messageCacheLifetime: 0,
       messageSweepInterval: 0,
       invalidRequestWarningInterval: 0,
       partials: [],
-      restWsBridgeTimeout: 5000,
-      restRequestTimeout: 15000,
+      restWsBridgeTimeout: 5_000,
+      restRequestTimeout: 15_000,
       restGlobalRateLimit: 0,
       retryLimit: 1,
       restTimeOffset: 500,
@@ -141,6 +135,7 @@ class Options extends null {
         version: 9,
       },
       http: {
+        agent: {},
         version: 9,
         api: 'https://discord.com/api',
         cdn: 'https://cdn.discordapp.com',
@@ -173,6 +168,9 @@ class Options extends null {
    * @example
    * // Sweep messages every 5 minutes, removing messages that have not been edited or created in the last 30 minutes
    * Options.cacheWithLimits({
+   *   // Keep default thread sweeping behavior
+   *   ...Options.defaultMakeCacheSettings,
+   *   // Override MessageManager
    *   MessageManager: {
    *     sweepInterval: 300,
    *     sweepFilter: LimitedCollection.filterByLifetime({
@@ -220,6 +218,35 @@ class Options extends null {
   static cacheEverything() {
     const { Collection } = require('@discordjs/collection');
     return () => new Collection();
+  }
+
+  /**
+   * The default settings passed to {@link Options.cacheWithLimits}.
+   * The caches that this changes are:
+   * * `MessageManager` - Limit to 200 messages
+   * * `ChannelManager` - Sweep archived threads
+   * * `GuildChannelManager` - Sweep archived threads
+   * * `ThreadManager` - Sweep archived threads
+   * <info>If you want to keep default behavior and add on top of it you can use this object and add on to it, e.g.
+   * `makeCache: Options.cacheWithLimits({ ...Options.defaultMakeCacheSettings, ReactionManager: 0 })`</info>
+   * @type {Object<string, LimitedCollectionOptions|number>}
+   */
+  static get defaultMakeCacheSettings() {
+    return {
+      MessageManager: 200,
+      ChannelManager: {
+        sweepInterval: 3600,
+        sweepFilter: require('./Util').archivedThreadSweepFilter(),
+      },
+      GuildChannelManager: {
+        sweepInterval: 3600,
+        sweepFilter: require('./Util').archivedThreadSweepFilter(),
+      },
+      ThreadManager: {
+        sweepInterval: 3600,
+        sweepFilter: require('./Util').archivedThreadSweepFilter(),
+      },
+    };
   }
 }
 

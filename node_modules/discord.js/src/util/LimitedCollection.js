@@ -8,7 +8,7 @@ const { TypeError } = require('../errors/DJSError.js');
  * @typedef {Function} SweepFilter
  * @param {LimitedCollection} collection The collection being swept
  * @returns {Function|null} Return `null` to skip sweeping, otherwise a function passed to `sweep()`,
- * See {@link [Collection#sweep](https://discord.js.org/#/docs/collection/master/class/Collection?scrollTo=sweep)}
+ * See {@link [Collection#sweep](https://discord.js.org/#/docs/collection/main/class/Collection?scrollTo=sweep)}
  * for the definition of this function.
  */
 
@@ -79,7 +79,7 @@ class LimitedCollection extends Collection {
             if (sweepFn === null) return;
             if (typeof sweepFn !== 'function') throw new TypeError('SWEEP_FILTER_RETURN');
             this.sweep(sweepFn);
-          }, sweepInterval * 1000).unref()
+          }, sweepInterval * 1_000).unref()
         : null;
   }
 
@@ -129,7 +129,7 @@ class LimitedCollection extends Collection {
     }
     return () => {
       if (lifetime <= 0) return null;
-      const lifetimeMs = lifetime * 1000;
+      const lifetimeMs = lifetime * 1_000;
       const now = Date.now();
       return (entry, key, coll) => {
         if (excludeFromSweep(entry, key, coll)) {

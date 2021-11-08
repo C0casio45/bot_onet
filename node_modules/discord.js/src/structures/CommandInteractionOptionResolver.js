@@ -6,7 +6,7 @@ const { TypeError } = require('../errors');
  * A resolver for command interaction options.
  */
 class CommandInteractionOptionResolver {
-  constructor(client, options) {
+  constructor(client, options, resolved) {
     /**
      * The client that instantiated this.
      * @name CommandInteractionOptionResolver#client
@@ -55,6 +55,13 @@ class CommandInteractionOptionResolver {
      * @readonly
      */
     Object.defineProperty(this, 'data', { value: Object.freeze([...options]) });
+
+    /**
+     * The interaction resolved data
+     * @name CommandInteractionOptionResolver#resolved
+     * @type {Readonly<CommandInteractionResolvedData>}
+     */
+    Object.defineProperty(this, 'resolved', { value: Object.freeze(resolved) });
   }
 
   /**
@@ -134,7 +141,7 @@ class CommandInteractionOptionResolver {
    * Gets a channel option.
    * @param {string} name The name of the option.
    * @param {boolean} [required=false] Whether to throw an error if the option is not found.
-   * @returns {?(GuildChannel|APIInteractionDataResolvedChannel)}
+   * @returns {?(GuildChannel|ThreadChannel|APIChannel)}
    * The value of the option, or null if not set and not required.
    */
   getChannel(name, required = false) {
@@ -190,7 +197,7 @@ class CommandInteractionOptionResolver {
    * Gets a member option.
    * @param {string} name The name of the option.
    * @param {boolean} [required=false] Whether to throw an error if the option is not found.
-   * @returns {?(GuildMember|APIInteractionDataResolvedGuildMember)}
+   * @returns {?(GuildMember|APIGuildMember)}
    * The value of the option, or null if not set and not required.
    */
   getMember(name, required = false) {
@@ -213,12 +220,24 @@ class CommandInteractionOptionResolver {
    * Gets a mentionable option.
    * @param {string} name The name of the option.
    * @param {boolean} [required=false] Whether to throw an error if the option is not found.
-   * @returns {?(User|GuildMember|APIInteractionDataResolvedGuildMember|Role|APIRole)}
+   * @returns {?(User|GuildMember|APIGuildMember|Role|APIRole)}
    * The value of the option, or null if not set and not required.
    */
   getMentionable(name, required = false) {
     const option = this._getTypedOption(name, 'MENTIONABLE', ['user', 'member', 'role'], required);
     return option?.member ?? option?.user ?? option?.role ?? null;
+  }
+
+  /**
+   * Gets a message option.
+   * @param {string} name The name of the option.
+   * @param {boolean} [required=false] Whether to throw an error if the option is not found.
+   * @returns {?(Message|APIMessage)}
+   * The value of the option, or null if not set and not required.
+   */
+  getMessage(name, required = false) {
+    const option = this._getTypedOption(name, '_MESSAGE', ['message'], required);
+    return option?.message ?? null;
   }
 }
 
