@@ -1,1 +1,218 @@
-{"810471003855519754":{"name":"Chaudard","ban":{"https://www.faceit.com/fr/players/Lelouch299":[30,1628436978],"https://www.faceit.com/fr/players-modal/REAZZONN":[15,1628447756471],"https://www.faceit.com/en/players/akistunak":[14,1628723092427],"https://www.faceit.com/fr/players/akistunaki":[14,1628754195127]}},"272361822965858308":{"name":"RedXxSpookyyy |OnlyRedXx.tv|","ban":{"https://www.faceit.com/fr/players-modal/CMD1232222":[60,1628506278107],"https://www.faceit.com/fr/players/fissou":[120,1628506488510],"https://www.faceit.com/fr/players/DuckNCover":[30,1628506669499],"https://www.faceit.com/fr/players/KiwIsABird":[30,1628507105579],"https://www.faceit.com/fr/players/Diken-_-":[30,1628708094215],"https://www.faceit.com/fr/players/AdoO0":[30,1628956996074]}},"278874425091293184":{"name":"JokerMatlej","ban":{"https://www.faceit.com/en/players/FranQuais":[30,1628537048619],"https://www.faceit.com/en/players/Yzrohk":[60,1629485926805],"https://www.faceit.com/en/players/The2pac1080":[60,1629485719578]}},"282190750001922048":{"name":"COcasio45","ban":{"https://www.faceit.com/fr/players-modal/REAZZONN":[5,1629650196606]}}}
+{
+    "810471003855519754": {
+        "name": "Chaudard",
+        "ban": {
+            "https://www.faceit.com/fr/players/Lelouch299": [
+                30,
+                1628436978
+            ],
+            "https://www.faceit.com/fr/players-modal/REAZZONN": [
+                15,
+                1628447756471
+            ],
+            "https://www.faceit.com/en/players/akistunak": [
+                14,
+                1628723092427
+            ],
+            "https://www.faceit.com/fr/players/akistunaki": [
+                14,
+                1628754195127
+            ],
+            "https://www.faceit.com/fr/players/Nrv38": [
+                60,
+                1631366531067
+            ],
+            "*https://www.faceit.com/fr/players/E-Canna13**": [
+                7,
+                1632312618965
+            ],
+            "https://www.faceit.com/fr/players-modal/DataLog": [
+                10,
+                1632317992677
+            ],
+            "https://www.faceit.com/fr/players-modal/DISQUETTEUR": [
+                7,
+                1632562160478
+            ],
+            "https://www.faceit.com/fr/players-modal/iSapik_": [
+                7,
+                1632727794595
+            ],
+            "https://www.faceit.com/fr/players-modal/pHx44": [
+                7,
+                1632924449261
+            ],
+            "https://www.faceit.com/fr/search/player/arO63": [
+                15,
+                1633010880149
+            ]
+        }
+    },
+    "272361822965858308": {
+        "name": "RedXxSpookyyy |OnlyRedXx.tv|",
+        "ban": {
+            "https://www.faceit.com/fr/players-modal/CMD1232222": [
+                60,
+                1628506278107
+            ],
+            "https://www.faceit.com/fr/players/fissou": [
+                120,
+                1628506488510
+            ],
+            "https://www.faceit.com/fr/players/DuckNCover": [
+                30,
+                1628506669499
+            ],
+            "https://www.faceit.com/fr/players/KiwIsABird": [
+                30,
+                1628507105579
+            ],
+            "https://www.faceit.com/fr/players/Diken-_-": [
+                30,
+                1628708094215
+            ],
+            "https://www.faceit.com/fr/players/AdoO0": [
+                30,
+                1628956996074
+            ],
+            "https://www.faceit.com/fr/players/Vivigagadu29": [
+                30,
+                1631904912376
+            ],
+            "https://www.faceit.com/fr/players/Olampuse": [
+                14,
+                1631971560106
+            ],
+            "https://www.faceit.com/fr/players/InSane_Tom": [
+                30,
+                1632337384594
+            ],
+            "https://www.faceit.com/fr/players/Pokito78": [
+                30,
+                1632408759617
+            ],
+            "https://www.faceit.com/fr/players/HSBarbi": [
+                21,
+                1633184680626
+            ]
+        }
+    },
+    "278874425091293184": {
+        "name": "JokerMatlej",
+        "ban": {
+            "https://www.faceit.com/en/players/FranQuais": [
+                30,
+                1628537048619
+            ],
+            "https://www.faceit.com/en/players/Yzrohk": [
+                60,
+                1629485926805
+            ],
+            "https://www.faceit.com/en/players/The2pac1080": [
+                60,
+                1629485719578
+            ],
+            "https://www.faceit.com/en/players/bvnchezjawad": [
+                5,
+                1631108959764
+            ],
+            "https://www.faceit.com/en/players/Floppzz": [
+                2,
+                1631108931960
+            ]
+        }
+    },
+    "282190750001922048": {
+        "name": "COcasio45",
+        "ban": {
+            "https://www.faceit.com/en/players/C0casio45": [
+                1,
+                1629649575115
+            ],
+            "https://www.test/test": [
+                30,
+                1629915212584
+            ],
+            "https://www.faceit.com/fr/players/SHINIIIIII": [
+                16,
+                1630439863786
+            ],
+            "https://www.faceit.com/fr/players-modal/AsKk__KK": [
+                7,
+                1634473617413
+            ]
+        }
+    },
+    "222027506746785793": {
+        "name": "Rachellp",
+        "ban": {
+            "https://www.faceit.com/en/players/Yzrohk": [
+                60,
+                1629828354963
+            ],
+            "https://www.faceit.com/en/players/The2pac1080": [
+                60,
+                1629828386821
+            ]
+        }
+    },
+    "746442764861833297": {
+        "name": "Chandl3r",
+        "ban": {
+            "https://www.faceit.com/fr/players/SHINIIIIII": [
+                30,
+                1630439687213
+            ],
+            "https://www.faceit.com/fr/players/_C0br4_": [
+                7,
+                1630522914630
+            ],
+            "https://www.faceit.com/fr/players/YatholeN_": [
+                7,
+                1630523182947
+            ],
+            "https://www.faceit.com/fr/players/Nuggets001": [
+                90,
+                1633957008492
+            ]
+        }
+    },
+    "338051623924269076": {
+        "name": "hasch",
+        "ban": {
+            "https://www.faceit.com/fr/players-modal/tOtOrIIna63": [
+                14,
+                1631222034783
+            ],
+            "https://www.faceit.com/fr/players/Newtown": [
+                30,
+                1631900680543
+            ],
+            "jours": [
+                999,
+                1631996754275
+            ],
+            "https://www.faceit.com/fr/players-modal/0-PewPew-0/stats/csgo": [
+                14,
+                1633545429739
+            ],
+            "https://www.faceit.com/fr/players/NoctoSenju": [
+                7,
+                1633981354004
+            ],
+            "https://www.faceit.com/fr/players-modal/wgm": [
+                730,
+                1634123042264
+            ]
+        }
+    },
+    "192335713906327552": {
+        "name": "ALFA",
+        "ban": {
+            "https://www.faceit.com/fr/players/Mathiaass_": [
+                30,
+                1632592102816
+            ]
+        }
+    }
+}

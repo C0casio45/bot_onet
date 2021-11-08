@@ -20,7 +20,7 @@ class PermissionOverwriteManager extends CachedManager {
       cacheWarningEmitted = true;
       process.emitWarning(
         `Overriding the cache handling for ${this.constructor.name} is unsupported and breaks functionality.`,
-        'UnuspportedCacheOverwriteWarning',
+        'UnsupportedCacheOverwriteWarning',
       );
     }
 
@@ -150,7 +150,7 @@ class PermissionOverwriteManager extends CachedManager {
    * Deletes permission overwrites for a user or role in this channel.
    * @param {UserResolvable|RoleResolvable} userOrRole The user or role to delete
    * @param {string} [reason] The reason for deleting the overwrite
-   * @returns {GuildChannel}
+   * @returns {Promise<GuildChannel>}
    */
   async delete(userOrRole, reason) {
     const userOrRoleId = this.channel.guild.roles.resolveId(userOrRole) ?? this.client.users.resolveId(userOrRole);

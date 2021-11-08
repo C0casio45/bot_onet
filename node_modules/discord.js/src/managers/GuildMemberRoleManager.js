@@ -102,7 +102,7 @@ class GuildMemberRoleManager extends DataManager {
         resolvedRoles.push(resolvedRole);
       }
 
-      const newRoles = [...new Set(resolvedRoles.concat(...this.cache.values()))];
+      const newRoles = [...new Set(resolvedRoles.concat(...this.cache.keys()))];
       return this.set(newRoles, reason);
     } else {
       roleOrRoles = this.guild.roles.resolveId(roleOrRoles);
@@ -138,7 +138,7 @@ class GuildMemberRoleManager extends DataManager {
     } else {
       roleOrRoles = this.guild.roles.resolveId(roleOrRoles);
       if (roleOrRoles === null) {
-        throw new TypeError('INVALID_TYPE', 'roles', 'Role, Snwoflake or Array or Collection of Roles or Snowflakes');
+        throw new TypeError('INVALID_TYPE', 'roles', 'Role, Snowflake or Array or Collection of Roles or Snowflakes');
       }
 
       await this.client.api.guilds[this.guild.id].members[this.member.id].roles[roleOrRoles].delete({ reason });

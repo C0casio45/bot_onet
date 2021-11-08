@@ -1,3 +1,0 @@
-[0125/110758.272:ERROR:process_reader_win.cc(151)] SuspendThread: Accès refusé. (0x5)
-[0125/110758.273:ERROR:exception_snapshot_win.cc(98)] thread ID 2080 not found in process
-[0125/110758.273:ERROR:scoped_process_suspend.cc(40)] NtResumeProcess: Tentative d’accès à un processus en cours d’arrêt. (0xc000010a)
