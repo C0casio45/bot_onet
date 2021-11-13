@@ -1,20 +1,14 @@
 const { MessageActionRow,MessageButton,MessageEmbed } = require('discord.js');
-const con = require("./dbconnect.js");
+const con = require("../commands/dbconnect")
 const db = con.database();
 
 module.exports = {
-    name : 'stats',
-    description : "Méthode pour voir le nombre de tickets pris en charge par les différents modérateurs",
-    options: [
-        {
-            "name": "user",
-            "description": "Name of the moderator",
-            "type": "USER",
-            "required": false
-        }
-    ],
-    async execute(interaction,client){
-        args = interaction.options._hoistedOptions;
+    name : 'setpage',
+    description : "Méthode changer la page actuelle",
+    execute : function(interaction,client) {  
+
+        let param = interaction.customId.split(" ");
+
 
         if(!db._connectCalled ) {
             db.connect();
@@ -59,24 +53,26 @@ module.exports = {
             const embed = new MessageEmbed()
                 .setColor('#e34c3b')
                 .setTitle('Statistiques des modérateurs')
-                .addFields(rst[0])
+                .addFields(rst[param[1]])
                 .setTimestamp();
-            return interaction.reply({embeds : [embed], components: btn(rst.length,rst,0)});
+            
+            return interaction.update({embeds : [embed], components: btn(rst.length,rst,param[1])});
         });
+        
     }
 }
 
-function btn(number,rst){
+function btn(number,rst,pos){
     let bt =  new MessageActionRow()
     for (let i = 0; i < number; i++) {
         let datas = "";
         rst[i].forEach(mod => {
             datas += ` ${mod.name} ${mod.value}`
         })
-        if(i == 0){
+        if(i == pos){
             bt.addComponents(
                 new MessageButton()
-                    .setCustomId(`setpage ${i}`)
+                    .setCustomId(`setpage`)
                     .setLabel(`${i}`)
                     .setStyle('PRIMARY')
                     .setDisabled(true),

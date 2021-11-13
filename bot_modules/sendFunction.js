@@ -24,20 +24,20 @@ module.exports = {
     
                         let Fdate = date + ' ' + month + ' ' + year;
                         const row = new MessageActionRow()
-                        .addComponents(
-                            new MessageButton()
-                                .setCustomId(`${unban.id} ${unban.idT}`)
-                                .setLabel(`A faire`)
-                                .setStyle('DANGER'),
-                        );
-                        const link = new MessageActionRow()
-                        .addComponents(
-                            new MessageButton()
-                                .setURL('https://www.faceit.com/fr/hub/f3150918-521a-4664-b430-4e4713b91495/OneT%20Community/admin/bans/hub')
-                                .setLabel(`Panel de banissement`)
-                                .setStyle('LINK'),
-                        );
-                        client.channels.cache.find(channel => channel.name == "rappel-unban").send({embeds: [sendEmbed(unban.Pseudo,unban.duree,Fdate,unban.mod)], components: [row,link]});
+                            .addComponents(
+                                new MessageButton()
+                                    .setCustomId(`unban ${unban.id} ${unban.idT}`)
+                                    .setLabel(`A faire`)
+                                    .setStyle('DANGER'),
+                            )
+                            .addComponents(
+                                new MessageButton()
+                                    .setURL('https://www.faceit.com/fr/hub/f3150918-521a-4664-b430-4e4713b91495/OneT%20Community/admin/bans/hub')
+                                    .setLabel(`Ban faceit`)
+                                    .setStyle('LINK'),
+                            );
+                            
+                        client.channels.cache.find(channel => channel.name == "rappel-unban").send({content : `<@${unban.mod}>`,embeds: [sendEmbed(unban.Pseudo,unban.duree,Fdate,unban.mod)], components: [row]});
                     });
                     return;
                 } else if(result[0].length == 0){
