@@ -43,6 +43,10 @@ client.on('messageCreate', async message => {
         dp.dply(client,param[1],param[2]);
         monitor.log(client, "deployed on " + param[2]);
 	}
+
+    if (message.content.toLowerCase().split(" ")[0] == '!r' && message.author.id === client.application?.owner.id) {
+        process.exit();
+	}
 });
 
 client.on('interactionCreate', async interaction => {
