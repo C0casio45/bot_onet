@@ -29,16 +29,16 @@ module.exports = {
         function send_ban(nbEntreeBan,array){
             let list = "";
             if(nbEntreeBan == 1 && array[0][1] == 99999){
-                list = `Le joueur **${array[0][0]}** a été banni de **manière permanante** par <@${userid}>.`;
+                list = `Le joueur **${array[0][0]}** a été banni de **manière permanante** par <@${userid}> pour la raison suivante : ${array[0][2]}.`;
             } else if(nbEntreeBan == 1 && array[0][1] == 0) {
-                list = `Le joueur **${array[0][0]}** a reçu un **avertissement** par <@${userid}>.`;
+                list = `Le joueur **${array[0][0]}** a reçu un **avertissement** par <@${userid}> pour la raison suivante : ${array[0][2]}.`;
             } else if(nbEntreeBan == 1) { 
-                list = `Le joueur **${array[0][0]}** a été banni par <@${userid}> pour une durée de **${array[0][1]} jours**.\nUn rappel sera fait dans le channel <#${unban.id}> le jour de l'unban à 9h.`;
+                list = `Le joueur **${array[0][0]}** a été banni par <@${userid}> pour une durée de **${array[0][1]} jours** pour la raison suivante : ${array[0][2]}.\nUn rappel sera fait dans le channel <#${unban.id}> le jour de l'unban à 9h.`;
             } else {
                 list = `Les joueur suivants ont été modéré par <@${userid}> :\n`;
                 array.forEach(ban => {
                     if(ban[1] == 0){
-                        list += `- L'utilisateur ${ban[0]} a reçu un avertissement\n`
+                        list += `- L'utilisateur ${ban[0]} a reçu un avertissement \n`
                     } else if(ban[1] == 99999){
                         list += `- L'utilisateur ${ban[0]} a été banni de manière permanante\n`
                     } else{
@@ -133,7 +133,7 @@ module.exports = {
 
         user.send({embeds : [request_gameLink()]})
             .then(async tmsg => {
-                tmsg.channel.awaitMessages({filter, max: 1, time: 60000, errors: ['time'] })
+                tmsg.channel.awaitMessages({filter, max: 1, time: 300000, errors: ['time'] })
                         .then((collected) => {
                                 quiz(0,collected.first().content);
                         }).catch((err) => {
@@ -148,7 +148,7 @@ module.exports = {
             array.push([]);
             user.send({embeds : [request_userlink()]})
                     .then(async msg => {
-                    msg.channel.awaitMessages({filter, max: 1, time: 60000, errors: ['time'] })
+                    msg.channel.awaitMessages({filter, max: 1, time: 300000, errors: ['time'] })
                             .then((collected) => {
                                 let link = collected.first().content.split("/");
                                 let pseudo = link[link.length -1];
@@ -165,7 +165,7 @@ module.exports = {
         function getDays(i,array,liengame,msg,pseudo){
             msg.channel.send({embeds : [request_userdays(pseudo)]})
                 .then(async rmsg => {
-                    rmsg.channel.awaitMessages({filter, max: 1, time: 60000, errors: ['time'] })
+                    rmsg.channel.awaitMessages({filter, max: 1, time: 300000, errors: ['time'] })
                             .then((collected) => {
                                 let jours = collected.first().content;
                                 let days = parseInt(jours);
@@ -186,7 +186,7 @@ module.exports = {
         function getReason(i,array,liengame,msg,pseudo){
             msg.channel.send({embeds : [request_raison(pseudo)]})
                 .then(async rmsg => {
-                    rmsg.channel.awaitMessages({filter, max: 1, time: 60000, errors: ['time'] })
+                    rmsg.channel.awaitMessages({filter, max: 1, time: 300000, errors: ['time'] })
                             .then((collected) => {
                                 let raison = collected.first().content;
                                 array[i][2] = raison;
@@ -194,7 +194,7 @@ module.exports = {
         
                             }).catch((err) => {
                                 console.log(err)
-                                smsg.channel.send({embeds : [error(1)]});
+                                rmsg.channel.send({embeds : [error(1)]});
                             });
         
                         });
@@ -203,7 +203,7 @@ module.exports = {
         function isLoop(i,array,liengame,msg,pseudo){
             msg.channel.send({embeds : [request_other(array.length,array)]})
                 .then(async rmsg => {
-                    rmsg.channel.awaitMessages({filter, max: 1, time: 60000, errors: ['time'] })
+                    rmsg.channel.awaitMessages({filter, max: 1, time: 300000, errors: ['time'] })
                             .then((collected) => {
                                 let choix = collected.first().content;
 

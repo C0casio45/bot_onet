@@ -9,12 +9,11 @@ module.exports = {
 
         let ub = interaction.customId.split(" ");
 
-        db.connect(function(err) {
+        if(!db._connectCalled ) {
+            db.connect();
+        }
+        db.query(`call bot_onet.unban(${ub[1]},${ub[2]});`, function (err, result) {
             if (err) throw err;
-            db.query(`call bot_onet.unban(${ub[1]},${ub[2]});`, function (err, result) {
-                if (err) throw err;
-                
-            });
         });
 
         const row = new MessageActionRow()

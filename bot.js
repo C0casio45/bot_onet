@@ -1,10 +1,11 @@
 const fs = require('fs');
 const { folder } = require("./config.json");
-const { token } = require(`${folder}config.json`);
-//const close = require(`${folder}bot_modules/closeFunction.js`);
+const { token } = require("./config.json");
 const sending = require(`${folder}bot_modules/sendFunction.js`);
 const btn = require(`${folder}bot_modules/unbanFunction.js`);
 const { Client, Collection, Intents } = require('discord.js');
+const monitor = require("./bot_modules/monitor.js");
+const rappl = require("./bot_modules/rappelModo.js");
 
 
 
@@ -28,7 +29,8 @@ for (const file of btnFiles) {
 
 client.once('ready', () => {
     let now = new Date();
-    console.log('Launched at : ' + now);
+    monitor.execute(client);
+    monitor.log('Launched at : ' + now,client);
 });
 
 client.on('messageCreate', async message => {
@@ -39,7 +41,7 @@ client.on('messageCreate', async message => {
 		const dp = require(`${folder}bot_modules/deploy.js`);
         param = message.content.split(" ");
         dp.dply(client,param[1],param[2]);
-        console.log("deployed");
+        monitor.log(client, "deployed on " + param[2]);
 	}
 });
 
@@ -49,7 +51,7 @@ client.on('interactionCreate', async interaction => {
         try {
             await client.buttons.get(param[0]).execute(interaction,client);
         } catch (error) {
-            console.error(error);
+            monitor.error(error);
             return interaction.reply({ content: 'Il y a eu une erreur lors de l\'exécution de ta commande (redx be like)', ephemeral: true });
         }
     }
@@ -61,7 +63,7 @@ client.on('interactionCreate', async interaction => {
     try {
         await client.commands.get(interaction.commandName).execute(interaction,client);
     } catch (error) {
-        console.error(error);
+        monitor.error(error);
         return interaction.reply({ content: 'Il y a eu une erreur lors de l\'exécution de ta commande (redx be like)', ephemeral: true });
     }
 });
@@ -76,7 +78,17 @@ function sendUnBan()
     }
 }
 
-setInterval(sendUnBan, 60*60*1000);
+setInterval(() => {
+    const actualDate = new Date();
+    let h = actualDate.getHours();
+    let d = actualDate.getDay();
+    if(h == 9){
+        sending.send("none",client);
+    }
+    if(d == 1){
+        rappl.execute(client);
+    }
+}, 60*60*1000);
 
 
 

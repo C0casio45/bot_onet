@@ -1,28 +1,32 @@
 const { MessageEmbed } = require("discord.js");
 const con = require("./dbconnect.js");
 const db = con.database();
+const dp = require(`../bot_modules/deploy.js`);
 
 module.exports = {
-    name : 'send',
-    description : "Méthode pour rappeler l'unban des gens",
+    name : 'close',
+    description : "Méthode pour fermer les tickets",
     execute(interaction,client){
         let ticket = interaction.options._hoistedOptions[0].value;
 
-        if(!connection._connectCalled ) 
+        if(!db._connectCalled ) 
         {
-            connection.connect();
+            db.connect();
         }
         db.query(`call close_ticket_simp('${ticket}');`, function (err, result) {
             if (err) throw err;
+            result[0].forEach(ticket => {
+                let embed =  new MessageEmbed()
+                    .setColor('#e34c3b')
+                    .setAuthor(`Le ${ticket.Nom} a bien été fermé`)
+                    .setFooter('Créé et hébergé par COcasio45#2406')
+                    .setTimestamp();;
+                interaction.reply({embeds : [embed], ephemeral : true})
+                dp.dply(client,"0",interaction.guildId);
+            });
         });
 
         
-        let embed =  new MessageEmbed()
-                .setColor('#e34c3b')
-                .setAuthor('Le ticket a bien été fermé')
-                .setFooter('Créé et hébergé par COcasio45#2406')
-                .setTimestamp();
-
-        interaction.reply({embeds : [embed], ephemeral : true})
+        
     }
 }
