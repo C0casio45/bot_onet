@@ -14,6 +14,9 @@ module.exports = {
                         console.error(err)
                         return
                     }
+                    if (data.substring(95,99) == "-104") {
+                        return;
+                    }
 
                     //vérifier le nombre de charactères
 
