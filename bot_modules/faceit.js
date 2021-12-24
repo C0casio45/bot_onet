@@ -1,11 +1,13 @@
 const {MessageEmbed } = require('discord.js');
+const {faceit} = require("../config.json");
 
 module.exports = {
     GetPlain(){
-        const guid = "724e510a-6919-46f7-90b5-400dbe153d8f";
+        const guid = faceit.guid;
 
-        token = "8a2bc19f-b02c-41e0-849f-15eb488cdcb1";
+        token = faceit.token; //distinct id
 
+        //to found this token, go to websocket, messages and search for PLAIN
         const saslPlain = Buffer.from(guid + "@faceit.com" + "\x00" + guid + "\x00" + token).toString('base64');
 
         return saslPlain;
@@ -21,8 +23,10 @@ module.exports = {
         const https = require('https')
 
         const data = JSON.stringify({
-        todo: 'Buy the milk'
+            hubId: 'f3150918-521a-4664-b430-4e4713b91495'
         })
+
+        `{"hubId":"${hubId}","reason":"${reason}"","userId":"${userId}"}`
 
         const options = {
         hostname: `api.faceit.com`,
@@ -33,7 +37,7 @@ module.exports = {
             'Content-Type': 'application/json',
             'Content-Length': data.length,
             'Authorization' : `Bearer ${userToken}`,
-            'Body' : `{"hubId":"${hubId}","reason":"${reason}"","userId":"${userId}"}`
+            'Body' : data
         }
         }
 
