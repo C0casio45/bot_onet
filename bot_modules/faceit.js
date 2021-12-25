@@ -12,58 +12,50 @@ module.exports = {
 
         return saslPlain;
     },
-    BanPlayer(hubId,userId,userToken,reason){
+    BanPlayer(userId,reason){
         // POST https://api.faceit.com/hubs/v1/hub/{hubId}/ban/{userId}
         // Authorization: Bearer {userToken}
         // Content-Type: application/json
         // Content-Length: {length}
         // Body:
         // {"hubId":"HUB_ID","reason":"REASON","userId":"USER_ID"}
-
-        const https = require('https')
+        url = `https://api.faceit.com/hubs/v1/hub/${faceit.hubId}/ban/${userId}`
 
         const data = JSON.stringify({
-            hubId: 'f3150918-521a-4664-b430-4e4713b91495'
-        })
+            hubId: faceit.hubId,
+            reason: reason,
+            userId: userId
+        });
 
-        `{"hubId":"${hubId}","reason":"${reason}"","userId":"${userId}"}`
-
-        const options = {
-        hostname: `api.faceit.com`,
-        port: 443,
-        path: `/hubs/v1/hub/${hubId}/ban/${userId}`,
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Content-Length': data.length,
-            'Authorization' : `Bearer ${userToken}`,
-            'Body' : data
-        }
-        }
-
-        const req = https.request(options, res => {
-        console.log(`statusCode: ${res.statusCode}`)
-
-        res.on('data', d => {
-            process.stdout.write(d)
-        })
-        })
-
-        req.on('error', error => {
-        console.error(error)
-        })
-
-        req.write(data)
-        req.end()
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", url, true);
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.setRequestHeader('Content-Length', data.length);
+        xhr.setRequestHeader('Authorization', `Bearer ${faceit.token}`);
+        xhr.send(data);
     },
-    RemoveBan(){
+    RemoveBan(userId){
         // DELETE https://api.faceit.com/hubs/v1/hub/{hubId}/ban/{userId}
         // Authorization: Bearer {userToken}
+        url = `https://api.faceit.com/hubs/v1/hub/${faceit.hubId}/ban/${userId}`
+
+        var xhr = new XMLHttpRequest();
+        xhr.open("DELETE", url, true);
+        xhr.setRequestHeader('Authorization', `Bearer ${faceit.token}`);
+        xhr.send(data);
     },
     SpecificBan(){
-        //GET https://api.faceit.com/hubs/v1/hub/{hubId}/ban?userNickname={nickname}&offset=0&limit=1
+        // GET https://api.faceit.com/hubs/v1/hub/{hubId}/ban?userNickname={nickname}&offset=0&limit=1
+        // Authorization: Bearer {token}
     },
     BanList(){
         // GET https://api.faceit.com/hubs/v1/hub/{hubId}/ban?offset=0&limit=50
+        // Authorization: Bearer {token}
+    },
+    GetUserToken(link){
+        // GET https://api.faceit.com/hubs/v1/hub/{hubId}/ban?offset=0&limit=50
+        // Authorization: Bearer {token}
+        pseudo = link.split("/")
+        url = `https://open.faceit.com/data/v4/search/players?nickname=${pseudo[pseudo.length -1]}&offset=0&limit=1`;
     }
 }
