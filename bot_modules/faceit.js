@@ -12,6 +12,12 @@ module.exports = {
 
         return saslPlain;
     },
+    GetUserToken(link){
+        // GET https://api.faceit.com/hubs/v1/hub/{hubId}/ban?offset=0&limit=50
+        // Authorization: Bearer {token}
+        pseudo = link.split("/")
+        url = `https://open.faceit.com/data/v4/search/players?nickname=${pseudo[pseudo.length -1]}&offset=0&limit=1`;
+    },
     BanPlayer(userId,reason){
         // POST https://api.faceit.com/hubs/v1/hub/{hubId}/ban/{userId}
         // Authorization: Bearer {userToken}
@@ -51,11 +57,5 @@ module.exports = {
     BanList(){
         // GET https://api.faceit.com/hubs/v1/hub/{hubId}/ban?offset=0&limit=50
         // Authorization: Bearer {token}
-    },
-    GetUserToken(link){
-        // GET https://api.faceit.com/hubs/v1/hub/{hubId}/ban?offset=0&limit=50
-        // Authorization: Bearer {token}
-        pseudo = link.split("/")
-        url = `https://open.faceit.com/data/v4/search/players?nickname=${pseudo[pseudo.length -1]}&offset=0&limit=1`;
     }
 }
