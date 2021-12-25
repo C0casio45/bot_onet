@@ -38,11 +38,11 @@ module.exports = {
                 list = `Les joueur suivants ont été modéré par <@${userid}> :\n`;
                 array.forEach(ban => {
                     if(ban[1] == 0){
-                        list += `- L'utilisateur ${ban[0]} a reçu un avertissement \n`
+                        list += `- L'utilisateur ${ban[0]} a reçu un avertissement pour la raison suivante : ${ban[2]}\n`
                     } else if(ban[1] == 99999){
-                        list += `- L'utilisateur ${ban[0]} a été banni de manière permanante\n`
+                        list += `- L'utilisateur ${ban[0]} a été banni de manière permanante pour la raison suivante : ${ban[2]}\n`
                     } else{
-                        list += `- L'utilisateur ${ban[0]} a été banni pendant ${ban[1]} jours\n`
+                        list += `- L'utilisateur ${ban[0]} a été banni pendant ${ban[1]} jours pour la raison suivante : ${ban[2]}\n`
                     }
                     
                 });
