@@ -17,6 +17,17 @@ module.exports = {
         // Authorization: Bearer {token}
         pseudo = link.split("/")
         url = `https://open.faceit.com/data/v4/search/players?nickname=${pseudo[pseudo.length -1]}&offset=0&limit=1`;
+
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+               userData = JSON.parse(xhr.responseText);
+               return userData.items[0].player_id;
+            }
+        };
+        xhr.open("GET", url, true);
+        xhr.setRequestHeader('Authorization', `Bearer ${faceit.clientAPIKey}`);
+        xhr.send(null);
     },
     BanPlayer(userId,reason){
         // POST https://api.faceit.com/hubs/v1/hub/{hubId}/ban/{userId}
