@@ -12,6 +12,7 @@ module.exports = {
         if(!db._connectCalled ) {
             db.connect();
         }
+        //unban(id accusé, id ticket)
         db.query(`call bot_onet.unban(${ub[1]},${ub[2]});`, function (err, result) {
             if (err) throw err;
         });
