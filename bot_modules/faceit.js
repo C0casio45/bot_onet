@@ -23,13 +23,13 @@ module.exports = {
             if (this.readyState == 4 && this.status == 200) {
                 let userData = JSON.parse(xhr.responseText);
                 return userData.items[0].player_id;
-            }
+            } 
         };
         xhr.open("GET", url, true);
         xhr.setRequestHeader('Authorization', `Bearer ${faceit.clientAPIKey}`);
         xhr.send(null);
     },
-    BanPlayer(userLink,reason){
+    BanPlayer(userLink,reason,modToken){
         // POST https://api.faceit.com/hubs/v1/hub/{hubId}/ban/{userId}
         // Authorization: Bearer {userToken}
         // Content-Type: application/json
@@ -48,13 +48,19 @@ module.exports = {
         });
 
         var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function(){
+            if (this.status != 200){
+                return false;
+            }
+            return true;
+        }
         xhr.open("POST", url, true);
         xhr.setRequestHeader('Content-Type', 'application/json');
         xhr.setRequestHeader('Content-Length', data.length);
-        xhr.setRequestHeader('Authorization', `Bearer ${faceit.token}`);
+        xhr.setRequestHeader('Authorization', `Bearer ${modToken}`);
         xhr.send(data);
     },
-    RemoveBan(userLink){
+    RemoveBan(userLink,modToken){
         // DELETE https://api.faceit.com/hubs/v1/hub/{hubId}/ban/{userId}
         // Authorization: Bearer {userToken}
         let userId = GetUserToken(userLink);
@@ -63,7 +69,7 @@ module.exports = {
 
         var xhr = new XMLHttpRequest();
         xhr.open("DELETE", url, true);
-        xhr.setRequestHeader('Authorization', `Bearer ${faceit.token}`);
+        xhr.setRequestHeader('Authorization', `Bearer ${modToken}`);
         xhr.send(data);
     },
     SpecificBan(){
@@ -73,5 +79,39 @@ module.exports = {
     BanList(){
         // GET https://api.faceit.com/hubs/v1/hub/{hubId}/ban?offset=0&limit=50
         // Authorization: Bearer {token}
+    },
+    SetModToken(client,mod){
+        const con = require("../commands/dbconnect.js");
+        const db = con.database();
+
+        client.channel.send({embeds : [get_new_token(pseudo)]})
+            .then(async rmsg => {
+                rmsg.channel.awaitMessages({filter, max: 1, time: 300000, errors: ['time'] })
+                        .then((collected) => {
+                            if(!db._connectCalled ) {
+                                db.connect();
+                            }
+
+                            db.query(`call bot_onet.set_token(${collected.first().content},${mod});`, function (err, result) {
+                                if (err) throw err;
+                            });
+    
+                        }).catch((err) => {
+                            console.log(err)
+                            rmsg.channel.send({embeds : [error(1)]});
+                        });
+    
+                    });
+    },
+    GetModToken(mod){
+        const con = require("../commands/dbconnect.js");
+        const db = con.database();
+        if(!db._connectCalled ) {
+            db.connect();
+        }
+
+        db.query(`call bot_onet.get_token(${mod});`, function (err, result) {
+            if (err) throw err;
+        });
     }
 }
