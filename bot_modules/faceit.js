@@ -18,18 +18,32 @@ module.exports = {
         let pseudo = link.split("/")
         let url = `https://open.faceit.com/data/v4/search/players?nickname=${pseudo[pseudo.length -1]}&offset=0&limit=1`;
 
-        var xhr = new XMLHttpRequest();
-        xhr.onreadystatechange = function() {
-            if (this.readyState == 4 && this.status == 200) {
-                let userData = JSON.parse(xhr.responseText);
+        const https = require('https')
+        const options = {
+        hostname: 'open.faceit.com',
+        port: 443,
+        path: `/data/v4/search/players?nickname=${pseudo[pseudo.length -1]}&offset=0&limit=1`,
+        method: 'GET',
+        headers: {
+            'Authorization': `Bearer ${faceit.clientAPIKey}`
+        }
+        
+        }
+
+        const req = https.request(options, res => {
+            res.on('data', d => {
+                let userData = JSON.parse(d.toString());
                 return userData.items[0].player_id;
-            }
-        };
-        xhr.open("GET", url, true);
-        xhr.setRequestHeader('Authorization', `Bearer ${faceit.clientAPIKey}`);
-        xhr.send(null);
+            })
+        })
+
+        req.on('error', error => {
+            console.error(error)
+        })
+
+        req.end()
     },
-    BanPlayer(userLink,reason){
+    BanPlayer(client,userLink,reason,mod){
         // POST https://api.faceit.com/hubs/v1/hub/{hubId}/ban/{userId}
         // Authorization: Bearer {userToken}
         // Content-Type: application/json
@@ -37,7 +51,9 @@ module.exports = {
         // Body:
         // {"hubId":"HUB_ID","reason":"REASON","userId":"USER_ID"}
 
-        let userId = GetUserToken(userLink);
+        let userId = this.GetUserToken(userLink);
+        //Need to wait for response
+        let modToken = this.GetModToken(mod) === null ? this.SetModToken(client,mod) : this.GetModToken(mod);
 
         let url = `https://api.faceit.com/hubs/v1/hub/${faceit.hubId}/ban/${userId}`
 
@@ -48,22 +64,30 @@ module.exports = {
         });
 
         var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function(){
+            if (this.status != 200){
+                return false;
+            }
+            return true;
+        }
         xhr.open("POST", url, true);
         xhr.setRequestHeader('Content-Type', 'application/json');
         xhr.setRequestHeader('Content-Length', data.length);
-        xhr.setRequestHeader('Authorization', `Bearer ${faceit.token}`);
+        xhr.setRequestHeader('Authorization', `Bearer ${modToken}`);
         xhr.send(data);
     },
-    RemoveBan(userLink){
+    RemoveBan(userLink,mod){
         // DELETE https://api.faceit.com/hubs/v1/hub/{hubId}/ban/{userId}
         // Authorization: Bearer {userToken}
         let userId = GetUserToken(userLink);
+        //Need to wait for response
+        let modToken = this.GetModToken(mod) === null ? this.SetModToken(client,mod) : this.GetModToken(mod);
 
         let url = `https://api.faceit.com/hubs/v1/hub/${faceit.hubId}/ban/${userId}`
 
         var xhr = new XMLHttpRequest();
         xhr.open("DELETE", url, true);
-        xhr.setRequestHeader('Authorization', `Bearer ${faceit.token}`);
+        xhr.setRequestHeader('Authorization', `Bearer ${modToken}`);
         xhr.send(data);
     },
     SpecificBan(){
@@ -73,5 +97,39 @@ module.exports = {
     BanList(){
         // GET https://api.faceit.com/hubs/v1/hub/{hubId}/ban?offset=0&limit=50
         // Authorization: Bearer {token}
+    },
+    SetModToken(client,mod){
+        const con = require("../commands/dbconnect.js");
+        const db = con.database();
+
+        client.channel.send({embeds : [get_new_token(pseudo)]})
+            .then(async rmsg => {
+                rmsg.channel.awaitMessages({filter, max: 1, time: 300000, errors: ['time'] })
+                        .then((collected) => {
+                            if(!db._connectCalled ) {
+                                db.connect();
+                            }
+                            //set_token(token,discord id)
+                            db.query(`call bot_onet.set_token(${collected.first().content},${mod});`, function (err, result) {
+                                if (err) throw err;
+                            });
+    
+                        }).catch((err) => {
+                            console.log(err)
+                            rmsg.channel.send({embeds : [error(1)]});
+                        });
+    
+                    });
+    },
+    GetModToken(mod){
+        const con = require("../commands/dbconnect.js");
+        const db = con.database();
+        if(!db._connectCalled ) {
+            db.connect();
+        }
+        //get_token(discord id)
+        db.query(`call bot_onet.get_token(${mod});`, function (err, result) {
+            if (err) throw err;
+        });
     }
 }
