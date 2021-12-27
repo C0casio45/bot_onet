@@ -11,10 +11,6 @@ jobs:
     strategy:
       matrix:
         node-version: [16.x]
-        
-    defaults:
-      run:
-        working-directory: /var/www/bot/discord
 
     steps:
     - uses: actions/checkout@v2
@@ -23,3 +19,9 @@ jobs:
       with: 
         node-version: ${{ matrix.node-version }}
     - run: npm i
+    - name: Setup bot
+      run: |
+        cd /var/www/bot/discord
+        git clone https://github.com/C0casio45/bot_onet.git
+        pm2 stop bot
+        pm2 start bot
