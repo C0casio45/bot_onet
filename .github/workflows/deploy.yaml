@@ -24,7 +24,7 @@ jobs:
         mkdir /var/www/bot/discord
         cd /var/www/bot/discord
         git clone https://github.com/C0casio45/bot_onet.git /var/www/bot/discord
-    - run: npm i
+        npm i
     - name: create json file
       env:
         DISCORDTOKEN: ${{ env.DISCORDTOKEN }}
