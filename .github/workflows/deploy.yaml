@@ -11,8 +11,7 @@ jobs:
     strategy:
       matrix:
         node-version: [16.x]
-    
-    runs-on: ubuntu-latest
+        
     defaults:
       run:
         working-directory: /var/www/bot/discord
