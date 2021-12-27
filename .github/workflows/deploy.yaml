@@ -27,12 +27,12 @@ jobs:
         git clone https://github.com/C0casio45/bot_onet.git /var/www/bot/discord
     - name: create json file
       env:
-        DISCORDTOKEN: ${{ secrets.DISCORDTOKEN }}
-        FOLDER: ${{ secrets.FOLDER }}
-        LOGS: ${{ secrets.LOGS }}
-        GUID: ${{ secrets.GUID }}
-        HUBID: ${{ secrets.HUBID }}
-        CLIENTAPIKEY: ${{ secrets.CLIENTAPIKEY }}
+        DISCORDTOKEN: ${{ env.DISCORDTOKEN }}
+        FOLDER: ${{ env.FOLDER }}
+        LOGS: ${{ env.LOGS }}
+        GUID: ${{ env.GUID }}
+        HUBID: ${{ env.HUBID }}
+        CLIENTAPIKEY: ${{ env.CLIENTAPIKEY }}
       run: echo "{\"token\":\"$DISCORDTOKEN\",\"folder\":\"$FOLDER\",\"logs\":\"$LOGS\",\"faceit\":{\"token\":\"$FACEITTOKEN\",\"guid\":\"$GUID\",\"hubId\":\"$HUBID\",\"clientAPIKey\":\"$CLIENTAPIKEY\"}}" > /var/www/bot/discord/config.json
     - name: run bot
       run: |
