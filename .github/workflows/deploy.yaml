@@ -28,7 +28,7 @@ jobs:
     - name: create json file
       run: |
         touch config.json
-        echo {"token":"${{ config.DISCORDTOKEN }}","folder":"${{ config.FOLDER }}","logs":"${{ config.LOGS }}","faceit":{"token":"${{ config.FACEITTOKEN }}","guid":"${{ config.GUID }}","hubId":"${{ config.HUBID }}","clientAPIKey":"${{ config.CLIENTAPIKEY }}"}}
+        echo {"token":"${{ secrets.DISCORDTOKEN }}","folder":"${{ secrets.FOLDER }}","logs":"${{ secrets.LOGS }}","faceit":{"token":"${{ secrets.FACEITTOKEN }}","guid":"${{ secrets.GUID }}","hubId":"${{ secrets.HUBID }}","clientAPIKey":"${{ secrets.CLIENTAPIKEY }}"}}
     - name: run bot
       run: |
         pm2 stop bot
