@@ -18,13 +18,13 @@ jobs:
       uses: actions/setup-node@v1
       with: 
         node-version: ${{ matrix.node-version }}
-    - run: npm i
     - name: Setup bot
       run: |
         rm -r /var/www/bot/discord
         mkdir /var/www/bot/discord
         cd /var/www/bot/discord
         git clone https://github.com/C0casio45/bot_onet.git /var/www/bot/discord
+    - run: npm i
     - name: create json file
       env:
         DISCORDTOKEN: ${{ env.DISCORDTOKEN }}
