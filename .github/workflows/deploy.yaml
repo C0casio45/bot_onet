@@ -10,12 +10,35 @@ jobs:
 
     strategy:
       matrix:
-        node-version: 16
-    
+        node-version: [16.x]
+
     steps:
     - uses: actions/checkout@v2
     - name: Uses Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v1
       with: 
         node-version: ${{ matrix.node-version }}
-    - run: npm i
+    - name: Setup bot
+      run: |
+        rm -r /var/www/bot/discord
+        mkdir /var/www/bot/discord
+        cd /var/www/bot/discord
+        git clone https://github.com/C0casio45/bot_onet.git /var/www/bot/discord
+        npm i
+    - name: Create json file
+      env:
+        DISCORDTOKEN: ${{ secrets.DISCORDTOKEN }}
+        FOLDER: ${{ secrets.FOLDER }}
+        LOGS: ${{ secrets.LOGS }}
+        GUID: ${{ secrets.GUID }}
+        HUBID: ${{ secrets.HUBID }}
+        CLIENTAPIKEY: ${{ secrets.CLIENTAPIKEY }}
+      run: echo "{\"token\":\"$DISCORDTOKEN\",\"folder\":\"$FOLDER\",\"logs\":\"$LOGS\",\"faceit\":{\"token\":\"$FACEITTOKEN\",\"guid\":\"$GUID\",\"hubId\":\"$HUBID\",\"clientAPIKey\":\"$CLIENTAPIKEY\"}}" > /var/www/bot/discord/config.json
+    - name: Create DBConnect.js
+      env:
+        DBCONNECT: ${{ secrets.DBCONNECT }}
+      run: echo "$DBCONNECT" > /var/www/bot/discord/commands/dbconnect.js
+    - name: run bot
+      run: |
+        pm2 stop bot
+        pm2 start bot
