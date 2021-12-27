@@ -22,7 +22,7 @@ jobs:
     - name: Setup bot
       run: |
         cd /var/www/bot/discord
-        rm -r /var/www/bot/discord/*
+        rm -r /var/www/bot/discord/
         git clone https://github.com/C0casio45/bot_onet.git /var/www/bot/discord
         pm2 stop bot
         pm2 start bot
