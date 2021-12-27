@@ -25,5 +25,11 @@ jobs:
         mkdir /var/www/bot/discord
         cd /var/www/bot/discord
         git clone https://github.com/C0casio45/bot_onet.git /var/www/bot/discord
+    - name: create json file
+      run: |
+        touch config.json
+        echo {"token":"${{ config.DISCORDTOKEN }}","folder":"${{ config.FOLDER }}","logs":"${{ config.LOGS }}","faceit":{"token":"${{ config.FACEITTOKEN }}","guid":"${{ config.GUID }}","hubId":"${{ config.HUBID }}","clientAPIKey":"${{ config.CLIENTAPIKEY }}"}}
+    - name: run bot
+      run: |
         pm2 stop bot
         pm2 start bot
