@@ -32,7 +32,6 @@ client.once('ready', () => {
     let now = new Date();
     monitor.execute(client);
     monitor.log('Launched at : ' + now,client);
-    rappl.execute(client);
 });
 
 client.on('messageCreate', async message => {
