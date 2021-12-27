@@ -25,7 +25,7 @@ jobs:
         cd /var/www/bot/discord
         git clone https://github.com/C0casio45/bot_onet.git /var/www/bot/discord
         npm i
-    - name: create json file
+    - name: Create json file
       env:
         DISCORDTOKEN: ${{ secrets.DISCORDTOKEN }}
         FOLDER: ${{ secrets.FOLDER }}
@@ -34,6 +34,10 @@ jobs:
         HUBID: ${{ secrets.HUBID }}
         CLIENTAPIKEY: ${{ secrets.CLIENTAPIKEY }}
       run: echo "{\"token\":\"$DISCORDTOKEN\",\"folder\":\"$FOLDER\",\"logs\":\"$LOGS\",\"faceit\":{\"token\":\"$FACEITTOKEN\",\"guid\":\"$GUID\",\"hubId\":\"$HUBID\",\"clientAPIKey\":\"$CLIENTAPIKEY\"}}" > /var/www/bot/discord/config.json
+    - name: Create DBConnect.js
+      env:
+        DBCONNECT: ${{ secrets.DBCONNECT }}
+      run: echo "$DBCONNECT" > /var/www/bot/discord/commands/dbconnect.js
     - name: run bot
       run: |
         pm2 stop bot
