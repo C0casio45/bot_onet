@@ -20,19 +20,19 @@ jobs:
         node-version: ${{ matrix.node-version }}
     - name: Setup bot
       run: |
-        rm -r /var/www/bot/discord
-        mkdir /var/www/bot/discord
-        cd /var/www/bot/discord
-        git clone https://github.com/C0casio45/bot_onet.git /var/www/bot/discord
+        rm -r /var/www/bot/test
+        mkdir /var/www/bot/test
+        cd /var/www/bot/test
+        git clone https://github.com/C0casio45/bot_onet.git /var/www/bot/test
         npm i
     - name: create json file
       env:
-        DISCORDTOKEN: ${{ env.DISCORDTOKEN }}
-        FOLDER: ${{ env.FOLDER }}
-        LOGS: ${{ env.LOGS }}
-        GUID: ${{ env.GUID }}
-        HUBID: ${{ env.HUBID }}
-        CLIENTAPIKEY: ${{ env.CLIENTAPIKEY }}
+        DISCORDTOKEN: ${{ secrets.DISCORDTOKEN }}
+        FOLDER: ${{ secrets.FOLDER }}
+        LOGS: ${{ secrets.LOGS }}
+        GUID: ${{ secrets.GUID }}
+        HUBID: ${{ secrets.HUBID }}
+        CLIENTAPIKEY: ${{ secrets.CLIENTAPIKEY }}
       run: echo "{\"token\":\"$DISCORDTOKEN\",\"folder\":\"$FOLDER\",\"logs\":\"$LOGS\",\"faceit\":{\"token\":\"$FACEITTOKEN\",\"guid\":\"$GUID\",\"hubId\":\"$HUBID\",\"clientAPIKey\":\"$CLIENTAPIKEY\"}}" > /var/www/bot/discord/config.json
     - name: run bot
       run: |
