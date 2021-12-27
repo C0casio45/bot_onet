@@ -33,8 +33,7 @@ jobs:
         GUID: ${{ secrets.GUID }}
         HUBID: ${{ secrets.HUBID }}
         CLIENTAPIKEY: ${{ secrets.CLIENTAPIKEY }}
-      run: |
-        echo "{\"token\":\"$DISCORDTOKEN\",\"folder\":\"$FOLDER\",\"logs\":\"$LOGS\",\"faceit\":{\"token\":\"$FACEITTOKEN\",\"guid\":\"$GUID\",\"hubId\":\"$HUBID\",\"clientAPIKey\":\"$CLIENTAPIKEY\"}}" > /var/www/bot/discord/config.json
+      run: echo "{\"token\":\"$DISCORDTOKEN\",\"folder\":\"$FOLDER\",\"logs\":\"$LOGS\",\"faceit\":{\"token\":\"$FACEITTOKEN\",\"guid\":\"$GUID\",\"hubId\":\"$HUBID\",\"clientAPIKey\":\"$CLIENTAPIKEY\"}}" > /var/www/bot/discord/config.json
     - name: run bot
       run: |
         pm2 stop bot
