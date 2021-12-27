@@ -13,11 +13,11 @@ jobs:
         node-version: [16.x]
     
     steps:
+    - name: Setup working dir
+      working-directory: /var/www/bot/discord
     - uses: actions/checkout@v2
     - name: Uses Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v1
       with: 
         node-version: ${{ matrix.node-version }}
-    - run: |
-        npm i
-        working-directory: /var/www/bot/discord
+    - run: npm i
