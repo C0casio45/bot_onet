@@ -3,6 +3,7 @@ const { folder } = require("../config.json");
 const con = require("./dbconnect.js");
 const db = con.database();
 const dp = require(`${folder}bot_modules/deploy.js`);
+const faceit = require("../bot_modules/faceit.js")
 
 module.exports = {
     name : 'ban',
@@ -209,8 +210,7 @@ module.exports = {
 
                                 if(choix.toLowerCase() == "oui" || choix.toLowerCase() == "yes" || choix.toLowerCase() == "o" || choix.toLowerCase() == "y"){
                                     quiz(i+1);
-                                }else{
-                                    rmsg.channel.send({embeds : [send_ban(array.length,array)]});  
+                                }else{ 
                                     if(!db._connectCalled ) {
                                         db.connect();
                                     }
@@ -220,9 +220,11 @@ module.exports = {
                                         db.query(`call bot_onet.close_ticket(${options}, '${row[0]}', 'https://www.faceit.com/fr/players/${row[0]}', '${liengame}', ${row[1]}, '${row[2]}', TRUE);`, function (err, result) {
                                             if (err) throw err;
                                         });
+                                        faceit.BanPlayer(rmsg,`https://www.faceit.com/fr/players/${row[0]}`,`${row[1]} ${options}`)
                                     });
 
                                     
+                                    //rmsg.channel.send({embeds : [send_ban(array.length,array)]}); 
                                     ban.send({embeds : [send_ban(array.length,array)]});
                                     dp.dply(client,"0",interaction.guildId);
 

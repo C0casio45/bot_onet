@@ -6,7 +6,6 @@ const btn = require(`${folder}bot_modules/unbanFunction.js`);
 const { Client, Collection, Intents } = require('discord.js');
 const monitor = require("./bot_modules/monitor.js");
 const rappl = require("./bot_modules/rappelModo.js");
-const faceit = require("./bot_modules/faceit.js")
 
 
 
@@ -37,18 +36,6 @@ client.once('ready', () => {
 client.on('messageCreate', async message => {
     
 	if (!client.application?.owner) await client.application?.fetch();
-
-    if(message.content.toLowerCase().split(" ")[0] == '!get'){
-        console.log(faceit.GetUserToken(message.content.toLowerCase().split(" ")[1]))
-    }
-
-    if(message.content.toLowerCase().split(" ")[0] == '!ban'){
-        faceit.BanPlayer(client,message.content.toLowerCase().split(" ")[1],"pseudo",message.author.id)
-    }
-
-    if(message.content.toLowerCase().split(" ")[0] == '!unban'){
-        faceit.RemoveBan(message.content.toLowerCase().split(" ")[1],message.author.id)
-    }
 
 	if (message.content.toLowerCase().split(" ")[0] == '!deploy' && message.author.id === client.application?.owner.id) {
 		const dp = require(`${folder}bot_modules/deploy.js`);
