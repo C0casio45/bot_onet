@@ -67,7 +67,7 @@ client.on('interactionCreate', async interaction => {
     try {
         await client.commands.get(interaction.commandName).execute(interaction,client);
     } catch (error) {
-        monitor.error(error);
+        console.log(error);
         return interaction.reply({ content: 'Il y a eu une erreur lors de l\'exécution de ta commande (redx be like)', ephemeral: true });
     }
 });

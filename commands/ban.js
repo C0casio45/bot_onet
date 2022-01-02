@@ -3,7 +3,7 @@ const { folder } = require("../config.json");
 const con = require("./dbconnect.js");
 const db = con.database();
 const dp = require(`${folder}bot_modules/deploy.js`);
-const faceit = require("../bot_modules/faceit.js")
+const faceit = require("../bot_modules/faceit.js");
 
 module.exports = {
     name : 'ban',

@@ -54,11 +54,11 @@ module.exports = {
         // {"hubId":"HUB_ID","reason":"REASON","userId":"USER_ID"}
         let userId = await this.GetUserToken(userLink);
         let modToken = await this.GetModToken(user); 
-        if(!modToken){
-            modToken = await this.SetModToken(user);
+        if(modToken == false){
+            modToken = this.SetModToken(user);
         }
-
-        console.log(modToken);
+        console.log("id retourné : " + userId);
+        console.log("token retourné : " + modToken);
 
         const data = JSON.stringify({
             hubId: faceit.hubId,
@@ -81,6 +81,7 @@ module.exports = {
 
         const req = https.request(options, res => {
             res.on('data', d => {
+                console.log(d.toString())
                 const res = JSON.parse(d.toString())
                 if(res.error == "invalid_token") this.SetModToken(user);
             })
@@ -115,60 +116,34 @@ module.exports = {
         // GET https://api.faceit.com/hubs/v1/hub/{hubId}/ban?offset=0&limit=50
         // Authorization: Bearer {token}
     },
-    SetModToken(user){
-        function get_new_token(){
-            let embed = new MessageEmbed()
-                    .setColor('#e34c3b')
-                    .setAuthor('Utilitaire de banissement')
-                    .setDescription(`Merci d'aller sur le site faceit et de récupérer votre token`)
-                    .setFooter('Créé et hébergé par COcasio45#2406')
-                    .setTimestamp();
-            let button = new MessageActionRow()
-                        .addComponents(
-                            new MessageButton()
-                                .setURL('https://www.faceit.com/fr/hub/f3150918-521a-4664-b430-4e4713b91495/OneT%20Community')
-                                .setLabel(`Site FACEIT`)
-                                .setStyle('LINK'),
-                        );
-            return {embeds: [embed], components: [button]}
-        }
-
-        function error(){
-            let embed = new MessageEmbed()
-                    .setColor('#e34c3b')
-                    .setAuthor('Utilitaire de banissement')
-                    .setDescription(`Le token est invalid merci de réessayer`)
-                    .setFooter('Créé et hébergé par COcasio45#2406')
-                    .setTimestamp();
-            return {embeds: [embed]}
-        }
+    async SetModToken(user){
+        const con = require("../commands/dbconnect.js");
+        const db = con.database();
         const filter = m => m.author.id == user.id;
+        console.log(user);
 
-        return new Promise(resolve => {
-            const con = require("../commands/dbconnect.js");
-            const db = con.database();
+        user.send(this.get_new_token())
+            .then(async rmsg => {
+                rmsg.channel.awaitMessages({filter, max: 1, time: 300000, errors: ['time'] })
+                        .then((collected) => {
+                            if(!db._connectCalled ) {
+                                db.connect();
+                            }
+                            console.log("message collecté : " + collected.first().content);
+                            //set_token(token,discord id)
+                            // db.query(`call bot_onet.set_token(${collected.first().content},${user.id});`, function (err, result) {
+                            //     if (err) throw err;
+                            //     console.log("token : " + result[0][0].faceitToken);
+                            //     resolve(result[0][0].faceitToken);
+                            // });
 
-            user.channel.send(get_new_token())
-                .then(async rmsg => {
-                    rmsg.channel.awaitMessages({filter, max: 1, time: 300000, errors: ['time'] })
-                            .then((collected) => {
-                                if(!db._connectCalled ) {
-                                    db.connect();
-                                }
-                                console.log(collected.first().content);
-                                //set_token(token,discord id)
-                                db.query(`call bot_onet.set_token(${collected.first().content},${user.id});`, function (err, result) {
-                                    if (err) throw err;
-                                    resolve(result[0][0].faceitToken)
-                                });
-
-                            }).catch((err) => {
-                                console.log(err)
-                                rmsg.channel.send(error());
-                            });
-
+                        }).catch((err) => {
+                            console.log(err)
+                            rmsg.channel.send(this.error());
                         });
-        });
+
+                    });
+        
     },
     GetModToken(user){
         return new Promise(resolve => {
@@ -183,9 +158,35 @@ module.exports = {
                 if(result[1].fieldCount == 0) {
                     resolve(false);
                 } else{
-                    resolve(result[0][0].faceitToken)
+                    console.log("token :" + result[0][0].faceitToken);
+                    resolve(result[0][0].faceitToken);
                 }
             });
         });
+    },
+    error(){
+        let embed = new MessageEmbed()
+                .setColor('#e34c3b')
+                .setAuthor('Utilitaire de banissement')
+                .setDescription(`Le token est invalid merci de réessayer`)
+                .setFooter('Créé et hébergé par COcasio45#2406')
+                .setTimestamp();
+        return {embeds: [embed]}
+    },
+    get_new_token(){
+        let embed = new MessageEmbed()
+                .setColor('#e34c3b')
+                .setAuthor('Utilitaire de banissement')
+                .setDescription(`Merci d'aller sur le site faceit et de récupérer votre token`)
+                .setFooter('Créé et hébergé par COcasio45#2406')
+                .setTimestamp();
+        let button = new MessageActionRow()
+                    .addComponents(
+                        new MessageButton()
+                            .setURL('https://www.faceit.com/fr/hub/f3150918-521a-4664-b430-4e4713b91495/OneT%20Community')
+                            .setLabel(`Site FACEIT`)
+                            .setStyle('LINK'),
+                    );
+        return {embeds: [embed], components: [button]}
     }
 }
