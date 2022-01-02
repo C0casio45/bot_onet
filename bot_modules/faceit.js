@@ -52,13 +52,12 @@ module.exports = {
         // Content-Length: {length}
         // Body:
         // {"hubId":"HUB_ID","reason":"REASON","userId":"USER_ID"}
+        let bufferConstructor = [];
         let userId = await this.GetUserToken(userLink);
         let modToken = await this.GetModToken(user); 
         if(modToken == false){
-            modToken = this.SetModToken(user);
+            modToken = await this.SetModToken(user);
         }
-        console.log("id retourné : " + userId);
-        console.log("token retourné : " + modToken);
 
         const data = JSON.stringify({
             hubId: faceit.hubId,
@@ -81,9 +80,25 @@ module.exports = {
 
         const req = https.request(options, res => {
             res.on('data', d => {
-                console.log(d.toString())
-                const res = JSON.parse(d.toString())
-                if(res.error == "invalid_token") this.SetModToken(user);
+                try{
+                    console.log(d);
+                    let message = "";
+                    if(bufferConstructor.length > 0){
+                        message = bufferConstructor.join() + d.toString();
+                    } else {
+                        message = d.toString();
+                    }
+                    
+                    const r = JSON.parse(message)
+                    if(r.error == "invalid_token") {
+                        this.SetModToken(user);
+                        setTimeout(() => {this.BanPlayer(user,userLink,reason)}, 50000);
+                    } else{
+                        console.log(r);
+                    }
+                } catch{
+                    bufferConstructor[bufferConstructor.length] = d.toString();
+                }
             })
         })
 
@@ -122,20 +137,20 @@ module.exports = {
         const filter = m => m.author.id == user.id;
         console.log(user);
 
-        user.send(this.get_new_token())
+
+        user.channel.send(this.get_new_token())
             .then(async rmsg => {
                 rmsg.channel.awaitMessages({filter, max: 1, time: 300000, errors: ['time'] })
                         .then((collected) => {
                             if(!db._connectCalled ) {
                                 db.connect();
                             }
-                            console.log("message collecté : " + collected.first().content);
+                            
                             //set_token(token,discord id)
-                            // db.query(`call bot_onet.set_token(${collected.first().content},${user.id});`, function (err, result) {
-                            //     if (err) throw err;
-                            //     console.log("token : " + result[0][0].faceitToken);
-                            //     resolve(result[0][0].faceitToken);
-                            // });
+                            db.query(`call bot_onet.set_token("${collected.first().content}","${user.id}");`, function (err, result) {
+                                if (err) throw err;
+                            });
+                            return collected.first().content;
 
                         }).catch((err) => {
                             console.log(err)
@@ -155,10 +170,9 @@ module.exports = {
             //get_token(discord id)
             db.query(`call bot_onet.get_token(${user.id});`, function (err, result) {
                 if (err) throw err;
-                if(result[1].fieldCount == 0) {
+                if(result[0].length == 0) {
                     resolve(false);
                 } else{
-                    console.log("token :" + result[0][0].faceitToken);
                     resolve(result[0][0].faceitToken);
                 }
             });
