@@ -1,7 +1,7 @@
 const { logs } = require('../config.json');
 
 module.exports = {
-    execute : async function(client) {
+    execute: async function (client) {
 
         const chaudard = await client.users.fetch("810471003855519754");
         const redx = await client.users.fetch("272361822965858308");

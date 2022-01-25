@@ -1,9 +1,10 @@
-const {MessageEmbed, MessageActionRow, MessageButton } = require('discord.js');
+const { MessageEmbed, MessageActionRow, MessageButton } = require('discord.js');
+const { cp } = require('fs');
 const { resolve } = require('path');
-const {faceit} = require("../config.json");
+const { faceit } = require("../config.json");
 
 module.exports = {
-    GetPlain(){
+    GetPlain() {
         const guid = faceit.guid;
 
         let token = faceit.token; //distinct id
@@ -13,7 +14,7 @@ module.exports = {
 
         return saslPlain;
     },
-    GetUserToken(link){
+    GetUserToken(link) {
         // GET https://api.faceit.com/hubs/v1/hub/{hubId}/ban?offset=0&limit=50
         // Authorization: Bearer {token}
         return new Promise(resolve => {
@@ -23,29 +24,29 @@ module.exports = {
             const options = {
                 hostname: 'open.faceit.com',
                 port: 443,
-                path: `/data/v4/search/players?nickname=${pseudo[pseudo.length -1]}&offset=0&limit=1`,
+                path: `/data/v4/search/players?nickname=${pseudo[pseudo.length - 1]}&offset=0&limit=1`,
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${faceit.clientAPIKey}`
                 }
             }
-    
+
             const req = https.request(options, res => {
                 res.on('data', d => {
                     let userData = JSON.parse(d.toString());
                     resolve(userData.items[0].player_id);
                 })
             })
-    
+
             req.on('error', error => {
                 console.error(error)
             })
-    
+
             req.end()
         })
-        
+
     },
-    async BanPlayer(user,userLink,reason){
+    async BanPlayer(user, userLink, reason) {
         // POST https://api.faceit.com/hubs/v1/hub/{hubId}/ban/{userId}
         // Authorization: Bearer {userToken}
         // Content-Type: application/json
@@ -54,9 +55,11 @@ module.exports = {
         // {"hubId":"HUB_ID","reason":"REASON","userId":"USER_ID"}
         let bufferConstructor = [];
         let userId = await this.GetUserToken(userLink);
-        let modToken = await this.GetModToken(user); 
-        if(modToken == false){
+        let modToken = await this.GetModToken(user);
+        if (modToken == false) {
+            console.log("missing");
             modToken = await this.SetModToken(user);
+            setTimeout(() => { console.log(modToken) }, 50000);
         }
 
         const data = JSON.stringify({
@@ -73,30 +76,30 @@ module.exports = {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${modToken}`,
-                'Content-Type' : 'application/json',
-                'Content-Length' : data.length
+                'Content-Type': 'application/json',
+                'Content-Length': data.length
             }
         }
 
         const req = https.request(options, res => {
             res.on('data', d => {
-                try{
-                    console.log(d);
+                try {
                     let message = "";
-                    if(bufferConstructor.length > 0){
+                    if (bufferConstructor.length > 0) {
                         message = bufferConstructor.join() + d.toString();
                     } else {
                         message = d.toString();
                     }
-                    
-                    const r = JSON.parse(message)
-                    if(r.error == "invalid_token") {
+
+                    const r = JSON.parse(message);
+                    if (r.error == "invalid_token") {
+                        console.log("invalid");
                         this.SetModToken(user);
-                        setTimeout(() => {this.BanPlayer(user,userLink,reason)}, 50000);
-                    } else{
+                        setTimeout(() => { this.BanPlayer(user, userLink, reason) }, 50000);
+                    } else {
                         console.log(r);
                     }
-                } catch{
+                } catch {
                     bufferConstructor[bufferConstructor.length] = d.toString();
                 }
             })
@@ -109,7 +112,7 @@ module.exports = {
         req.write(data);
         req.end()
     },
-    RemoveBan(userLink,user){
+    RemoveBan(userLink, user) {
         // DELETE https://api.faceit.com/hubs/v1/hub/{hubId}/ban/{userId}
         // Authorization: Bearer {userToken}
         let userId = GetUserToken(userLink);
@@ -123,84 +126,83 @@ module.exports = {
         xhr.setRequestHeader('Authorization', `Bearer ${modToken}`);
         xhr.send(data);
     },
-    SpecificBan(){
+    SpecificBan() {
         // GET https://api.faceit.com/hubs/v1/hub/{hubId}/ban?userNickname={nickname}&offset=0&limit=1
         // Authorization: Bearer {token}
     },
-    BanList(){
+    BanList() {
         // GET https://api.faceit.com/hubs/v1/hub/{hubId}/ban?offset=0&limit=50
         // Authorization: Bearer {token}
     },
-    async SetModToken(user){
+    async SetModToken(user) {
         const con = require("../commands/dbconnect.js");
         const db = con.database();
         const filter = m => m.author.id == user.id;
-        console.log(user);
 
 
         user.channel.send(this.get_new_token())
             .then(async rmsg => {
-                rmsg.channel.awaitMessages({filter, max: 1, time: 300000, errors: ['time'] })
-                        .then((collected) => {
-                            if(!db._connectCalled ) {
-                                db.connect();
-                            }
-                            
-                            //set_token(token,discord id)
-                            db.query(`call bot_onet.set_token("${collected.first().content}","${user.id}");`, function (err, result) {
-                                if (err) throw err;
-                            });
-                            return collected.first().content;
+                rmsg.channel.awaitMessages({ filter, max: 1, time: 300000, errors: ['time'] })
+                    .then((collected) => {
+                        if (!db._connectCalled) {
+                            db.connect();
+                        }
 
-                        }).catch((err) => {
-                            console.log(err)
-                            rmsg.channel.send(this.error());
+                        //set_token(token,discord id)
+                        db.query(`call bot_onet.set_token("${collected.first().content}","${user.id}");`, function (err, result) {
+                            if (err) throw err;
                         });
+                        return collected.first().content;
 
+                    }).catch((err) => {
+                        console.log(err)
+                        rmsg.channel.send(this.error());
                     });
-        
+
+            });
+
     },
-    GetModToken(user){
+    GetModToken(user) {
         return new Promise(resolve => {
             const con = require("../commands/dbconnect.js");
             const db = con.database();
-            if(!db._connectCalled ) {
+            if (!db._connectCalled) {
                 db.connect();
             }
             //get_token(discord id)
             db.query(`call bot_onet.get_token(${user.id});`, function (err, result) {
                 if (err) throw err;
-                if(result[0].length == 0) {
+                if (result[0].length == 0) {
                     resolve(false);
-                } else{
+                } else {
                     resolve(result[0][0].faceitToken);
                 }
             });
         });
     },
-    error(){
+    error() {
         let embed = new MessageEmbed()
-                .setColor('#e34c3b')
-                .setAuthor('Utilitaire de banissement')
-                .setDescription(`Le token est invalid merci de réessayer`)
-                .setFooter('Créé et hébergé par COcasio45#2406')
-                .setTimestamp();
-        return {embeds: [embed]}
+            .setColor('#e34c3b')
+            .setAuthor('Utilitaire de banissement')
+            .setDescription(`Le token est invalid merci de réessayer`)
+            .setFooter('Créé et hébergé par COcasio45#2406')
+            .setTimestamp();
+        return { embeds: [embed] }
     },
-    get_new_token(){
+    get_new_token() {
         let embed = new MessageEmbed()
-                .setColor('#e34c3b')
-                .setAuthor('Utilitaire de banissement')
-                .setDescription(`Merci d'aller sur le site faceit et de récupérer votre token`)
-                .setFooter('Créé et hébergé par COcasio45#2406')
-                .setTimestamp();
+            .setColor('#e34c3b')
+            .setAuthor('Utilitaire de banissement')
+            .setDescription(`Merci d'aller sur le site faceit et de récupérer votre token`)
+            .setFooter('Créé et hébergé par COcasio45#2406')
+            .setTimestamp();
         let button = new MessageActionRow()
-                    .addComponents(
-                        new MessageButton()
-                            .setURL('https://www.faceit.com/fr/hub/f3150918-521a-4664-b430-4e4713b91495/OneT%20Community')
-                            .setLabel(`Site FACEIT`)
-                            .setStyle('LINK'),
-                    );
-        return {embeds: [embed], components: [button]}
+            .addComponents(
+                new MessageButton()
+                    .setURL('https://www.faceit.com/fr/hub/f3150918-521a-4664-b430-4e4713b91495/OneT%20Community')
+                    .setLabel(`Site FACEIT`)
+                    .setStyle('LINK'),
+            );
+        return { embeds: [embed], components: [button] }
     }
 }
