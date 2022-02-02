@@ -1,7 +1,7 @@
 const { MessageEmbed } = require('discord.js');
 const con = require("../commands/dbconnect.js");
 const db = con.database();
-const dp = require(`${folder}bot_modules/deploy.js`);
+const dp = require(`../bot_modules/deploy.js`);
 
 module.exports = {
     name: 'take',
