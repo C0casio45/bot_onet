@@ -1,7 +1,7 @@
 const { MessageEmbed } = require("discord.js");
 
 module.exports = {
-    send_ban(nbEntreeBan, array) {
+    send_ban(nbEntreeBan, array, userid) {
         let list = "";
 
         if (nbEntreeBan == 1 && array[0][1] == 99999) {
@@ -26,7 +26,7 @@ module.exports = {
 
         const embed = new MessageEmbed()
             .setColor("#e34c3b")
-            .setAuthor({ text: "Nouvelle entrée de banissement" })
+            .setAuthor({ name: "Nouvelle entrée de banissement" })
             .setDescription(list)
             .addField(
                 "Lien vers le pannel faceit de banissement",

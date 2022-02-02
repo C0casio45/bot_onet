@@ -226,7 +226,7 @@ module.exports = {
                 });
 
                 //rmsg.channel.send({embeds : [send_ban(array.length,array)]});
-                ban.send({ embeds: [send_ban(array.length, array)] });
+                ban.send({ embeds: [send_ban(array.length, array, userid)] });
                 dp.dply(client, "0", interaction.guildId);
 
                 return;
