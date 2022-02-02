@@ -6,6 +6,7 @@ const dp = require(`${folder}bot_modules/deploy.js`);
 const faceit = require("../bot_modules/faceit.js");
 
 const { mp_buttons } = require("./utils/buttons/mp_buttons");
+const { mp_loop_buttons } = require("./utils/buttons/mp_loop_buttons");
 
 module.exports = {
   name: "ban",
@@ -220,7 +221,10 @@ module.exports = {
 
     function isLoop(i, array, liengame, msg, pseudo) {
       msg.channel
-        .send({ embeds: [request_other(array.length, array)] })
+        .send({
+          embeds: [request_other(array.length, array)],
+          components: [mp_loop_buttons()],
+        })
         .then(async (rmsg) => {
           rmsg.channel
             .awaitMessages({ filter, max: 1, time: 300000, errors: ["time"] })
