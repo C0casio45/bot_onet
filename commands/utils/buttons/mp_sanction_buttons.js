@@ -16,11 +16,11 @@ const button_perm = () => {
     .setEmoji("🚨");
 };
 
-const mp_buttons = () => {
+const mp_sanction_buttons = () => {
   return new MessageActionRow()
     .addComponents(button_avertissement())
     .addComponents(button_perm());
 };
 module.exports = {
-  mp_buttons,
+  mp_sanction_buttons,
 };
