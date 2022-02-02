@@ -5,7 +5,7 @@ const button_avertissement = () => {
     .setCustomId(`avertissement`)
     .setLabel("Avertissement")
     .setStyle("SECONDARY")
-    .setEmoji("🚨");
+    .setEmoji("⚠️");
 };
 
 const button_perm = () => {
