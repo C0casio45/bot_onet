@@ -229,7 +229,7 @@ module.exports = {
               }
             }).catch((err) => {
               console.log(err)
-              tmsg.channel.send({ embeds: [error(1)] });
+              rmsg.channel.send({ embeds: [error(1)] });
             });
         });
     }
