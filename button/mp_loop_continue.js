@@ -11,7 +11,6 @@ module.exports = {
         .setCustomId("done")
         .setLabel(`Continuer`)
         .setStyle("SUCCESS")
-        .setEmoji("➕")
         .setDisabled("true")
     );
 

@@ -10,8 +10,7 @@ module.exports = {
       new MessageButton()
         .setCustomId("done")
         .setLabel(`Fermer`)
-        .setStyle("SUCCESS")
-        .setEmoji("❌")
+        .setStyle("DANGER")
         .setDisabled("true")
     );
 
