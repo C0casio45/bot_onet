@@ -11,7 +11,7 @@ module.exports = {
         .setCustomId("done")
         .setLabel(`Avertissement`)
         .setStyle("SUCCESS")
-        .setEmoji("🚨")
+        .setEmoji("⚠️")
         .setDisabled("true")
     );
 
