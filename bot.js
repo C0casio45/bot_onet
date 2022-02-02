@@ -38,26 +38,21 @@ client.on('messageCreate', async message => {
 
     if (!client.application?.owner) await client.application?.fetch();
 
-    if (message.content.toLowerCase().split(" ")[0] == '!get') {
-        console.log(faceit.GetUserToken(message.content.toLowerCase().split(" ")[1]))
+    function userVerif() {
+        if (message.author.id === client.application?.owner.id || 248069530381844481 /*Quentin*/) {
+            return true;
+        }
+        return false
     }
 
-    if (message.content.toLowerCase().split(" ")[0] == '!ban') {
-        faceit.BanPlayer(client, message.content.toLowerCase().split(" ")[1], "pseudo", message.author.id)
-    }
-
-    if (message.content.toLowerCase().split(" ")[0] == '!unban') {
-        faceit.RemoveBan(message.content.toLowerCase().split(" ")[1], message.author.id)
-    }
-
-    if (message.content.toLowerCase().split(" ")[0] == '!deploy' && message.author.id === client.application?.owner.id) {
+    if (message.content.toLowerCase().split(" ")[0] == '!deploy' && userVerif()) {
         const dp = require(`./bot_modules/deploy.js`);
         param = message.content.split(" ");
         dp.dply(client, param[1], param[2]);
         monitor.log(client, "deployed on " + param[2]);
     }
 
-    if (message.content.toLowerCase().split(" ")[0] == '!r' && message.author.id === client.application?.owner.id) {
+    if (message.content.toLowerCase().split(" ")[0] == '!r' && userVerif()) {
         process.exit();
     }
 });
