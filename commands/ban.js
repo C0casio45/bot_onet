@@ -3,7 +3,6 @@ const { folder } = require("../config.json");
 const con = require("./dbconnect.js");
 const db = con.database();
 const dp = require(`${folder}bot_modules/deploy.js`);
-const faceit = require("../bot_modules/faceit.js");
 
 const { mp_sanction_buttons } = require("./utils/buttons/mp_sanction_buttons");
 const { mp_loop_buttons } = require("./utils/buttons/mp_loop_buttons");
@@ -220,6 +219,7 @@ module.exports = {
                   db.query(
                     `call bot_onet.close_ticket(${options}, '${row[0]}', 'https://www.faceit.com/fr/players/${row[0]}', '${liengame}', ${row[1]}, '${row[2]}', TRUE);`,
                     function (err, result) {
+                      console.log(err);
                       if (err) throw err;
                     }
                   );
