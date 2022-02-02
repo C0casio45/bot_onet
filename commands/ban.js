@@ -87,7 +87,7 @@ module.exports = {
         .setColor("#e34c3b")
         .setAuthor("Utilitaire de banissement")
         .setDescription(
-          `Merci d'indiquer le nombre de jours l'utilisateur ${pseudo} doit être banni`
+          `Merci d'indiquer le nombre de jours l'utilisateur ${pseudo} doit être banni ou de cliquer sur un des boutons si il s'agit d'un avertissement/ban permanant.`
         )
         .setFooter("Créé et hébergé par COcasio45#2406")
         .setTimestamp();
@@ -105,13 +105,19 @@ module.exports = {
     function request_other(nbEntreeBan, array) {
       let list = "";
       array.forEach((ban) => {
-        list += `- Utilisateur ${ban[0]} banni pendant ${ban[1]} jours\n`;
+        list += `- Utilisateur ${ban[0]} ${
+          ban[1] == 0
+            ? "averti"
+            : ban[1] == 99999
+            ? "ban permanant"
+            : "banni pendant " + ban[1] + " jours"
+        }\n`;
       });
       const embed = new MessageEmbed()
         .setColor("#e34c3b")
         .setAuthor("Utilitaire de banissement")
         .setDescription(
-          `Vous avez actuellement ${nbEntreeBan} enregistrés :\n${list}\nPour interragir avec le bot :\n-Pour ajouter un accusé : oui / yes / o / y \n-Pour finir l'enregistrement : n / non / no`
+          `Vous avez actuellement ${nbEntreeBan} enregistrés :\n${list}\n\nVoulez vous ajouter une sanction à un autre utilisateur ?`
         )
         .setFooter("Créé et hébergé par COcasio45#2406")
         .setTimestamp();
