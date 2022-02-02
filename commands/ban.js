@@ -223,11 +223,6 @@ module.exports = {
                       if (err) throw err;
                     }
                   );
-                  faceit.BanPlayer(
-                    rmsg,
-                    `https://www.faceit.com/fr/players/${row[0]}`,
-                    `${row[1]} ${options}`
-                  );
                 });
 
                 //rmsg.channel.send({embeds : [send_ban(array.length,array)]});
