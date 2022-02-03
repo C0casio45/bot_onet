@@ -21,7 +21,7 @@ for (const file of commandFiles) {
     client.commands.set(command.name, command);
 }
 
-const btnFiles = fs.readdirSync(`./button`).filter(file => file.endsWith('.js'));
+const btnFiles = fs.readdirSync(`${__dirname}/button`).filter(file => file.endsWith('.js'));
 
 for (const file of btnFiles) {
     const button = require(`./button/${file}`);
