@@ -4,7 +4,7 @@ module.exports = {
   name: "mp_loop_button_continue",
   description: "",
   execute: function (interaction, client) {
-    interaction.channel.send({ content: "o" });
+    interaction.channel.send({ content: "Ajout d'un nouvel accusé" });
 
     const row = new MessageActionRow().addComponents(
       new MessageButton()

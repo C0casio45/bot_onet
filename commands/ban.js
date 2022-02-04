@@ -6,8 +6,15 @@ const dp = require(`${folder}bot_modules/deploy.js`);
 
 const { mp_sanction_buttons } = require("./utils/buttons/mp_sanction_buttons");
 const { mp_loop_buttons } = require("./utils/buttons/mp_loop_buttons");
-
 const { send_ban } = require("./utils/embeds/send_ban.js");
+
+const request_mp = require("./utils/embeds/request_mp");
+const request_gameLink = require("./utils/embeds/request_gameLink");
+const request_userdays = require("./utils/embeds/request_userdays");
+const request_raison = require("./utils/embeds/request_raison");
+const request_other = require("./utils/embeds/request_other");
+const request_userlink = require("./utils/embeds/request_userlink");
+const error = require("./utils/embeds/error");
 
 module.exports = {
   name: "ban",
@@ -21,93 +28,6 @@ module.exports = {
     let user = interaction.user;
     let userid = user.id;
     let array = [];
-
-    function request_mp() {
-      return new MessageEmbed()
-        .setColor("#e34c3b")
-        .setAuthor("Banissement")
-        .setDescription(`Merci d'aller voir vos messages privés`)
-        .setFooter("Créé et hébergé par COcasio45#2406")
-        .setTimestamp();
-    }
-    function request_gameLink() {
-      return new MessageEmbed()
-        .setColor("#e34c3b")
-        .setAuthor("Utilitaire de banissement")
-        .setDescription(`Merci de mettre le lien faceit de **la partie**.`)
-        .setFooter("Créé et hébergé par COcasio45#2406")
-        .setTimestamp();
-    }
-    function request_userlink() {
-      return new MessageEmbed()
-        .setColor("#e34c3b")
-        .setAuthor("Utilitaire de banissement")
-        .setDescription(
-          `Merci de mettre le lien faceit de **l'utilisateur a bannir**.`
-        )
-        .setFooter("Créé et hébergé par COcasio45#2406")
-        .setTimestamp();
-    }
-    function request_userdays(pseudo) {
-      return new MessageEmbed()
-        .setColor("#e34c3b")
-        .setAuthor("Utilitaire de banissement")
-        .setDescription(
-          `Merci d'indiquer le nombre de jours l'utilisateur ${pseudo} doit être banni ou de cliquer sur un des boutons si il s'agit d'un avertissement/ban permanant.`
-        )
-        .setFooter("Créé et hébergé par COcasio45#2406")
-        .setTimestamp();
-    }
-    function request_raison(pseudo) {
-      return new MessageEmbed()
-        .setColor("#e34c3b")
-        .setAuthor("Utilitaire de banissement")
-        .setDescription(
-          `Merci d'indiquer la raison du banissement de l'utilisateur : ${pseudo}`
-        )
-        .setFooter("Créé et hébergé par COcasio45#2406")
-        .setTimestamp();
-    }
-    function request_other(nbEntreeBan, array) {
-      let list = "";
-      array.forEach((ban) => {
-        list += `- Utilisateur ${ban[0]} ${ban[1] == 0
-          ? "averti"
-          : ban[1] == 99999
-            ? "ban permanant"
-            : "banni pendant " + ban[1] + " jours"
-          }\n`;
-      });
-      const embed = new MessageEmbed()
-        .setColor("#e34c3b")
-        .setAuthor("Utilitaire de banissement")
-        .setDescription(
-          `Vous avez actuellement ${nbEntreeBan} enregistrés :\n${list}\n\nVoulez vous ajouter une sanction à un autre utilisateur ?`
-        )
-        .setFooter("Créé et hébergé par COcasio45#2406")
-        .setTimestamp();
-      return embed;
-    }
-    function error(code) {
-      let error_msg = "";
-      switch (code) {
-        case 1:
-          error_msg = `Vous avez mis trop de temps a répondre, merci de recommencer la démarche en écrivant /ban [ticket]`;
-          break;
-        case 2:
-          error_msg = `Merci de relancer une demande d'unban en indiquant un numéro la prochaine fois`;
-          break;
-
-        default:
-          break;
-      }
-      return new MessageEmbed()
-        .setColor("#e34c3b")
-        .setAuthor("Utilitaire de banissement")
-        .setDescription(error_msg)
-        .setFooter("Créé et hébergé par COcasio45#2406")
-        .setTimestamp();
-    }
 
     interaction.reply({ embeds: [request_mp()], ephemeral: true });
 
@@ -157,9 +77,19 @@ module.exports = {
             .then((collected) => {
               let jours = collected.first().content;
               let days = parseInt(jours);
-              if (isNaN(days)) {
+              if (
+                isNaN(days) &&
+                jours != "Avertissement" &&
+                jours != "Banissement permanant"
+              ) {
                 getDays(i, array, liengame, rmsg, pseudo);
               } else {
+                days =
+                  jours == "Avertissement"
+                    ? 0
+                    : jours == "Banissement permanant"
+                    ? 99999
+                    : days;
                 array[i][1] = days;
                 if (array[i][1] > 99999) array[i][1] = 99999;
                 getReason(i, array, liengame, rmsg, pseudo);
@@ -206,7 +136,8 @@ module.exports = {
                 choix.toLowerCase() == "oui" ||
                 choix.toLowerCase() == "yes" ||
                 choix.toLowerCase() == "o" ||
-                choix.toLowerCase() == "y"
+                choix.toLowerCase() == "y" ||
+                choix.toLowerCase() == "ajout d'un nouvel accusé"
               ) {
                 quiz(i + 1);
               } else {

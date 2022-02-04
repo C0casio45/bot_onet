@@ -4,7 +4,7 @@ module.exports = {
   name: "avertissement",
   description: "Méthode pour créer un avertissement",
   execute: function (interaction, client) {
-    interaction.channel.send({ content: "0" });
+    interaction.channel.send({ content: "Avertissement" });
 
     const row = new MessageActionRow().addComponents(
       new MessageButton()
