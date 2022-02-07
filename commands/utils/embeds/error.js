@@ -15,8 +15,8 @@ module.exports = function error(code) {
   }
   return new MessageEmbed()
     .setColor("#e34c3b")
-    .setAuthor("Utilitaire de banissement")
     .setDescription(error_msg)
-    .setFooter("Créé et hébergé par COcasio45#2406")
+    .setAuthor({ name: "Utilitaire de banissement" })
+    .setFooter({ text: "Créé et hébergé par COcasio45#2406" })
     .setTimestamp();
 };

@@ -13,11 +13,11 @@ module.exports = function request_other(nbEntreeBan, array) {
   });
   const embed = new MessageEmbed()
     .setColor("#e34c3b")
-    .setAuthor("Utilitaire de banissement")
     .setDescription(
       `Vous avez actuellement ${nbEntreeBan} enregistrés :\n${list}\n\nVoulez vous ajouter une sanction à un autre utilisateur ?`
     )
-    .setFooter("Créé et hébergé par COcasio45#2406")
+    .setAuthor({ name: "Utilitaire de banissement" })
+    .setFooter({ text: "Créé et hébergé par COcasio45#2406" })
     .setTimestamp();
   return embed;
 };

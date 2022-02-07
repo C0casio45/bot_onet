@@ -7,6 +7,7 @@ module.exports = function request_userlink() {
     .setDescription(
       `Merci de mettre le lien faceit de **l'utilisateur a bannir**.`
     )
-    .setFooter("Créé et hébergé par COcasio45#2406")
+    .setAuthor({ name: "Utilitaire de banissement" })
+    .setFooter({ text: "Créé et hébergé par COcasio45#2406" })
     .setTimestamp();
 };
