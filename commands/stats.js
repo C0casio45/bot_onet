@@ -1,10 +1,10 @@
-const { MessageActionRow,MessageButton,MessageEmbed } = require('discord.js');
+const { MessageActionRow, MessageButton, MessageEmbed } = require('discord.js');
 const con = require("./dbconnect.js");
 const db = con.database();
 
 module.exports = {
-    name : 'stats',
-    description : "Méthode pour voir le nombre de tickets pris en charge par les différents modérateurs",
+    name: 'stats',
+    description: "Méthode pour voir le nombre de tickets pris en charge par les différents modérateurs",
     options: [
         {
             "name": "user",
@@ -13,43 +13,43 @@ module.exports = {
             "required": false
         }
     ],
-    async execute(interaction,client){
+    async execute(interaction, client) {
         args = interaction.options._hoistedOptions;
 
-        if(!db._connectCalled ) {
+        if (!db._connectCalled) {
             db.connect();
         }
         db.query(`call bot_onet.stats_all();`, function (err, result) {
             if (err) throw err;
             stats = {};
             result[0].forEach(ticket => {
-                if(isNaN(stats[ticket.Pseudo]))stats[ticket.Pseudo] = 0;
-                stats[ticket.Pseudo]++; 
+                if (isNaN(stats[ticket.Pseudo])) stats[ticket.Pseudo] = 0;
+                stats[ticket.Pseudo]++;
             });
 
-            
+
             let i = 0;
             let info = [];
-            for(let mod in stats){
-                info.push({ "name" : mod, "value": `${stats[mod]}`, "inline": false });
+            for (let mod in stats) {
+                info.push({ "name": mod, "value": `${stats[mod]}`, "inline": false });
             };
 
-            
+
 
             info.sort(function (a, b) {
                 return b.value - a.value;
             });
-            
+
             let rst = [];
             let temp = [];
 
             info.forEach(row => {
-                if(i == 5){
+                if (i == 5) {
                     rst.push(temp);
                     temp = [];
                     i = 0;
                 }
-                if(info[info.length - 1] == row){
+                if (info[info.length - 1] == row) {
                     rst.push(temp);
                 }
                 temp.push(row);
@@ -60,20 +60,21 @@ module.exports = {
                 .setColor('#e34c3b')
                 .setTitle('Statistiques des modérateurs')
                 .addFields(rst[0])
+                .setFooter({ text: 'Créé et hébergé par COcasio45#2406' })
                 .setTimestamp();
-            return interaction.reply({embeds : [embed], components: btn(rst.length,rst,0)});
+            return interaction.reply({ embeds: [embed], components: btn(rst.length, rst, 0) });
         });
     }
 }
 
-function btn(number,rst){
-    let bt =  new MessageActionRow()
+function btn(number, rst) {
+    let bt = new MessageActionRow()
     for (let i = 0; i < number; i++) {
         let datas = "";
         rst[i].forEach(mod => {
             datas += ` ${mod.name} ${mod.value}`
         })
-        if(i == 0){
+        if (i == 0) {
             bt.addComponents(
                 new MessageButton()
                     .setCustomId(`setpage ${i}`)
