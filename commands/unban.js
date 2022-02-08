@@ -1,12 +1,12 @@
 const { folder } = require("../config.json");
-const { MessageActionRow,MessageButton,MessageEmbed } = require('discord.js');
+const { MessageActionRow, MessageButton, MessageEmbed } = require('discord.js');
 const con = require("../commands/dbconnect.js");
 const db = con.database();
 
 module.exports = {
-    name : 'unban',
-    description : "Méthode pour débannir les gens",
-    execute(interaction,client){
+    name: 'unban',
+    description: "Méthode pour débannir les gens",
+    execute(interaction, client) {
         let rst = interaction.options._hoistedOptions[0].value;
 
         let options = rst.split(",");
@@ -14,24 +14,23 @@ module.exports = {
         let Pseudo = options[0];
         let idTicket = options[1];
         let idAccuse = options[2];
-        
-        if(!connection._connectCalled ) 
-        {
+
+        if (!connection._connectCalled) {
             connection.connect();
         }
         db.query(`call bot_onet.unban('${idTicket}', '${idAccuse}');`, function (err, result) {
             if (err) throw err;
         });
-        
+
         const dp = require(`${folder}bot_modules/deploy.js`);
-        dp.dply(client,"0",interaction.guildId);
+        dp.dply(client, "0", interaction.guildId);
 
         const embed = new MessageEmbed()
             .setColor('#e34c3b')
-            .setAuthor('Salut !')
+            .setAuthor({ name: 'Salut !' })
             .setDescription(`Le joueur ${Pseudo} a été débanni par <@!${interaction.user.id}>.`)
             .setTimestamp()
-            .setFooter('Créé et hébergé par COcasio45#2406');
+            .setFooter({ text: 'Créé et hébergé par COcasio45#2406' });
 
         const link = new MessageActionRow()
             .addComponents(
@@ -40,8 +39,8 @@ module.exports = {
                     .setLabel(`Panel de banissement`)
                     .setStyle('LINK'),
             );
-        
-        return interaction.reply({embeds: [embed], components: [link]});
+
+        return interaction.reply({ embeds: [embed], components: [link] });
     }
 }
 
