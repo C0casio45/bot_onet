@@ -6,7 +6,6 @@ const btn = require(`./bot_modules/unbanFunction.js`);
 const { Client, Collection, Intents } = require('discord.js');
 const monitor = require("./bot_modules/monitor.js");
 const rappl = require("./bot_modules/rappelModo.js");
-const faceit = require("./bot_modules/faceit.js")
 
 
 
@@ -35,6 +34,7 @@ client.once('ready', () => {
 });
 
 client.on('messageCreate', async message => {
+
 
     if (!client.application?.owner) await client.application?.fetch();
 
@@ -75,7 +75,7 @@ client.on('interactionCreate', async interaction => {
     try {
         await client.commands.get(interaction.commandName).execute(interaction, client);
     } catch (error) {
-        monitor.error(error);
+        console.log(error);
         return interaction.reply({ content: 'Il y a eu une erreur lors de l\'exécution de ta commande (redx be like)', ephemeral: true });
     }
 });

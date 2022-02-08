@@ -47,6 +47,9 @@ module.exports = {
             dp.dply(client, "0", interaction.guildId);
 
         });
+        const dp = require(`${folder}bot_modules/deploy.js`);
+        dp.dply(client, "0", interaction.guildId);
+
 
 
         return interaction.reply(`Le <#${channel.id}> a été pris par <@!${interaction.user.id}>`);

@@ -16,6 +16,7 @@ module.exports = {
                     tickets = []
                     result[0].forEach(ticket => {
                         tickets.push({ name: ticket.Nom, value: `${ticket.idTicket}` });
+
                     });
 
                     const dataGuild = [{
