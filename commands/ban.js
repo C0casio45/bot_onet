@@ -102,28 +102,6 @@ module.exports = {
         });
     }
 
-
-    function getDays(i, array, liengame, msg, pseudo) {
-      msg.channel.send({ embeds: [request_userdays(pseudo)] })
-        .then(async rmsg => {
-          rmsg.channel.awaitMessages({ filter, max: 1, time: 300000, errors: ['time'] })
-            .then((collected) => {
-              let jours = collected.first().content;
-              let days = parseInt(jours);
-              if (isNaN(days)) {
-                getDays(i, array, liengame, rmsg, pseudo);
-              } else {
-                array[i][1] = days;
-                if (array[i][1] > 99999) array[i][1] = 99999;
-                getReason(i, array, liengame, rmsg, pseudo);
-              }
-            }).catch((err) => {
-              console.log(err)
-              rmsg.channel.send({ embeds: [error(1)] });
-            });
-        });
-    }
-
     function getReason(i, array, liengame, msg, pseudo) {
       msg.channel.send({ embeds: [request_raison(pseudo)] })
         .then(async rmsg => {
