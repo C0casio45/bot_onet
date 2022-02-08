@@ -1,7 +1,7 @@
 const { MessageEmbed } = require('discord.js');
 const con = require("../commands/dbconnect.js");
 const db = con.database();
-const { folder } = require("../config.json");
+const dp = require(`../bot_modules/deploy.js`);
 
 module.exports = {
     name: 'take',
@@ -14,7 +14,7 @@ module.exports = {
             "required": true
         }
     ],
-    execute(interaction, client) {
+    async execute(interaction, client) {
         let sliced = interaction.options._hoistedOptions;
         let channel = client.channels.cache.get(sliced[0].value);
         let ticket = channel.name;
@@ -22,7 +22,7 @@ module.exports = {
         let discordID = interaction.user.id;
         let ticketList = [];
 
-        // A faire - @ le mec qui créé le ticket
+        // TODO - @ le mec qui créé le ticket
         // channel.messages.fetch({ limit: 100 }).then(messages => {
         //     last = messages[Object.keys(messages)[Object.keys(messages).length - 1]];
         //     console.log(messages);
@@ -43,9 +43,13 @@ module.exports = {
         }
         db.query(`call bot_onet.create_ticket('${ticket}', '${pseudo}', '${discordID}');`, function (err, result) {
             if (err) throw err;
+
+            dp.dply(client, "0", interaction.guildId);
+
         });
         const dp = require(`${folder}bot_modules/deploy.js`);
         dp.dply(client, "0", interaction.guildId);
+
 
 
         return interaction.reply(`Le <#${channel.id}> a été pris par <@!${interaction.user.id}>`);

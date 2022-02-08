@@ -1,8 +1,7 @@
 const { MessageEmbed } = require("discord.js");
-const { folder } = require("../config.json");
 const con = require("./dbconnect.js");
 const db = con.database();
-const dp = require(`${folder}bot_modules/deploy.js`);
+const dp = require(`../bot_modules/deploy.js`);
 
 const { mp_sanction_buttons } = require("./utils/buttons/mp_sanction_buttons");
 const { mp_loop_buttons } = require("./utils/buttons/mp_loop_buttons");
@@ -98,23 +97,45 @@ module.exports = {
             .catch((err) => {
               console.log(err);
               rmsg.channel.send({ embeds: [error(1)] });
+
+            });
+        });
+    }
+
+
+    function getDays(i, array, liengame, msg, pseudo) {
+      msg.channel.send({ embeds: [request_userdays(pseudo)] })
+        .then(async rmsg => {
+          rmsg.channel.awaitMessages({ filter, max: 1, time: 300000, errors: ['time'] })
+            .then((collected) => {
+              let jours = collected.first().content;
+              let days = parseInt(jours);
+              if (isNaN(days)) {
+                getDays(i, array, liengame, rmsg, pseudo);
+              } else {
+                array[i][1] = days;
+                if (array[i][1] > 99999) array[i][1] = 99999;
+                getReason(i, array, liengame, rmsg, pseudo);
+              }
+            }).catch((err) => {
+              console.log(err)
+              rmsg.channel.send({ embeds: [error(1)] });
             });
         });
     }
 
     function getReason(i, array, liengame, msg, pseudo) {
-      msg.channel
-        .send({ embeds: [request_raison(pseudo)] })
-        .then(async (rmsg) => {
-          rmsg.channel
-            .awaitMessages({ filter, max: 1, time: 300000, errors: ["time"] })
+      msg.channel.send({ embeds: [request_raison(pseudo)] })
+        .then(async rmsg => {
+          rmsg.channel.awaitMessages({ filter, max: 1, time: 300000, errors: ['time'] })
             .then((collected) => {
               let raison = collected.first().content;
               array[i][2] = raison;
               isLoop(i, array, liengame, rmsg, pseudo);
-            })
-            .catch((err) => {
-              console.log(err);
+
+
+            }).catch((err) => {
+              console.log(err)
               rmsg.channel.send({ embeds: [error(1)] });
             });
         });

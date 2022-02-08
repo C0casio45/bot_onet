@@ -16,6 +16,7 @@ module.exports = {
                     tickets = []
                     result[0].forEach(ticket => {
                         tickets.push({ name: ticket.Nom, value: `${ticket.idTicket}` });
+
                     });
 
                     const dataGuild = [{
@@ -76,12 +77,14 @@ module.exports = {
                 });
                 break;
             case "1":
-                const dataGuild = [{
-                    "name": 'test',
-                    "description": "Méthode de test"
-                }];
-
-                client.guilds.cache.get(id)?.commands.set(dataGuild);
+                db.connect(function (err) {
+                    if (err) throw err;
+                    const banned = db.query(`call bot_onet.banned_list();`, function (err, result) {
+                        if (err) throw err;
+                        return result;
+                    });
+                    console.log(banned);
+                });
                 break;
             case "2":
                 const dataGlobal = [{
