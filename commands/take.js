@@ -1,7 +1,6 @@
 const { MessageEmbed } = require('discord.js');
 const con = require("../commands/dbconnect.js");
 const db = con.database();
-const dp = require(`../bot_modules/deploy.js`);
 
 module.exports = {
     name: 'take',
@@ -44,10 +43,8 @@ module.exports = {
         db.query(`call bot_onet.create_ticket('${ticket}', '${pseudo}', '${discordID}');`, function (err, result) {
             if (err) throw err;
 
-            dp.dply(client, "0", interaction.guildId);
-
         });
-        const dp = require(`${folder}bot_modules/deploy.js`);
+        const dp = require(`${__dirname}bot_modules/deploy.js`);
         dp.dply(client, "0", interaction.guildId);
 
 
