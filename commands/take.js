@@ -44,7 +44,7 @@ module.exports = {
             if (err) throw err;
 
         });
-        const dp = require(`${__dirname}bot_modules/deploy.js`);
+        const dp = require(`${__dirname}/../bot_modules/deploy.js`);
         dp.dply(client, "0", interaction.guildId);
 
 
