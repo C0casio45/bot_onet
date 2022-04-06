@@ -14,6 +14,7 @@ const request_raison = require("./utils/embeds/request_raison");
 const request_other = require("./utils/embeds/request_other");
 const request_userlink = require("./utils/embeds/request_userlink");
 const error = require("./utils/embeds/error");
+const { setTimeout } = require("timers");
 
 module.exports = {
   name: "ban",
@@ -31,37 +32,67 @@ module.exports = {
     interaction.reply({ embeds: [request_mp()], ephemeral: true });
 
     const filter = (m) => [user.id, client.user.id].includes(m.author.id);
+    const isBot = (m) => m.includes("BOT");
 
-    user.send({ embeds: [request_gameLink()] }).then(async (tmsg) => {
+    const regexRoom = new RegExp(
+      "https://www.faceit.com/([a-zA-Z0-9-]{2})/csgo/room/([a-zA-Z0-9-]*)"
+    );
+    const regexPlayer = new RegExp(
+      "(https://www.faceit.com/([a-zA-Z0-9-]{2})/players-modal/([a-zA-Z0-9_-]*))|(https://www.faceit.com/([a-zA-Z0-9-]{2})/players/([a-zA-Z0-9_-]*)/([/a-zA-Z])*)"
+    );
+
+    getGame();
+
+    function getGame() {
+      user
+        .send({ embeds: [request_gameLink()] })
+        .then(async (tmsg) => listenGame(tmsg));
+    }
+
+    function listenGame(tmsg) {
       tmsg.channel
         .awaitMessages({ filter, max: 1, time: 300000, errors: ["time"] })
         .then((collected) => {
-          quiz(0, collected.first().content);
+          if (collected.first().content.match(regexRoom))
+            quiz(0, collected.first().content);
+          else {
+            collected.first().reply({ content: "Format de données invalide." });
+            setTimeout(() => getGame(), 300);
+          }
         })
         .catch((err) => {
           console.log(err);
           tmsg.channel.send({ embeds: [error()] });
         });
-    });
+    }
 
     return;
 
     function quiz(i, liengame) {
       array.push([]);
-      user.send({ embeds: [request_userlink()] }).then(async (msg) => {
-        msg.channel
-          .awaitMessages({ filter, max: 1, time: 300000, errors: ["time"] })
-          .then((collected) => {
+      user
+        .send({ embeds: [request_userlink()] })
+        .then(async (msg) => listenQuizz(i, liengame, msg));
+    }
+
+    function listenQuizz(i, liengame, msg) {
+      msg.channel
+        .awaitMessages({ filter, max: 1, time: 300000, errors: ["time"] })
+        .then((collected) => {
+          if (collected.first().content.match(regexPlayer)) {
             let link = collected.first().content.split("/");
             let pseudo = link[link.length - 1];
             array[i][0] = pseudo;
             getDays(i, array, liengame, msg, pseudo);
-          })
-          .catch((err) => {
-            console.log(err);
-            msg.channel.send({ embeds: [error(1)] });
-          });
-      });
+          } else {
+            collected.first().reply({ content: "Format de données invalide." });
+            setTimeout(() => quiz(i, liengame), 300);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+          msg.channel.send({ embeds: [error(1)] });
+        });
     }
 
     function getDays(i, array, liengame, msg, pseudo) {
@@ -71,49 +102,57 @@ module.exports = {
           components: [mp_sanction_buttons()],
         })
         .then(async (rmsg) => {
-          rmsg.channel
-            .awaitMessages({ filter, max: 1, time: 300000, errors: ["time"] })
-            .then((collected) => {
-              let jours = collected.first().content;
-              let days = parseInt(jours);
-              if (
-                isNaN(days) &&
-                jours != "Avertissement" &&
-                jours != "Banissement permanant"
-              ) {
-                getDays(i, array, liengame, rmsg, pseudo);
-              } else {
-                days =
-                  jours == "Avertissement"
-                    ? 0
-                    : jours == "Banissement permanant"
-                    ? 99999
-                    : days;
-                array[i][1] = days;
-                if (array[i][1] > 99999) array[i][1] = 99999;
-                getReason(i, array, liengame, rmsg, pseudo);
-              }
-            })
-            .catch((err) => {
-              console.log(err);
-              rmsg.channel.send({ embeds: [error(1)] });
+          listenDay(i, array, liengame, rmsg, pseudo);
+        });
+    }
 
-            });
+    function listenDay(i, array, liengame, rmsg, pseudo) {
+      rmsg.channel
+        .awaitMessages({ filter, max: 1, time: 300000, errors: ["time"] })
+        .then((collected) => {
+          let jours = collected.first().content;
+          let days = parseInt(jours);
+          if (
+            isNaN(days) &&
+            jours != "BOT Avertissement" &&
+            jours != "BOT Banissement permanant"
+          ) {
+            collected.first().reply({ content: "Format de données invalide." });
+            setTimeout(() => {
+              getDays(i, array, liengame, rmsg, pseudo);
+              return;
+            }, 300);
+          } else {
+            days =
+              jours == "BOT Avertissement"
+                ? 0
+                : jours == "BOT Banissement permanant"
+                ? 99999
+                : days;
+            array[i][1] = days;
+            if (array[i][1] > 99999) array[i][1] = 99999;
+            getReason(i, array, liengame, rmsg, pseudo);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+          rmsg.channel.send({ embeds: [error(1)] });
         });
     }
 
     function getReason(i, array, liengame, msg, pseudo) {
-      msg.channel.send({ embeds: [request_raison(pseudo)] })
-        .then(async rmsg => {
-          rmsg.channel.awaitMessages({ filter, max: 1, time: 300000, errors: ['time'] })
+      msg.channel
+        .send({ embeds: [request_raison(pseudo)] })
+        .then(async (rmsg) => {
+          rmsg.channel
+            .awaitMessages({ filter, max: 1, time: 300000, errors: ["time"] })
             .then((collected) => {
               let raison = collected.first().content;
               array[i][2] = raison;
               isLoop(i, array, liengame, rmsg, pseudo);
-
-
-            }).catch((err) => {
-              console.log(err)
+            })
+            .catch((err) => {
+              console.log(err);
               rmsg.channel.send({ embeds: [error(1)] });
             });
         });
