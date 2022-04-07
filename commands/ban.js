@@ -34,9 +34,16 @@ module.exports = {
     const filter = (m) => [user.id, client.user.id].includes(m.author.id);
     const is = (m) => m.includes("BOT");
 
+    // FACEIT ROOM EXEMPLE
+    // https://www.faceit.com/fr/csgo/room/1-0def9859-57d0-4613-a578-eb3c6ec04176
     const regexRoom = new RegExp(
       "https://www.faceit.com/([a-zA-Z0-9-]{2})/csgo/room/([a-zA-Z0-9-]*)"
     );
+
+    // FACEIT PROFIL EXEMPLE
+    // https://www.faceit.com/fr/players-modal/k-dev
+    // OR
+    // https://www.faceit.com/fr/players/k-dev
     const regexPlayer = new RegExp(
       "(https://www.faceit.com/([a-zA-Z0-9-]{2})/players-modal/([a-zA-Z0-9_-]*))|(https://www.faceit.com/([a-zA-Z0-9-]{2})/players/([a-zA-Z0-9_-]*)/([/a-zA-Z])*)"
     );
