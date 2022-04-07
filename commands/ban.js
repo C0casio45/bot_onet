@@ -32,7 +32,7 @@ module.exports = {
     interaction.reply({ embeds: [request_mp()], ephemeral: true });
 
     const filter = (m) => [user.id, client.user.id].includes(m.author.id);
-    const isBot = (m) => m.includes("BOT");
+    const is = (m) => m.includes("BOT");
 
     const regexRoom = new RegExp(
       "https://www.faceit.com/([a-zA-Z0-9-]{2})/csgo/room/([a-zA-Z0-9-]*)"
@@ -114,8 +114,8 @@ module.exports = {
           let days = parseInt(jours);
           if (
             isNaN(days) &&
-            jours != "BOT Avertissement" &&
-            jours != "BOT Banissement permanant"
+            jours != "Avertissement" &&
+            jours != "Banissement permanant"
           ) {
             collected.first().reply({ content: "Format de données invalide." });
             setTimeout(() => {
@@ -124,9 +124,9 @@ module.exports = {
             }, 300);
           } else {
             days =
-              jours == "BOT Avertissement"
+              jours == "Avertissement"
                 ? 0
-                : jours == "BOT Banissement permanant"
+                : jours == "Banissement permanant"
                 ? 99999
                 : days;
             array[i][1] = days;
