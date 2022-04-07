@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="308beedf-21c1-4383-9882-3fe8f0898c28" name="QS">
+        <fileTransfer rootFolder="//var/www/html/qs-officials/new-qs/" accessType="SFTP" host="quanticalsolutions.com" port="2022" sshConfigId="e838738e-81d4-41b4-a485-4225d9fc125d" sshConfig="www-data@quanticalsolutions.com:2022 password">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" keepAliveTimeout="0" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+      <webServer id="0feda828-0edd-4439-b665-9bd84de1756c" name="EINT">
+        <fileTransfer rootFolder="//var/www/html/qs-officials/school/" accessType="SFTP" host="quanticalsolutions.com" port="2022" sshConfigId="e838738e-81d4-41b4-a485-4225d9fc125d" sshConfig="www-data@quanticalsolutions.com:2022 password">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" keepAliveTimeout="0" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+      <webServer id="3d7be40e-5847-41d5-9f5e-123ad1945751" name="LEXNEA" url="http://lumiere.o2switch.net">
+        <fileTransfer rootFolder="/public_html" host="lumiere.o2switch.net" port="21">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+      <webServer id="f235be39-f14c-4b26-a10c-a402ea145961" name="PHENIX" url="http://lumiere.o2switch.net">
+        <fileTransfer rootFolder="/phenix" host="lumiere.o2switch.net" port="21">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>
