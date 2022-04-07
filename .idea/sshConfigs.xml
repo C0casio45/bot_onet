@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project version="4">
-  <component name="SshConfigs">
-    <configs>
-      <sshConfig authType="PASSWORD" host="quanticalsolutions.com" id="e838738e-81d4-41b4-a485-4225d9fc125d" port="2022" nameFormat="DESCRIPTIVE" username="www-data" useOpenSSHConfig="true" />
-    </configs>
-  </component>
-</project>

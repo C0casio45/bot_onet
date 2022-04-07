@@ -4,7 +4,7 @@ module.exports = {
   name: "perm",
   description: "Méthode pour créer un ban permnant",
   execute: function (interaction, client) {
-    interaction.channel.send({ content: "Banissement permanant" });
+    interaction.channel.send({ content: "BOT Banissement permanant" });
 
     const row = new MessageActionRow().addComponents(
       new MessageButton()
