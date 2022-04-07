@@ -32,15 +32,24 @@ module.exports = {
       .setAuthor({ name: "Bonjour !" })
       .setDescription(
         `Ton ticket a été pris en charge par <@!${interaction.user.id}>.
-            
-            Merci de nous transmettre toutes les informations qui pourraient nous aider a traiter votre ticket plus rapidement.`
-      )
-      .setTimestamp()
-      .setFooter({ text: "Créé et hébergé par COcasio45#2406" });
-    channel.send({ embeds: [embed] });
+            Merci de nous transmettre toutes les informations qui pourraient nous aider a traiter votre ticket plus rapidement.`)
+            .setTimestamp()
+            .setFooter({ text: 'Créé et hébergé par COcasio45#2406' });
+        channel.send({ embeds: [embed] });
 
-    if (!db._connectCalled) {
-      db.connect();
+        if (!db._connectCalled) {
+            db.connect();
+        }
+        db.query(`call bot_onet.create_ticket('${ticket}', '${pseudo}', '${discordID}');`, function (err, result) {
+            if (err) throw err;
+
+        });
+        const dp = require(`${__dirname}/../bot_modules/deploy.js`);
+        dp.dply(client, "0", interaction.guildId);
+
+
+
+        return interaction.reply(`Le <#${channel.id}> a été pris par <@!${interaction.user.id}>`);
     }
     db.query(
       `call bot_onet.create_ticket('${ticket}', '${pseudo}', '${discordID}');`,
