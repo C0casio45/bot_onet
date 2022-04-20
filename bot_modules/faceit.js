@@ -1,6 +1,5 @@
 const { MessageEmbed, MessageActionRow, MessageButton } = require('discord.js');
 const fs = require('fs');
-const { resolve } = require('path');
 const { faceit } = require("../config.json");
 
 
