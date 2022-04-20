@@ -203,7 +203,7 @@ module.exports = {
                   );
                 });
                 //ban player in faceit
-                faceit.BanPlayer(row[0],row[2]);
+                faceit.BanPlayer(row[0],user.name + " " + row[1]);
                 //send message in private to user who banned the player
                 //rmsg.channel.send({embeds : [send_ban(array.length,array)]});
                 //send message in discord channel
