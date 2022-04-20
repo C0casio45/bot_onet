@@ -46,7 +46,7 @@ module.exports = {
         })
 
     },
-    async BanPlayer(user, userLink, reason) {
+    async BanPlayer(userLink, reason) {
         // POST https://api.faceit.com/hubs/v1/hub/{hubId}/ban/{userId}
         // Authorization: Bearer {userToken}
         // Content-Type: application/json
@@ -109,9 +109,7 @@ module.exports = {
             req.end()
 
         } catch (e) {
-            const token = await this.SetModToken(user);
-            console.log("second : " + token);
-            this.BanPlayer(user, userLink, reason, token);
+            console.log(e);
         }
 
     },

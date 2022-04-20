@@ -6,6 +6,7 @@ const dp = require(`../bot_modules/deploy.js`);
 const { mp_sanction_buttons } = require("./utils/buttons/mp_sanction_buttons");
 const { mp_loop_buttons } = require("./utils/buttons/mp_loop_buttons");
 const { send_ban } = require("./utils/embeds/send_ban.js");
+const faceit = require("./faceit.js");
 
 const request_mp = require("./utils/embeds/request_mp");
 const request_gameLink = require("./utils/embeds/request_gameLink");
@@ -190,6 +191,7 @@ module.exports = {
                   db.connect();
                 }
 
+                //load data in database
                 array.forEach((row) => {
                   // id_Ticket, pseudo_accusé, Lien_Accusé, Lien_Partie, Duree_jours, raison, Fermé?
                   db.query(
@@ -200,9 +202,13 @@ module.exports = {
                     }
                   );
                 });
-
+                //ban player in faceit
+                faceit.BanPlayer(row[0],row[2]);
+                //send message in private to user who banned the player
                 //rmsg.channel.send({embeds : [send_ban(array.length,array)]});
+                //send message in discord channel
                 ban.send({ embeds: [send_ban(array.length, array, userid)] });
+                //update discord cache
                 dp.dply(client, "0", interaction.guildId);
 
                 return;
