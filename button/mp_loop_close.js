@@ -4,7 +4,7 @@ module.exports = {
   name: "mp_loop_button_close",
   description: "",
   execute: function (interaction, client) {
-    interaction.channel.send({ content: "Ticket fermé avec succès" });
+    interaction.channel.send({ content: "Demande de fermeture du ticket..." });
 
     const row = new MessageActionRow().addComponents(
       new MessageButton()
