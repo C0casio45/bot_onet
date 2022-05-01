@@ -14,6 +14,8 @@ const request_userdays = require("./utils/embeds/request_userdays");
 const request_raison = require("./utils/embeds/request_raison");
 const request_other = require("./utils/embeds/request_other");
 const request_userlink = require("./utils/embeds/request_userlink");
+const result_success = require("./utils/embeds/result_success");
+const result_error = require("./utils/embeds/result_error");
 const error = require("./utils/embeds/error");
 const { setTimeout } = require("timers");
 
@@ -132,8 +134,8 @@ module.exports = {
               jours == "Avertissement"
                 ? 0
                 : jours == "Banissement permanant"
-                  ? 99999
-                  : days;
+                ? 99999
+                : days;
             array[i][1] = days;
             if (array[i][1] > 99999) array[i][1] = 99999;
             getReason(i, array, liengame, rmsg, pseudo);
@@ -200,7 +202,24 @@ module.exports = {
                   );
                   if (!row[1] == 0) {
                     //ban player in faceit
-                    faceit.BanPlayer(row[0], "Ban "(row[1] == 99999 ? 'perm' : row[1] + "j") + ". Plus d'informations sur notre discord.");
+                    faceit.BanPlayer(
+                      row[0],
+                      "Ban " +
+                        (row[1] == 99999 ? "perm" : row[1] + "j") +
+                        ". Plus d'informations sur notre discord.",
+                      (failed, error = null) => {
+                        if (failed)
+                          rmsg.channel.send({
+                            embeds: [result_error(`${error}`)],
+                          });
+                        else
+                          rmsg.channel.send({
+                            embeds: [
+                              result_success("Ticket fermé avec succès."),
+                            ],
+                          });
+                      }
+                    );
                   }
                 });
 
