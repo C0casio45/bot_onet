@@ -6,6 +6,7 @@ const dp = require(`../bot_modules/deploy.js`);
 const { mp_sanction_buttons } = require("./utils/buttons/mp_sanction_buttons");
 const { mp_loop_buttons } = require("./utils/buttons/mp_loop_buttons");
 const { send_ban } = require("./utils/embeds/send_ban.js");
+const faceit = require("../bot_modules/faceit.js");
 
 const request_mp = require("./utils/embeds/request_mp");
 const request_gameLink = require("./utils/embeds/request_gameLink");
@@ -20,9 +21,6 @@ module.exports = {
   name: "ban",
   description: "Méthode pour bannir les gens",
   async execute(interaction, client) {
-    let unban = client.channels.cache.find(
-      (channel) => channel.name == "rappel-unban"
-    );
     let ban = client.channels.cache.find((channel) => channel.name == "ban");
     let options = interaction.options._hoistedOptions[0].value;
     let user = interaction.user;
@@ -134,8 +132,8 @@ module.exports = {
               jours == "Avertissement"
                 ? 0
                 : jours == "Banissement permanant"
-                ? 99999
-                : days;
+                  ? 99999
+                  : days;
             array[i][1] = days;
             if (array[i][1] > 99999) array[i][1] = 99999;
             getReason(i, array, liengame, rmsg, pseudo);
@@ -190,22 +188,28 @@ module.exports = {
                   db.connect();
                 }
 
+                //load data in database
                 array.forEach((row) => {
                   // id_Ticket, pseudo_accusé, Lien_Accusé, Lien_Partie, Duree_jours, raison, Fermé?
                   db.query(
                     `call bot_onet.close_ticket(${options}, '${row[0]}', 'https://www.faceit.com/fr/players/${row[0]}', '${liengame}', ${row[1]}, '${row[2]}', TRUE);`,
-                    function (err, result) {
+                    function (err) {
                       console.log(err);
                       if (err) throw err;
                     }
                   );
+                  if (!row[1] == 0) {
+                    //ban player in faceit
+                    faceit.BanPlayer(row[0], "Ban " + (row[1] == 99999 ? 'perm' : row[1] + "j") + ". Plus d'informations sur notre discord.");
+                  }
                 });
 
+                //send message in private to user who banned the player
                 //rmsg.channel.send({embeds : [send_ban(array.length,array)]});
+                //send message in discord channel
                 ban.send({ embeds: [send_ban(array.length, array, userid)] });
+                //update discord cache
                 dp.dply(client, "0", interaction.guildId);
-
-                return;
               }
             })
             .catch((err) => {

@@ -8,7 +8,6 @@ const monitor = require("./bot_modules/monitor.js");
 const rappl = require("./bot_modules/rappelModo.js");
 
 
-
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.DIRECT_MESSAGES], partials: ['MESSAGE', 'CHANNEL', 'REACTION'] });
 client.commands = new Collection();
 client.buttons = new Collection();
@@ -38,16 +37,13 @@ client.on('messageCreate', async message => {
 
     if (!client.application?.owner) await client.application?.fetch();
 
-    function userVerif() {
-        if (message.author.id === client.application?.owner.id || 248069530381844481 /*Quentin*/) {
-            return true;
-        }
-        return false
+    let userVerif = () => {
+        return !!(message.author.id === client.application?.owner.id || 248069530381844481 /*Quentin*/);
     }
 
-    if (message.content.toLowerCase().split(" ")[0] == '!deploy' && userVerif()) {
+    if (message.content.toLowerCase().split(" ")[0] == '!deploy' && userVerif) {
         const dp = require(`./bot_modules/deploy.js`);
-        param = message.content.split(" ");
+        const param = message.content.split(" ");
         dp.dply(client, param[1], param[2]);
         monitor.log(client, "deployed on " + param[2]);
     }
