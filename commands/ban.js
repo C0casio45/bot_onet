@@ -45,7 +45,7 @@ module.exports = {
     // OR
     // https://www.faceit.com/fr/players/k-dev
     const regexPlayer = new RegExp(
-      "(https://www.faceit.com/([a-zA-Z0-9-]{2})/players-modal/([a-zA-Z0-9_-]*))|(https://www.faceit.com/([a-zA-Z0-9-]{2})/players/([a-zA-Z0-9_-]*)/([/a-zA-Z])*)"
+      "(https://www.faceit.com/([a-zA-Z0-9-]{2})/players-modal/([a-zA-Z0-9_-]*))|(https://www.faceit.com/([a-zA-Z0-9-]{2})/players/([a-zA-Z0-9_-]*))"
     );
 
     getGame();
