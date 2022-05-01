@@ -21,9 +21,6 @@ module.exports = {
   name: "ban",
   description: "Méthode pour bannir les gens",
   async execute(interaction, client) {
-    let unban = client.channels.cache.find(
-      (channel) => channel.name == "rappel-unban"
-    );
     let ban = client.channels.cache.find((channel) => channel.name == "ban");
     let options = interaction.options._hoistedOptions[0].value;
     let user = interaction.user;
@@ -135,8 +132,8 @@ module.exports = {
               jours == "Avertissement"
                 ? 0
                 : jours == "Banissement permanant"
-                ? 99999
-                : days;
+                  ? 99999
+                  : days;
             array[i][1] = days;
             if (array[i][1] > 99999) array[i][1] = 99999;
             getReason(i, array, liengame, rmsg, pseudo);
@@ -203,7 +200,7 @@ module.exports = {
                   );
                 });
                 //ban player in faceit
-                faceit.BanPlayer(row[0],user.name + " " + row[1]);
+                faceit.BanPlayer(row[0], user.name + " " + row[1]);
                 //send message in private to user who banned the player
                 //rmsg.channel.send({embeds : [send_ban(array.length,array)]});
                 //send message in discord channel
