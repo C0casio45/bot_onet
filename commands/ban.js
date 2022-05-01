@@ -6,7 +6,7 @@ const dp = require(`../bot_modules/deploy.js`);
 const { mp_sanction_buttons } = require("./utils/buttons/mp_sanction_buttons");
 const { mp_loop_buttons } = require("./utils/buttons/mp_loop_buttons");
 const { send_ban } = require("./utils/embeds/send_ban.js");
-const faceit = require("./faceit.js");
+const faceit = require("../bot_modules/faceit.js");
 
 const request_mp = require("./utils/embeds/request_mp");
 const request_gameLink = require("./utils/embeds/request_gameLink");
