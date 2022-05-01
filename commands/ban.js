@@ -193,13 +193,15 @@ module.exports = {
                   // id_Ticket, pseudo_accusé, Lien_Accusé, Lien_Partie, Duree_jours, raison, Fermé?
                   db.query(
                     `call bot_onet.close_ticket(${options}, '${row[0]}', 'https://www.faceit.com/fr/players/${row[0]}', '${liengame}', ${row[1]}, '${row[2]}', TRUE);`,
-                    function (err, result) {
+                    function (err) {
                       console.log(err);
                       if (err) throw err;
                     }
                   );
-                  //ban player in faceit
-                  faceit.BanPlayer(row[0], user.name + " " + row[1]);
+                  if (!row[1] == 0) {
+                    //ban player in faceit
+                    faceit.BanPlayer(row[0], "Durée : " + (row[1] == 99999 ? 'définitif' : row[1] + " jours") + ". Merci de nous contacter sur discord pour plus d'informations.");
+                  }
                 });
 
                 //send message in private to user who banned the player
@@ -208,8 +210,6 @@ module.exports = {
                 ban.send({ embeds: [send_ban(array.length, array, userid)] });
                 //update discord cache
                 dp.dply(client, "0", interaction.guildId);
-
-                return;
               }
             })
             .catch((err) => {
