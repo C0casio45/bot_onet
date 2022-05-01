@@ -23,6 +23,9 @@ module.exports = {
   name: "ban",
   description: "Méthode pour bannir les gens",
   async execute(interaction, client) {
+    let unban = client.channels.cache.find(
+      (channel) => channel.name == "rappel-unban"
+    );
     let ban = client.channels.cache.find((channel) => channel.name == "ban");
     let options = interaction.options._hoistedOptions[0].value;
     let user = interaction.user;
@@ -226,7 +229,9 @@ module.exports = {
                 //send message in private to user who banned the player
                 //rmsg.channel.send({embeds : [send_ban(array.length,array)]});
                 //send message in discord channel
-                ban.send({ embeds: [send_ban(array.length, array, userid)] });
+                ban.send({
+                  embeds: [send_ban(array.length, array, userid, unban)],
+                });
                 //update discord cache
                 dp.dply(client, "0", interaction.guildId);
               }

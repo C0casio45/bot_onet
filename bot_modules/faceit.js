@@ -31,12 +31,19 @@ module.exports = {
         method: "GET",
         headers: {
           Authorization: `Bearer ${faceit.clientAPIKey}`,
+          "Content-Type": "application/json",
         },
       };
 
       const req = https.request(options, (res) => {
-        res.on("data", (d) => {
-          let userData = JSON.parse(d.toString());
+        let chunks = [];
+
+        res.on("data", function (chunk) {
+          chunks.push(chunk);
+        });
+
+        res.on("end", (d) => {
+          let userData = JSON.parse(Buffer.concat(chunks).toString());
           resolve(userData.items[0].player_id);
         });
       });
@@ -81,15 +88,15 @@ module.exports = {
 
     try {
       const req = https.request(options, (res) => {
-        res.on("data", (d) => {
-          try {
-            let message = "";
-            if (bufferConstructor.length > 0) {
-              message = bufferConstructor.join() + d.toString();
-            } else {
-              message = d.toString();
-            }
+        let chunks = [];
 
+        res.on("data", function (chunk) {
+          chunks.push(chunk);
+        });
+
+        res.on("end", (d) => {
+          try {
+            let message = Buffer.concat(chunks).toString();
             const r = JSON.parse(message);
             if (r.error == "invalid_token") {
               console.log(r);
@@ -102,7 +109,6 @@ module.exports = {
             }
             callback(false);
           } catch (exception) {
-            bufferConstructor[bufferConstructor.length] = d.toString();
             callback(true, exception);
           }
         });
