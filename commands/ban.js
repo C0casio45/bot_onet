@@ -200,7 +200,7 @@ module.exports = {
                   );
                   if (!row[1] == 0) {
                     //ban player in faceit
-                    faceit.BanPlayer(row[0], "Ban "(row[1] == 99999 ? 'perm' : row[1] + "j") + ". Plus d'informations sur notre discord.");
+                    faceit.BanPlayer(row[0], "Ban " + (row[1] == 99999 ? 'perm' : row[1] + "j") + ". Plus d'informations sur notre discord.");
                   }
                 });
 
