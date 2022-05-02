@@ -6,6 +6,7 @@ module.exports = {
         client.application?.fetch()
             .then(() => {
                 const cocasio = client.application?.owner;
+                const netinq = await client.users.fetch("685633892476387339");
 
                 const fs = require('fs')
 
@@ -22,11 +23,14 @@ module.exports = {
 
                     if (data.length < 3500) {
                         cocasio.send({ content: `Le bot a redémarré a cause de l'erreur suivante : \`\`\`js\n${data}\`\`\`` });
+                        netinq.send({ content: `Le bot a redémarré a cause de l'erreur suivante : \`\`\`js\n${data}\`\`\`` });
                     } else if (data.length < 7000) {
                         let first = data.substring(0, 3500);
                         let second = data.substring(3500);
                         cocasio.send({ content: `Le bot a redémarré a cause de l'erreur suivante : \`\`\`js\n${first}\`\`\`` });
                         cocasio.send({ content: `\`\`\`js\n${second}\`\`\`` });
+                        netinq.send({ content: `Le bot a redémarré a cause de l'erreur suivante : \`\`\`js\n${first}\`\`\`` });
+                        netinq.send({ content: `\`\`\`js\n${second}\`\`\`` });
                     } else if (data.length < 10500) {
                         let first = data.substring(0, 3500);
                         let second = data.substring(3500, 7000);
@@ -34,6 +38,9 @@ module.exports = {
                         cocasio.send({ content: `Le bot a redémarré a cause de l'erreur suivante : \`\`\`js\n${first}\`\`\`` });
                         cocasio.send({ content: `\`\`\`js\n${second}\`\`\`` });
                         cocasio.send({ content: `\`\`\`js\n${third}\`\`\`` });
+                        netinq.send({ content: `Le bot a redémarré a cause de l'erreur suivante : \`\`\`js\n${first}\`\`\`` });
+                        netinq.send({ content: `\`\`\`js\n${second}\`\`\`` });
+                        netinq.send({ content: `\`\`\`js\n${third}\`\`\`` });
                     } else if (data.length < 14000) {
                         let first = data.substring(0, 3500);
                         let second = data.substring(3500, 7000);
@@ -43,6 +50,10 @@ module.exports = {
                         cocasio.send({ content: `\`\`\`js\n${second}\`\`\`` });
                         cocasio.send({ content: `\`\`\`js\n${third}\`\`\`` });
                         cocasio.send({ content: `\`\`\`js\n${quat}\`\`\`` });
+                        netinq.send({ content: `Le bot a redémarré a cause de l'erreur suivante : \`\`\`js\n${first}\`\`\`` });
+                        netinq.send({ content: `\`\`\`js\n${second}\`\`\`` });
+                        netinq.send({ content: `\`\`\`js\n${third}\`\`\`` });
+                        netinq.send({ content: `\`\`\`js\n${quat}\`\`\`` });
                     } else if (data.length < 17500) {
                         let first = data.substring(0, 3500);
                         let second = data.substring(3500, 7000);
@@ -54,6 +65,11 @@ module.exports = {
                         cocasio.send({ content: `\`\`\`js\n${third}\`\`\`` });
                         cocasio.send({ content: `\`\`\`js\n${quat}\`\`\`` });
                         cocasio.send({ content: `\`\`\`js\n${cinq}\`\`\`` });
+                        netinq.send({ content: `Le bot a redémarré a cause de l'erreur suivante : \`\`\`js\n${first}\`\`\`` });
+                        netinq.send({ content: `\`\`\`js\n${second}\`\`\`` });
+                        netinq.send({ content: `\`\`\`js\n${third}\`\`\`` });
+                        netinq.send({ content: `\`\`\`js\n${quat}\`\`\`` });
+                        netinq.send({ content: `\`\`\`js\n${cinq}\`\`\`` });
                     } else if (data.length < 21000) {
                         let first = data.substring(0, 3500);
                         let second = data.substring(3500, 7000);
@@ -66,8 +82,14 @@ module.exports = {
                         cocasio.send({ content: `\`\`\`js\n${third}\`\`\`` });
                         cocasio.send({ content: `\`\`\`js\n${quat}\`\`\`` });
                         cocasio.send({ content: `\`\`\`js\n${six}\`\`\`` });
+                        netinq.send({ content: `Le bot a redémarré a cause de l'erreur suivante : \`\`\`js\n${first}\`\`\`` });
+                        netinq.send({ content: `\`\`\`js\n${second}\`\`\`` });
+                        netinq.send({ content: `\`\`\`js\n${third}\`\`\`` });
+                        netinq.send({ content: `\`\`\`js\n${quat}\`\`\`` });
+                        netinq.send({ content: `\`\`\`js\n${six}\`\`\`` });
                     } else {
                         cocasio.send({ content: `le bot a redémarré. Le message est trop long (${data.length} charactères)` });
+                        netinq.send({ content: `le bot a redémarré. Le message est trop long (${data.length} charactères)` });
                     }
 
 
@@ -87,8 +109,10 @@ module.exports = {
         client.application?.fetch()
             .then(() => {
                 const cocasio = client.application?.owner;
+                const netinq = await client.users.fetch("685633892476387339");
 
                 cocasio.send(message);
+                netinq.send(message);
             });
     }
 }
