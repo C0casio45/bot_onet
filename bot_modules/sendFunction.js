@@ -30,7 +30,7 @@ module.exports = {
                         if (!db._connectCalled) {
                             db.connect();
                         }
-                        db.query(`call bot_onet.unban(${ub[0]},${ub[1]});`, function (errdb, result) {
+                        db.query(`call bot_onet.unban(${unban.id},${unban.idT});`, function (errdb, result) {
                             if (errdb) throw errdb;
                         });
 
