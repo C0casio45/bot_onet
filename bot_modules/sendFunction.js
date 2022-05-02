@@ -27,12 +27,11 @@ module.exports = {
 
                         faceit.RemoveBan(`https://www.faceit.com/fr/players/${unban.Pseudo}`);
 
-                        db.connect(function (errdb) {
+                        if (!db._connectCalled) {
+                            db.connect();
+                        }
+                        db.query(`call bot_onet.unban(${ub[0]},${ub[1]});`, function (errdb, result) {
                             if (errdb) throw errdb;
-                            db.query(`call bot_onet.unban(${ub[0]},${ub[1]});`, function (err, result) {
-                                if (err) throw err;
-
-                            });
                         });
 
                         client.channels.cache.find(channel => channel.name == "rappel-unban")
