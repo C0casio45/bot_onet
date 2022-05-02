@@ -55,13 +55,13 @@ module.exports = {
 
 function sendEmbed(pseudo, duree, date) {
 
-    return MessageEmbed()
+    return new MessageEmbed()
         .setColor('#e34c3b')
         .setAuthor({ name: 'Rappel unban' })
         .setDescription(`Le joueur **${pseudo}** a été banni pour une durée de **${duree} jours** le ${date}.
         Il a été débanni a ce jour.`)
         .addField('Lien vers le pannel faceit de banissement', 'https://www.faceit.com/fr/hub/f3150918-521a-4664-b430-4e4713b91495/OneT%20Community/admin/tickets', false)
-        .setFooter({ name: 'Créé et hébergé par COcasio45#2406' })
+        .setFooter({ text: 'Créé et hébergé par COcasio45#2406' })
         .setTimestamp();
 
 }
