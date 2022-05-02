@@ -1,6 +1,7 @@
 const { MessageActionRow, MessageButton, MessageEmbed } = require('discord.js');
 const con = require("../commands/dbconnect.js");
 const db = con.database();
+const faceit = require("./faceit.js");
 
 module.exports = {
     send: function (interaction, client) {
