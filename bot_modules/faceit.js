@@ -129,12 +129,20 @@ module.exports = {
     //Need to wait for response
     let modToken = faceit.token;
 
-    let url = `https://api.faceit.com/hubs/v1/hub/${faceit.hubId}/ban/${userId}`;
 
-    var xhr = new XMLHttpRequest();
-    xhr.open("DELETE", url, true);
-    xhr.setRequestHeader("Authorization", `Bearer ${modToken}`);
-    xhr.send(data);
+    const https = require("https");
+    const options = {
+      hostname: "api.faceit.com",
+      port: 443,
+      path: `/hubs/v1/hub/${faceit.hubId}/ban/${userId}`,
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${modToken}`,
+      },
+    };
+
+    const req = https.request(options, (_));
+    req.end();
   },
   SpecificBan() {
     // GET https://api.faceit.com/hubs/v1/hub/{hubId}/ban?userNickname={nickname}&offset=0&limit=1
