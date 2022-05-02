@@ -70,7 +70,6 @@ module.exports = {
             );
 
             unbanChannel.send({
-              content: `<@${unban.mod}>`,
               embeds: [sendEmbed(unban.Pseudo, unban.duree, Fdate)],
             });
           });
