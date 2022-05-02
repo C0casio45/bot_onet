@@ -27,7 +27,16 @@ module.exports = {
 
                         faceit.RemoveBan(`https://www.faceit.com/fr/players/${unban.Pseudo}`);
 
-                        client.channels.cache.find(channel => channel.name == "rappel-unban").send({ content: `<@${unban.mod}>`, embeds: [sendEmbed(unban.Pseudo, unban.duree, Fdate)] });
+                        db.connect(function (errdb) {
+                            if (errdb) throw errdb;
+                            db.query(`call bot_onet.unban(${ub[0]},${ub[1]});`, function (err, result) {
+                                if (err) throw err;
+
+                            });
+                        });
+
+                        client.channels.cache.find(channel => channel.name == "rappel-unban")
+                            .send({ content: `<@${unban.mod}>`, embeds: [sendEmbed(unban.Pseudo, unban.duree, Fdate)] });
                     });
                 } else if (result[0].length == 0) {
                     return interaction.reply("Il n'y a pas d'unban a effectuer aujourd'hui");
