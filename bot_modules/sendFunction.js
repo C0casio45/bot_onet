@@ -1,6 +1,7 @@
 const { MessageActionRow, MessageButton, MessageEmbed } = require('discord.js');
 const con = require("../commands/dbconnect.js");
 const db = con.database();
+const faceit = require("./faceit.js");
 
 module.exports = {
     send: function (interaction, client) {
@@ -24,7 +25,7 @@ module.exports = {
 
                         let Fdate = date + ' ' + month + ' ' + year;
 
-                        faceit.RemoveBan(`https://www.faceit.com/fr/players/${unban.Pseudo}`)
+                        faceit.RemoveBan(`https://www.faceit.com/fr/players/${unban.Pseudo}`);
 
                         client.channels.cache.find(channel => channel.name == "rappel-unban").send({ content: `<@${unban.mod}>`, embeds: [sendEmbed(unban.Pseudo, unban.duree, Fdate)] });
                     });
