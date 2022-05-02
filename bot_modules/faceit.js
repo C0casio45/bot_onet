@@ -9,11 +9,9 @@ module.exports = {
     let token = faceit.token; //distinct id
 
     //to found this token, go to websocket, messages and search for PLAIN
-    const saslPlain = Buffer.from(
+    return Buffer.from(
       guid + "@faceit.com" + "\x00" + guid + "\x00" + token
     ).toString("base64");
-
-    return saslPlain;
   },
   GetUserToken(link) {
     // GET https://api.faceit.com/data/v4/search/players?nickname=test&offset=0&limit=50
@@ -25,9 +23,8 @@ module.exports = {
       const options = {
         hostname: "open.faceit.com",
         port: 443,
-        path: `/data/v4/search/players?nickname=${
-          pseudo[pseudo.length - 1]
-        }&offset=0&limit=1`,
+        path: `/data/v4/search/players?nickname=${pseudo[pseudo.length - 1]
+          }&offset=0&limit=1`,
         method: "GET",
         headers: {
           Authorization: `Bearer ${faceit.clientAPIKey}`,
@@ -42,7 +39,7 @@ module.exports = {
           chunks.push(chunk);
         });
 
-        res.on("end", (d) => {
+        res.on("end", (_d) => {
           let userData = JSON.parse(Buffer.concat(chunks).toString());
           resolve(userData.items[0].player_id);
         });
@@ -63,7 +60,6 @@ module.exports = {
     // Body:
     // {"hubId":"HUB_ID","reason":"REASON","userId":"USER_ID"}
 
-    let bufferConstructor = [];
     let userId = await this.GetUserToken(userLink);
     let modToken = faceit.token;
 
@@ -94,7 +90,7 @@ module.exports = {
           chunks.push(chunk);
         });
 
-        res.on("end", (d) => {
+        res.on("end", (_d) => {
           try {
             let message = Buffer.concat(chunks).toString();
             const r = JSON.parse(message);
@@ -126,15 +122,12 @@ module.exports = {
       callback(true);
     }
   },
-  RemoveBan(userLink, user) {
+  RemoveBan(userLink) {
     // DELETE https://api.faceit.com/hubs/v1/hub/{hubId}/ban/{userId}
     // Authorization: Bearer {userToken}
     let userId = GetUserToken(userLink);
     //Need to wait for response
-    let modToken =
-      this.GetModToken(user) === null
-        ? this.SetModToken(user)
-        : this.GetModToken(user);
+    let modToken = faceit.token;
 
     let url = `https://api.faceit.com/hubs/v1/hub/${faceit.hubId}/ban/${userId}`;
 
@@ -159,7 +152,7 @@ module.exports = {
     await user.channel.send(this.get_new_token()).then(async (rmsg) => {
       rmsg.channel
         .awaitMessages({ filter, max: 1, time: 300000, errors: ["time"] })
-        .then((collected) => {
+        .then((_collected) => {
           if (!db._connectCalled) {
             db.connect();
           }
@@ -200,20 +193,20 @@ module.exports = {
   error() {
     let embed = new MessageEmbed()
       .setColor("#e34c3b")
-      .setAuthor("Utilitaire de banissement")
+      .setAuthor({ name: "Utilitaire de banissement" })
       .setDescription(`Le token est invalid merci de réessayer`)
-      .setFooter("Créé et hébergé par COcasio45#2406")
+      .setFooter({ name: "Créé et hébergé par COcasio45#2406" })
       .setTimestamp();
     return { embeds: [embed] };
   },
   get_new_token() {
     let embed = new MessageEmbed()
       .setColor("#e34c3b")
-      .setAuthor("Utilitaire de banissement")
+      .setAuthor({ name: "Utilitaire de banissement" })
       .setDescription(
         `Merci d'aller sur le site faceit et de récupérer votre token`
       )
-      .setFooter("Créé et hébergé par COcasio45#2406")
+      .setFooter({ name: "Créé et hébergé par COcasio45#2406" })
       .setTimestamp();
     let button = new MessageActionRow().addComponents(
       new MessageButton()

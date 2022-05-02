@@ -7,12 +7,12 @@ module.exports = {
     name: 'close',
     description: "Méthode pour fermer les tickets",
     execute(interaction, client) {
-        let ticket = interaction.options._hoistedOptions[0].value;
+        let ticketValue = interaction.options._hoistedOptions[0].value;
 
         if (!db._connectCalled) {
             db.connect();
         }
-        db.query(`call close_ticket_simp('${ticket}');`, function (err, result) {
+        db.query(`call close_ticket_simp('${ticketValue}');`, function (err, result) {
             if (err) throw err;
             result[0].forEach(ticket => {
                 let embed = new MessageEmbed()
