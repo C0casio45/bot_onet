@@ -6,7 +6,7 @@ module.exports = {
         client.application?.fetch()
             .then(() => {
                 const cocasio = client.application?.owner;
-                const netinq = await client.users.fetch("685633892476387339");
+                const netinq = await client.users.fetch("248069530381844481");
 
                 const fs = require('fs')
 
@@ -109,7 +109,7 @@ module.exports = {
         client.application?.fetch()
             .then(() => {
                 const cocasio = client.application?.owner;
-                const netinq = await client.users.fetch("685633892476387339");
+                const netinq = await client.users.fetch("248069530381844481");
 
                 cocasio.send(message);
                 netinq.send(message);
