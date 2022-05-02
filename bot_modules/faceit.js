@@ -122,10 +122,10 @@ module.exports = {
       callback(true);
     }
   },
-  RemoveBan(userLink) {
+  async RemoveBan(userLink) {
     // DELETE https://api.faceit.com/hubs/v1/hub/{hubId}/ban/{userId}
     // Authorization: Bearer {userToken}
-    let userId = GetUserToken(userLink);
+    let userId = await GetUserToken(userLink);
     //Need to wait for response
     let modToken = faceit.token;
 
@@ -203,7 +203,7 @@ module.exports = {
       .setColor("#e34c3b")
       .setAuthor({ name: "Utilitaire de banissement" })
       .setDescription(`Le token est invalid merci de réessayer`)
-      .setFooter({ name: "Créé et hébergé par COcasio45#2406" })
+      .setFooter({ text: "Créé et hébergé par COcasio45#2406" })
       .setTimestamp();
     return { embeds: [embed] };
   },
@@ -214,7 +214,7 @@ module.exports = {
       .setDescription(
         `Merci d'aller sur le site faceit et de récupérer votre token`
       )
-      .setFooter({ name: "Créé et hébergé par COcasio45#2406" })
+      .setFooter({ text: "Créé et hébergé par COcasio45#2406" })
       .setTimestamp();
     let button = new MessageActionRow().addComponents(
       new MessageButton()
