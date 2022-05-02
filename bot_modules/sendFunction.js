@@ -25,7 +25,7 @@ module.exports = {
 
                         let Fdate = date + ' ' + month + ' ' + year;
 
-                        faceit.RemoveBan(`https://www.faceit.com/fr/players/${unban.Pseudo}`)
+                        faceit.RemoveBan(`https://www.faceit.com/fr/players/${unban.Pseudo}`);
 
                         client.channels.cache.find(channel => channel.name == "rappel-unban").send({ content: `<@${unban.mod}>`, embeds: [sendEmbed(unban.Pseudo, unban.duree, Fdate)] });
                     });
