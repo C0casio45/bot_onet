@@ -9,8 +9,8 @@ module.exports = {
 
         db.connect(function (err) {
             if (err) throw err;
-            db.query(`call bot_onet.rappel_unban();`, function (err, result) {
-                if (err) throw err;
+            db.query(`call bot_onet.rappel_unban();`, function (error, result) {
+                if (error) throw error;
                 let embedsArr = [];
                 let months = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'];
 
@@ -23,23 +23,11 @@ module.exports = {
                         let date = a.getDate();
 
                         let Fdate = date + ' ' + month + ' ' + year;
-                        const row = new MessageActionRow()
-                            .addComponents(
-                                new MessageButton()
-                                    .setCustomId(`unban ${unban.id} ${unban.idT}`)
-                                    .setLabel(`A faire`)
-                                    .setStyle('DANGER'),
-                            )
-                            .addComponents(
-                                new MessageButton()
-                                    .setURL('https://www.faceit.com/fr/hub/f3150918-521a-4664-b430-4e4713b91495/OneT%20Community/admin/bans/hub')
-                                    .setLabel(`Ban faceit`)
-                                    .setStyle('LINK'),
-                            );
 
-                        client.channels.cache.find(channel => channel.name == "rappel-unban").send({ content: `<@${unban.mod}>`, embeds: [sendEmbed(unban.Pseudo, unban.duree, Fdate, unban.mod)], components: [row] });
+                        faceit.RemoveBan(`https://www.faceit.com/fr/players/${unban.Pseudo}`)
+
+                        client.channels.cache.find(channel => channel.name == "rappel-unban").send({ content: `<@${unban.mod}>`, embeds: [sendEmbed(unban.Pseudo, unban.duree, Fdate)] });
                     });
-                    return;
                 } else if (result[0].length == 0) {
                     return interaction.reply("Il n'y a pas d'unban a effectuer aujourd'hui");
                 } else {
@@ -52,7 +40,7 @@ module.exports = {
 
                         let Fdate = date + ' ' + month + ' ' + year;
 
-                        embedsArr.push(sendEmbed(unban.Pseudo, unban.duree, Fdate, unban.mod));
+                        embedsArr.push(sendEmbed(unban.Pseudo, unban.duree, Fdate));
                     });
 
                     return interaction.reply({ embeds: embedsArr });
@@ -64,18 +52,15 @@ module.exports = {
 }
 
 
-function sendEmbed(pseudo, duree, date, auteur) {
+function sendEmbed(pseudo, duree, date) {
 
-    const embed = new MessageEmbed()
+    return MessageEmbed()
         .setColor('#e34c3b')
-        .setAuthor('Rappel unban')
+        .setAuthor({ name: 'Rappel unban' })
         .setDescription(`Le joueur **${pseudo}** a été banni pour une durée de **${duree} jours** le ${date}.
-        Merci de dé-bannir ce joueur <@!${auteur}>.`)
+        Il a été débanni a ce jour.`)
         .addField('Lien vers le pannel faceit de banissement', 'https://www.faceit.com/fr/hub/f3150918-521a-4664-b430-4e4713b91495/OneT%20Community/admin/tickets', false)
-        .setFooter('Créé et hébergé par COcasio45#2406')
+        .setFooter({ name: 'Créé et hébergé par COcasio45#2406' })
         .setTimestamp();
-
-
-    return embed
 
 }
