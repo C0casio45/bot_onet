@@ -125,7 +125,7 @@ module.exports = {
   async RemoveBan(userLink) {
     // DELETE https://api.faceit.com/hubs/v1/hub/{hubId}/ban/{userId}
     // Authorization: Bearer {userToken}
-    let userId = await GetUserToken(userLink);
+    let userId = await this.GetUserToken(userLink);
     //Need to wait for response
     let modToken = faceit.token;
 
@@ -141,7 +141,7 @@ module.exports = {
       },
     };
 
-    const req = https.request(options, (_));
+    const req = https.request(options);
     req.end();
   },
   SpecificBan() {
