@@ -1,9 +1,9 @@
 const { MessageActionRow, MessageButton, MessageEmbed } = require("discord.js");
-const con = require("../commands/dbconnect.js");
+const con = require("../dbconnect.js");
 const db = con.database();
 const faceit = require("./faceit.js");
-const result_success = require("../commands/utils/embeds/result_success");
-const result_error = require("../commands/utils/embeds/result_error");
+const result_success = require("../utils/embeds/result_success");
+const result_error = require("../utils/embeds/result_error");
 
 module.exports = {
   send: function (interaction, client) {
