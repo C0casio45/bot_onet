@@ -1,3 +1,5 @@
+const { MessageEmbed } = require('discord.js');
+
 class Message {
     constructor(content, author = "Utilitaire de banissement", color = "#e34c3b") {
         this.description = content;
@@ -19,12 +21,12 @@ class Message {
         return this;
     }
     get embed() {
-        new MessageEmbed()
-        .setColor(this.color)
-        .setAuthor({ name: this.author })
-        .setDescription(this.description)
-        .setFooter({ text: "Créé et hébergé par COcasio45#2406" })
-        .setTimestamp();
+        return new MessageEmbed()
+            .setColor(this.color)
+            .setAuthor({ name: this.author })
+            .setDescription(this.description)
+            .setFooter({ text: "Créé et hébergé par COcasio45#2406" })
+            .setTimestamp();
     }
     get raw() {
         return this.author + ": " + this.description;
