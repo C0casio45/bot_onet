@@ -3,20 +3,20 @@ const con = require("./dbconnect.js");
 const db = con.database();
 const dp = require(`../bot_modules/deploy.js`);
 
-const { mp_sanction_buttons } = require("./utils/buttons/mp_sanction_buttons");
-const { mp_loop_buttons } = require("./utils/buttons/mp_loop_buttons");
-const { send_ban } = require("./utils/embeds/send_ban.js");
+const { mp_sanction_buttons } = require("../utils/buttons/mp_sanction_buttons");
+const { mp_loop_buttons } = require("../utils/buttons/mp_loop_buttons");
+const { send_ban } = require("../utils/embeds/send_ban.js");
 const faceit = require("../bot_modules/faceit.js");
 
-const request_mp = require("./utils/embeds/request_mp");
-const request_gameLink = require("./utils/embeds/request_gameLink");
-const request_userdays = require("./utils/embeds/request_userdays");
-const request_raison = require("./utils/embeds/request_raison");
-const request_other = require("./utils/embeds/request_other");
-const request_userlink = require("./utils/embeds/request_userlink");
-const result_success = require("./utils/embeds/result_success");
-const result_error = require("./utils/embeds/result_error");
-const error = require("./utils/embeds/error");
+const request_mp = require("../utils/embeds/request_mp");
+const request_gameLink = require("../utils/embeds/request_gameLink");
+const request_userdays = require("../utils/embeds/request_userdays");
+const request_raison = require("../utils/embeds/request_raison");
+const request_other = require("../utils/embeds/request_other");
+const request_userlink = require("../utils/embeds/request_userlink");
+const result_success = require("../utils/embeds/result_success");
+const result_error = require("../utils/embeds/result_error");
+const error = require("../utils/embeds/error");
 const { setTimeout } = require("timers");
 
 module.exports = {
