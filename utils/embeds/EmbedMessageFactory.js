@@ -20,6 +20,9 @@ class Message {
         .setFooter({ text: "Créé et hébergé par COcasio45#2406" })
         .setTimestamp();
     }
+    get raw() {
+        return this.author + ": " + this.description;
+    }
     
 }
 module.exports = Message;
