@@ -1,20 +1,14 @@
 class Message {
-    constructor(content, author = "Utilitaire de banissement", color = "normal") {
+    constructor(content, author = "Utilitaire de banissement", color = "#e34c3b") {
         this.description = content;
         this.author = author;
-
-        switch (color) {
-            case "error":
-                this.color = "#F58B00";
-                break;
-            case "success":
-                this.color = "#00ff00";
-                break;
-            default:
-                this.color = "#e34c3b";
-                break;
-        }
-
+        this.color = color;
+    }
+    error(){
+        this.setColor("#F58B00");
+    }
+    success(){
+        this.setColor("#00ff00");
     }
     setColor(color) {
         this.color = color;
