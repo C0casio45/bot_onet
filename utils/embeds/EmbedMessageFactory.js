@@ -1,8 +1,8 @@
 class Message {
-    constructor(content) {
+    constructor(content, author = "Utilitaire de banissement", color = "#e34c3b") {
         this.description = content;
-        this.color = "#e34c3b";
-        this.author = "Utilitaire de banissement";
+        this.color = color;
+        this.author = author;
     }
     setColor(color) {
         this.color = color;
