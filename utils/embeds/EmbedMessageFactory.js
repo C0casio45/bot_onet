@@ -86,7 +86,7 @@ class Message {
   }
 
   get raw() {
-    return this.author + ": " + this.description;
+    return this.author + ":\n" + this.description;
   }
 
 }
