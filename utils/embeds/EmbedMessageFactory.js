@@ -1,13 +1,13 @@
 const { MessageEmbed } = require('discord.js');
 
-class Message {
+class MessageFactory {
 
   /**
  * @param content {string}
  * @param author {string}
  * @param color {string} - hexadecimal, default #e34c3b
  */
-  constructor(content, author = "Utilitaire de banissement", color = "#e34c3b") {
+  constructor(content = "", author = "Utilitaire de banissement", color = "#e34c3b") {
     this.description = content;
     this.author = author;
     this.color = color;
@@ -15,21 +15,25 @@ class Message {
 
   /**
    * @param code {number} - 1 = too late, 2 = try again, 3 = unknown
+   * @param message {string} - custom error message
    */
-  error(code) {
+  error(code, message) {
+    this.setColor("#F58B00");
+    if (message != "") {
+      this.setDescription(message);
+    }
     switch (code) {
       case 1:
-        this.author = `Vous avez mis trop de temps a répondre, merci de recommencer la démarche en écrivant /ban [ticket]`;
+        this.setDescription(`Vous avez mis trop de temps a répondre, merci de recommencer la démarche en écrivant /ban [ticket]`);
         break;
       case 2:
-        this.author = `Merci de relancer une demande d'unban en indiquant un numéro la prochaine fois`;
+        this.setDescription(`Merci de relancer une demande d'unban en indiquant un numéro la prochaine fois`);
         break;
 
       default:
-        this.author = `Erreur inconnue`;
+        this.setDescription(`Erreur inconnue`);
         break;
     }
-    this.setColor("#F58B00");
   }
 
   success() {
@@ -73,15 +77,6 @@ class Message {
     this.author = description;
   }
 
-  prettyUserList(array) {
-    const isAvertissement = banDuration == 0 ? "averti" : `banni pendant ${ban[1]} jours`;
-    array.map(ban => `- Utilisateur ${ban[0]} ${ban[1] == 99999
-      ? "ban permanent"
-      : isAvertissement
-      }`)
-    return array.join("\n");
-  }
-
   setColor(color) {
     this.color = color;
   }
@@ -108,4 +103,4 @@ class Message {
   }
 
 }
-module.exports = Message;
+module.exports = MessageFactory;
