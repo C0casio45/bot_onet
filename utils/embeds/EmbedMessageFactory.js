@@ -1,12 +1,21 @@
 const { MessageEmbed } = require('discord.js');
 
 class Message {
+
+  /**
+ * @param content {string}
+ * @param author {string}
+ * @param color {string} - hexadecimal, default #e34c3b
+ */
   constructor(content, author = "Utilitaire de banissement", color = "#e34c3b") {
     this.description = content;
     this.author = author;
     this.color = color;
   }
 
+  /**
+   * @param code {number} - 1 = too late, 2 = try again, 3 = unknown
+   */
   error(code) {
     switch (code) {
       case 1:
