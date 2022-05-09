@@ -1,9 +1,7 @@
 const con = require("../dbconnect.js");
 const db = con.database();
 const faceit = require("./faceit.js");
-const result_success = require("../utils/embeds/result_success");
-const result_error = require("../utils/embeds/result_error");
-const Message = require("../utils/embeds/EmbedMessageFactory");
+const Message = require("../utils/embeds/MessagesLibrary");
 
 module.exports = {
   send: function (interaction, client) {
@@ -45,12 +43,12 @@ module.exports = {
             (failed, error = null) => {
               if (failed)
                 unbanChannel.send({
-                  embeds: [result_error(`${error}`)],
+                  embeds: [Message.error(`${error}`)],
                 });
               else
                 unbanChannel.send({
                   embeds: [
-                    result_success(`Joueur ${unban.Pseudo} unban avec succès.`),
+                    Message.success(`Joueur ${unban.Pseudo} unban avec succès.`),
                   ],
                 });
             }

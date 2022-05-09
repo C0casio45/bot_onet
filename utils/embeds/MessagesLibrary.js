@@ -3,10 +3,10 @@ const MessageFactory = require("./EmbedMessageFactory");
 class Message {
     static { }
 
-    static successMessage(content) {
+    static success(content) {
         return new MessageFactory(content).success().embed();
     }
-    static errorMessage(code = 0, message = "") {
+    static error(code = 0, message = "") {
         return new MessageFactory().error(code, message).embed();
     }
 

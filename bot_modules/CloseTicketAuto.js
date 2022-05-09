@@ -1,4 +1,3 @@
-const { MessageEmbed } = require('discord.js');
 const db = require("../utils/dbconnect.js");
 
 module.exports = {
