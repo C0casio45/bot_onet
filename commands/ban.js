@@ -1,4 +1,3 @@
-const { MessageEmbed } = require("discord.js");
 const con = require("./dbconnect.js");
 const db = con.database();
 const dp = require(`../bot_modules/deploy.js`);
@@ -8,15 +7,8 @@ const { mp_loop_buttons } = require("../utils/buttons/mp_loop_buttons");
 const { send_ban } = require("../utils/embeds/send_ban.js");
 const faceit = require("../bot_modules/faceit.js");
 
-const request_mp = require("../utils/embeds/request_mp");
-const request_gameLink = require("../utils/embeds/request_gameLink");
-const request_userdays = require("../utils/embeds/request_userdays");
-const request_raison = require("../utils/embeds/request_raison");
-const request_other = require("../utils/embeds/request_other");
-const request_userlink = require("../utils/embeds/request_userlink");
-const result_success = require("../utils/embeds/result_success");
-const result_error = require("../utils/embeds/result_error");
-const error = require("../utils/embeds/error");
+
+const Message = require("../utils/embeds/MessagesLibrary");
 const { setTimeout } = require("timers");
 
 module.exports = {
@@ -32,7 +24,7 @@ module.exports = {
     let userid = user.id;
     let array = [];
 
-    interaction.reply({ embeds: [request_mp()], ephemeral: true });
+    interaction.reply({ embeds: [Message.requestMoveToMp()], ephemeral: true });
 
     const filter = (m) => [user.id, client.user.id].includes(m.author.id);
     const is = (m) => m.includes("BOT");
@@ -55,7 +47,7 @@ module.exports = {
 
     function getGame() {
       user
-        .send({ embeds: [request_gameLink()] })
+        .send({ embeds: [Message.requestGameLink()] })
         .then(async (tmsg) => listenGame(tmsg));
     }
 
@@ -72,7 +64,7 @@ module.exports = {
         })
         .catch((err) => {
           console.log(err);
-          tmsg.channel.send({ embeds: [error()] });
+          tmsg.channel.send({ embeds: [Message.error()] });
         });
     }
 
@@ -81,7 +73,7 @@ module.exports = {
     function quiz(i, liengame) {
       array.push([]);
       user
-        .send({ embeds: [request_userlink()] })
+        .send({ embeds: [Message.requestUserLink()] })
         .then(async (msg) => listenQuizz(i, liengame, msg));
     }
 
@@ -101,14 +93,14 @@ module.exports = {
         })
         .catch((err) => {
           console.log(err);
-          msg.channel.send({ embeds: [error(1)] });
+          msg.channel.send({ embeds: [Message.error(1)] });
         });
     }
 
     function getDays(i, array, liengame, msg, pseudo) {
       msg.channel
         .send({
-          embeds: [request_userdays(pseudo)],
+          embeds: [Message.requestBanDuration(pseudo)],
           components: [mp_sanction_buttons()],
         })
         .then(async (rmsg) => {
@@ -137,8 +129,8 @@ module.exports = {
               jours == "Avertissement"
                 ? 0
                 : jours == "Banissement permanant"
-                ? 99999
-                : days;
+                  ? 99999
+                  : days;
             array[i][1] = days;
             if (array[i][1] > 99999) array[i][1] = 99999;
             getReason(i, array, liengame, rmsg, pseudo);
@@ -146,13 +138,13 @@ module.exports = {
         })
         .catch((err) => {
           console.log(err);
-          rmsg.channel.send({ embeds: [error(1)] });
+          rmsg.channel.send({ embeds: [Message.error(1)] });
         });
     }
 
     function getReason(i, array, liengame, msg, pseudo) {
       msg.channel
-        .send({ embeds: [request_raison(pseudo)] })
+        .send({ embeds: [Message.requestRaison(pseudo)] })
         .then(async (rmsg) => {
           rmsg.channel
             .awaitMessages({ filter, max: 1, time: 300000, errors: ["time"] })
@@ -163,7 +155,7 @@ module.exports = {
             })
             .catch((err) => {
               console.log(err);
-              rmsg.channel.send({ embeds: [error(1)] });
+              rmsg.channel.send({ embeds: [Message.error(1)] });
             });
         });
     }
@@ -171,7 +163,7 @@ module.exports = {
     function isLoop(i, array, liengame, msg, pseudo) {
       msg.channel
         .send({
-          embeds: [request_other(array.length, array)],
+          embeds: [Message.requestOtherBans(array.length, array)],
           components: [mp_loop_buttons()],
         })
         .then(async (rmsg) => {
@@ -208,17 +200,17 @@ module.exports = {
                     faceit.BanPlayer(
                       row[0],
                       "Ban " +
-                        (row[1] == 99999 ? "perm" : row[1] + "j") +
-                        ". Plus d'informations sur notre discord.",
+                      (row[1] == 99999 ? "perm" : row[1] + "j") +
+                      ". Plus d'informations sur notre discord.",
                       (failed, error = null) => {
                         if (failed)
                           rmsg.channel.send({
-                            embeds: [result_error(`${error}`)],
+                            embeds: [Message.error(`${error}`)],
                           });
                         else
                           rmsg.channel.send({
                             embeds: [
-                              result_success("Ticket fermé avec succès."),
+                              Message.success("Ticket fermé avec succès."),
                             ],
                           });
                       }
@@ -238,7 +230,7 @@ module.exports = {
             })
             .catch((err) => {
               console.log(err);
-              rmsg.channel.send({ embeds: [error(1)] });
+              rmsg.channel.send({ embeds: [Message.error(1)] });
             });
         });
     }
