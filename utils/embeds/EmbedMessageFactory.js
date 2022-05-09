@@ -73,6 +73,15 @@ class Message {
     this.author = description;
   }
 
+  prettyUserList(array) {
+    const isAvertissement = banDuration == 0 ? "averti" : `banni pendant ${ban[1]} jours`;
+    array.map(ban => `- Utilisateur ${ban[0]} ${ban[1] == 99999
+      ? "ban permanent"
+      : isAvertissement
+      }`)
+    return array.join("\n");
+  }
+
   setColor(color) {
     this.color = color;
   }
