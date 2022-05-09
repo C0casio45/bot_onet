@@ -4,6 +4,7 @@ const db = con.database();
 const faceit = require("./faceit.js");
 const result_success = require("../utils/embeds/result_success");
 const result_error = require("../utils/embeds/result_error");
+const Message = require("../utils/embeds/EmbedMessageFactory");
 
 module.exports = {
   send: function (interaction, client) {
@@ -94,6 +95,9 @@ module.exports = {
 };
 
 function sendEmbed(pseudo, duree, date) {
+  let content = `Le joueur **${pseudo}** a été banni pour une durée de **${duree} jours** le ${date}.
+  Il a été débanni a ce jour.`
+  return new Message(content, "Rappel unban").embed();
   return new MessageEmbed()
     .setColor("#e34c3b")
     .setAuthor({ name: "Rappel unban" })
