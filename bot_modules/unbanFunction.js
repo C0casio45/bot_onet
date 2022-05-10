@@ -1,19 +1,12 @@
 const { MessageActionRow, MessageButton } = require('discord.js');
-const con = require("../commands/dbconnect")
-const db = con.database();
+const db = require("../utils/db/dbLibrary.js");
 
 module.exports = {
     unban: function (interaction) {
 
         let ub = interaction.customId.split(" ");
 
-        if (!db._connectCalled) {
-            db.connect();
-        }
-        db.query(`call bot_onet.unban(${ub[0]},${ub[1]});`, function (err) {
-            if (err) throw error;
-
-        });
+        db.unbanUser(ub[0], ub[1])
 
         const row = new MessageActionRow()
             .addComponents(
