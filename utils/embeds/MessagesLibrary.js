@@ -46,6 +46,10 @@ class Message {
         return new MessageFactory().banLog(nbEntreeBan, array, userid, unban).embed();
     }
 
+    static unbanLog(pseudo, modo) {
+        return new MessageFactory().unbanLog(pseudo, modo).embed();
+    }
+
     static takeTicket(modo) {
         const content = `Ton ticket a été pris en charge par <@!${modo}>.
         Merci de nous transmettre toutes les informations qui pourraient nous aider a traiter votre ticket plus rapidement.`;

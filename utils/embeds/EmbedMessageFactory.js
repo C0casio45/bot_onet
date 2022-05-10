@@ -1,4 +1,4 @@
-const { MessageEmbed } = require('discord.js');
+const { MessageEmbed, PartialWebhookMixin } = require('discord.js');
 
 class MessageFactory {
 
@@ -48,6 +48,12 @@ class MessageFactory {
     this.setAuthor("Rappel de débannissement");
   }
 
+  /**
+  * @param nbEntreeBan {number}
+  * @param array {array}
+  * @param userid {string} - discord user id
+  * @param unban {string} - unban channel id
+  */
   banLog(nbEntreeBan, array, userid, unban) {
     let description = "";
 
@@ -74,17 +80,35 @@ class MessageFactory {
     }
 
     this.newban();
-    this.author = description;
+    this.setDescription(description);
   }
 
+  /***
+   * @param pseudo {string}
+   * @param modo {string} - discord modo id
+   */
+  unbanLog(pseudo, modoId) {
+    const content = `Le joueur ${pseudo} a été débanni par <@!${modoId}>.`;
+    this.setDescription(content);
+  }
+
+  /**
+   * @param color {string} - hexadecimal, default #e34c3b
+   */
   setColor(color) {
     this.color = color;
   }
 
+  /**
+   * @param author {string}
+   */
   setAuthor(author) {
     this.author = author;
   }
 
+  /**
+   * @param description {string}
+   */
   setDescription(description) {
     this.description = description;
   }

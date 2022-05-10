@@ -1,7 +1,8 @@
 const { folder } = require("../config.json");
-const { MessageActionRow, MessageButton, MessageEmbed } = require('discord.js');
+const { MessageActionRow, MessageButton } = require('discord.js');
 const con = require("../commands/dbconnect.js");
 const db = con.database();
+const Message = require("../utils/embeds/MessageLibrary.js");
 
 module.exports = {
     name: 'unban',
@@ -11,7 +12,7 @@ module.exports = {
 
         let options = rst.split(",");
 
-        let Pseudo = options[0];
+        let pseudo = options[0];
         let idTicket = options[1];
         let idAccuse = options[2];
 
@@ -25,13 +26,7 @@ module.exports = {
         const dp = require(`${folder}bot_modules/deploy.js`);
         dp.dply(client, "0", interaction.guildId);
 
-        const embed = new MessageEmbed()
-            .setColor('#e34c3b')
-            .setAuthor({ name: 'Salut !' })
-            .setDescription(`Le joueur ${Pseudo} a été débanni par <@!${interaction.user.id}>.`)
-            .setTimestamp()
-            .setFooter({ text: 'Créé et hébergé par COcasio45#2406' });
-
+        const embed = Message.unbanLog(pseudo, interaction.user.id)
         const link = new MessageActionRow()
             .addComponents(
                 new MessageButton()
