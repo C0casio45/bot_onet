@@ -19,7 +19,6 @@ module.exports = {
         let ticket = channel.name;
         let pseudo = interaction.user.username;
         let discordID = interaction.user.id;
-        let ticketList = [];
 
         // TODO - @ le mec qui créé le ticket
         // channel.messages.fetch({ limit: 100 }).then(messages => {

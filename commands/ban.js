@@ -1,4 +1,4 @@
-const con = require("./dbconnect.js");
+const con = require("../utils/dbconnext.js");
 const db = con.database();
 const dp = require(`../bot_modules/deploy.js`);
 
@@ -7,7 +7,6 @@ const { mp_loop_buttons } = require("../utils/buttons/mp_loop_buttons");
 const { send_ban } = require("../utils/embeds/send_ban.js");
 const faceit = require("../bot_modules/faceit.js");
 
-const utils = require("../utils/methods.js");
 const Message = require("../utils/embeds/MessagesLibrary");
 const { setTimeout } = require("timers");
 
