@@ -1,5 +1,4 @@
-import { database } from "../utils/dbconnext.js";
-const db = database();
+const db = require("../dbconnect.js");
 
 class DatabaseFactory {
     constructor(query, callback) {

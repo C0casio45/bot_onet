@@ -1,7 +1,6 @@
 const DatabaseFactory = require("./dbFactory");
 
 class DbLibrary {
-    static { }
 
     /**
      * 

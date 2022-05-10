@@ -1,7 +1,6 @@
 const MessageFactory = require("./EmbedMessageFactory");
 
 class Message {
-    static { }
 
     static success(content) {
         return new MessageFactory(content).success().embed();
