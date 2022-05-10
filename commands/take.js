@@ -1,6 +1,6 @@
-const { MessageEmbed } = require("discord.js");
 const con = require("../commands/dbconnect.js");
 const db = con.database();
+const Message = require("../utils/embeds/MessagesLibrary.js");
 
 module.exports = {
     name: "take",
@@ -27,15 +27,7 @@ module.exports = {
         //     console.log(messages);
         //   })
 
-        const embed = new MessageEmbed()
-            .setColor("#e34c3b")
-            .setAuthor({ name: "Bonjour !" })
-            .setDescription(
-                `Ton ticket a été pris en charge par <@!${interaction.user.id}>.
-            Merci de nous transmettre toutes les informations qui pourraient nous aider a traiter votre ticket plus rapidement.`)
-            .setTimestamp()
-            .setFooter({ text: 'Créé et hébergé par COcasio45#2406' });
-        channel.send({ embeds: [embed] });
+        channel.send({ embeds: [Message.takeTicket(interaction.user.id)] });
 
         if (!db._connectCalled) {
             db.connect();

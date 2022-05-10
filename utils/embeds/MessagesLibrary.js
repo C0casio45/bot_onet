@@ -45,5 +45,15 @@ class Message {
     static banLog(nbEntreeBan, array, userid, unban) {
         return new MessageFactory().banLog(nbEntreeBan, array, userid, unban).embed();
     }
+
+    static takeTicket(modo) {
+        const content = `Ton ticket a été pris en charge par <@!${modo}>.
+        Merci de nous transmettre toutes les informations qui pourraient nous aider a traiter votre ticket plus rapidement.`;
+        return new MessageFactory(content, "Bonjour !").embed();
+    }
+
+    static closeTicket(ticketName) {
+        return new MessageFactory(`Le ${ticketName} a bien été fermé`).embed();
+    }
 }
 module.exports = Message;
