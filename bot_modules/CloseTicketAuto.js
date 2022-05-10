@@ -1,16 +1,9 @@
-const db = require("../utils/dbconnect.js");
+const db = require("../utils/db/dbLibrary.js");
 
 module.exports = {
     ticket: function () {
 
-        if (!db._connectCalled) {
-            db.connect();
-        }
-        db.query(`call bot_onet.close_auto();`, function (err, result) {
-            if (err) throw err;
-
-        });
-
+        db.closeAutomatically();
 
     }
 }

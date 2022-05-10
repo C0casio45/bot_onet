@@ -1,5 +1,4 @@
-const con = require("../commands/dbconnect.js");
-const db = con.database();
+const db = require('../utils/db/dbLibrary.js');
 const Message = require("../utils/embeds/MessagesLibrary.js");
 
 module.exports = {
@@ -28,13 +27,9 @@ module.exports = {
 
         channel.send({ embeds: [Message.takeTicket(interaction.user.id)] });
 
-        if (!db._connectCalled) {
-            db.connect();
-        }
-        db.query(`call bot_onet.create_ticket('${ticket}', '${pseudo}', '${discordID}');`, function (err, result) {
-            if (err) throw err;
 
-        });
+        db.takeTickets(ticket, pseudo, discordID);
+
         const dp = require(`${__dirname}/../bot_modules/deploy.js`);
         dp.dply(client, "0", interaction.guildId);
 

@@ -3,20 +3,38 @@ const DatabaseFactory = require("./dbFactory");
 class DbLibrary {
     static { }
 
+    /**
+     * 
+     * @param {string} ticketName 
+     * @param {string} pseudo 
+     * @param {string} discordId 
+     */
     static takeTicket(ticketName, pseudo, discordId) {
         const query = `call bot_onet.create_ticket('${ticketName}', '${pseudo}', '${discordId}');`;
-        return DatabaseFactory(query);
+        DatabaseFactory(query);
     }
 
     static closeAutomatically() {
         DatabaseFactory(`call bot_onet.close_auto();`);
     }
 
+    /**
+     * 
+     * @param {number} ticketId 
+     * @param {string} pseudoAccuse 
+     * @param {string} lienPartie 
+     * @param {number} dureeJours - 0 avertissement, 99999 permanent
+     * @param {string} raison 
+     */
     static closeTicket(ticketId, pseudoAccuse, lienPartie, dureeJours, raison) {
         const query = `call bot_onet.close_ticket(${ticketId}, '${pseudoAccuse}', 'https://www.faceit.com/fr/players/${pseudoAccuse}', '${lienPartie}', ${dureeJours}, '${raison}', TRUE);`;
         DatabaseFactory(query);
     }
 
+    /**
+     * 
+     * @param {number} ticketId 
+     */
     static closeTicketSimp(ticketId) {
         DatabaseFactory(`call bot_onet.close_ticket_simp(${ticketId});`);
     }
@@ -81,3 +99,5 @@ class DbLibrary {
 
 
 }
+
+module.exports = DbLibrary;

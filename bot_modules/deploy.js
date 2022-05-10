@@ -1,5 +1,4 @@
-const con = require("../commands/dbconnect")
-const db = con.database();
+const db = require("../utils/db/dbLibrary.js");
 
 module.exports = {
     dply: function (client, p, id) {
@@ -8,81 +7,57 @@ module.exports = {
 
         switch (p) {
             case "0":
-                if (!db._connectCalled) {
-                    db.connect();
-                }
-                db.query(`call bot_onet.ticket_list();`, function (err, result) {
-                    if (err) throw err;
-                    tickets = []
-                    result[0].forEach(ticket => {
-                        tickets.push({ name: ticket.Nom, value: `${ticket.idTicket}` });
+                const tickets = await db.getTicketList()
+                const user = await db.getBannedList()
 
-                    });
+                const dataGuild = [{
+                    "name": 'ban',
+                    "description": "Méthode pour bannir les gens",
+                    "options": [
+                        {
+                            "name": 'ticket',
+                            "description": 'Nom du ticket',
+                            "type": 'STRING',
+                            "required": true,
+                            "choices": tickets
+                        }
+                    ]
+                }];
 
-                    const dataGuild = [{
-                        "name": 'ban',
-                        "description": "Méthode pour bannir les gens",
-                        "options": [
-                            {
-                                "name": 'ticket',
-                                "description": 'Nom du ticket',
-                                "type": 'STRING',
-                                "required": true,
-                                "choices": tickets
-                            }
-                        ]
-                    }];
-
-                    dataGuild.push({
-                        "name": 'close',
-                        "description": "Méthode fermer les tickets",
-                        "options": [
-                            {
-                                "name": 'ticket',
-                                "description": 'Nom du ticket',
-                                "type": 'STRING',
-                                "required": true,
-                                "choices": tickets
-                            }
-                        ]
-                    });
-
-                    db.query(`call bot_onet.banned_list();`, function (err, result) {
-                        if (err) throw err;
-                        user = []
-                        result[0].forEach(accuse => {
-                            user.push({ name: accuse.Pseudo, value: `${accuse.Pseudo},${accuse.idt},${accuse.ida}` });
-                        });
-
-
-
-                        dataGuild.push({
-                            "name": 'unban',
-                            "description": "Méthode débannir des gens",
-                            "options": [
-                                {
-                                    "name": "utilisateur",
-                                    "description": "Pseudo de l'utilisateur a bannir",
-                                    "type": "STRING",
-                                    "required": true,
-                                    "choices": user
-                                }
-                            ]
-                        });
-
-                        client.guilds.cache.get(id)?.commands.set(dataGuild);
-
-                    });
-
+                dataGuild.push({
+                    "name": 'close',
+                    "description": "Méthode fermer les tickets",
+                    "options": [
+                        {
+                            "name": 'ticket',
+                            "description": 'Nom du ticket',
+                            "type": 'STRING',
+                            "required": true,
+                            "choices": tickets
+                        }
+                    ]
                 });
+
+                dataGuild.push({
+                    "name": 'unban',
+                    "description": "Méthode débannir des gens",
+                    "options": [
+                        {
+                            "name": "utilisateur",
+                            "description": "Pseudo de l'utilisateur a bannir",
+                            "type": "STRING",
+                            "required": true,
+                            "choices": user
+                        }
+                    ]
+                });
+
+                client.guilds.cache.get(id)?.commands.set(dataGuild);
                 break;
             case "1":
                 db.connect(function (err) {
                     if (err) throw err;
-                    const banned = db.query(`call bot_onet.banned_list();`, function (err, result) {
-                        if (err) throw err;
-                        return result;
-                    });
+                    const banned = await db.getBannedList()
                     console.log(banned);
                 });
                 break;

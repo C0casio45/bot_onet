@@ -1,93 +1,81 @@
-const con = require("../dbconnect.js");
-const db = con.database();
 const faceit = require("./faceit.js");
 const Message = require("../utils/embeds/MessagesLibrary");
+const db = require("../utils/db/dbLibrary.js");
 
 module.exports = {
   send: function (interaction, client) {
-    if (!db._connectCalled) db.connect();
-    db.query(`call bot_onet.rappel_unban();`, function (error, result) {
-      if (error) throw error;
-      let embedsArr = [];
-      let months = [
-        "Janvier",
-        "Février",
-        "Mars",
-        "Avril",
-        "Mai",
-        "Juin",
-        "Juillet",
-        "Août",
-        "Septembre",
-        "Octobre",
-        "Novembre",
-        "Décembre",
-      ];
+    const rappelUnbanList = await db.getRappelUnbanList();
+    let embedsArr = [];
+    let months = [
+      "Janvier",
+      "Février",
+      "Mars",
+      "Avril",
+      "Mai",
+      "Juin",
+      "Juillet",
+      "Août",
+      "Septembre",
+      "Octobre",
+      "Novembre",
+      "Décembre",
+    ];
 
-      if (interaction == "none") {
-        result[0].forEach((unban) => {
-          var a = new Date(unban.timecode * 1000);
+    if (interaction == "none") {
+      rappelUnbanList[0].forEach((unban) => {
+        var a = new Date(unban.timecode * 1000);
 
-          let year = a.getFullYear();
-          let month = months[a.getMonth()];
-          let date = a.getDate();
+        let year = a.getFullYear();
+        let month = months[a.getMonth()];
+        let date = a.getDate();
 
-          let Fdate = date + " " + month + " " + year;
+        let Fdate = date + " " + month + " " + year;
 
-          const unbanChannel = client.channels.cache.find(
-            (channel) => channel.name == "rappel-unban"
-          );
-
-          faceit.RemoveBan(
-            `https://www.faceit.com/fr/players/${unban.Pseudo}`,
-            (failed, error = null) => {
-              if (failed)
-                unbanChannel.send({
-                  embeds: [Message.error(`${error}`)],
-                });
-              else
-                unbanChannel.send({
-                  embeds: [
-                    Message.success(`Joueur ${unban.Pseudo} unban avec succès.`),
-                  ],
-                });
-            }
-          );
-
-          if (!db._connectCalled) {
-            db.connect();
-          }
-          db.query(
-            `call bot_onet.unban(${unban.id},${unban.idT});`,
-            function (errdb, result) {
-              if (errdb) throw errdb;
-            }
-          );
-
-          unbanChannel.send({
-            embeds: [sendEmbed(unban.Pseudo, unban.duree, Fdate)],
-          });
-        });
-      } else if (result[0].length == 0) {
-        return interaction.reply(
-          "Il n'y a pas d'unban a effectuer aujourd'hui"
+        const unbanChannel = client.channels.cache.find(
+          (channel) => channel.name == "rappel-unban"
         );
-      } else {
-        result[0].forEach((unban) => {
-          var a = new Date(unban.timecode * 1000);
 
-          let year = a.getFullYear();
-          let month = months[a.getMonth()];
-          let date = a.getDate();
+        faceit.RemoveBan(
+          `https://www.faceit.com/fr/players/${unban.Pseudo}`,
+          (failed, error = null) => {
+            if (failed)
+              unbanChannel.send({
+                embeds: [Message.error(`${error}`)],
+              });
+            else
+              unbanChannel.send({
+                embeds: [
+                  Message.success(`Joueur ${unban.Pseudo} unban avec succès.`),
+                ],
+              });
+          }
+        );
 
-          let Fdate = date + " " + month + " " + year;
+        db.unbanUser(unban.id, unban.idT);
 
-          embedsArr.push(sendEmbed(unban.Pseudo, unban.duree, Fdate));
+        unbanChannel.send({
+          embeds: [sendEmbed(unban.Pseudo, unban.duree, Fdate)],
         });
+      });
+    } else if (result[0].length == 0) {
+      return interaction.reply(
+        "Il n'y a pas d'unban a effectuer aujourd'hui"
+      );
+    } else {
+      result[0].forEach((unban) => {
+        var a = new Date(unban.timecode * 1000);
 
-        return interaction.reply({ embeds: embedsArr });
-      }
-    });
+        let year = a.getFullYear();
+        let month = months[a.getMonth()];
+        let date = a.getDate();
+
+        let Fdate = date + " " + month + " " + year;
+
+        embedsArr.push(sendEmbed(unban.Pseudo, unban.duree, Fdate));
+      });
+
+      return interaction.reply({ embeds: embedsArr });
+    }
   },
 };
 

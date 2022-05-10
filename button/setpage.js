@@ -15,7 +15,7 @@ module.exports = {
         }
         db.query(`call bot_onet.stats_all();`, function (err, result) {
             if (err) throw err;
-            stats = {};
+            let stats = {};
             result[0].forEach(ticket => {
                 if (isNaN(stats[ticket.Pseudo])) stats[ticket.Pseudo] = 0;
                 stats[ticket.Pseudo]++;
