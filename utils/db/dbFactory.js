@@ -1,12 +1,13 @@
-const db = require("../dbconnect.js");
+const con = require("../dbconnect.js");
+const db = con.database();
 
 class DatabaseFactory {
     constructor(query, callback) {
-        if (!database._connectCalled) {
-            database.connect();
+        if (!db._connectCalled) {
+            db.connect();
         }
 
-        database.query(query, function (err, result) {
+        db.query(query, function (err, result) {
             if (err) throw err;
             callback(err, result);
         }

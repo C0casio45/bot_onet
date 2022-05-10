@@ -1,7 +1,7 @@
 const { folder } = require("../config.json");
 const { MessageActionRow, MessageButton } = require('discord.js');
 const db = require("../utils/db/dbLibrary.js");
-const Message = require("../utils/embeds/MessageLibrary.js");
+const Message = require("../utils/embeds/MessagesLibrary.js");
 
 module.exports = {
     name: 'unban',

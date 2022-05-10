@@ -1,7 +1,7 @@
 const db = require("../utils/db/dbLibrary.js");
 
 module.exports = {
-    dply: function (client, p, id) {
+    dply: async function (client, p, id) {
 
         id = id == undefined ? "870319455115284481" : id;
 
@@ -55,11 +55,8 @@ module.exports = {
                 client.guilds.cache.get(id)?.commands.set(dataGuild);
                 break;
             case "1":
-                db.connect(function (err) {
-                    if (err) throw err;
-                    const banned = await db.getBannedList()
-                    console.log(banned);
-                });
+                const banned = await db.getBannedList()
+                console.log(banned);
                 break;
             case "2":
                 const dataGlobal = [{

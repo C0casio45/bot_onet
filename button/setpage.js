@@ -1,5 +1,5 @@
 const { MessageActionRow, MessageButton, MessageEmbed } = require('discord.js');
-const con = require("../commands/dbconnect")
+const con = require("../utils/dbconnect.js");
 const db = con.database();
 
 module.exports = {
