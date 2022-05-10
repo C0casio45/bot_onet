@@ -3,7 +3,7 @@ const Message = require("../utils/embeds/MessagesLibrary");
 const db = require("../utils/db/dbLibrary.js");
 
 module.exports = {
-  send: function (interaction, client) {
+  send: async function (interaction, client) {
     const rappelUnbanList = await db.getRappelUnbanList();
     let embedsArr = [];
     let months = [

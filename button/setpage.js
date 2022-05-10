@@ -5,7 +5,7 @@ const db = con.database();
 module.exports = {
     name: 'setpage',
     description: "Méthode changer la page actuelle",
-    execute: function (interaction, client) {
+    execute: function (interaction) {
 
         let param = interaction.customId.split(" ");
 
@@ -26,7 +26,7 @@ module.exports = {
             let info = [];
             for (let mod in stats) {
                 info.push({ "name": mod, "value": `${stats[mod]}`, "inline": false });
-            };
+            }
 
 
 

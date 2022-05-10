@@ -22,7 +22,7 @@ module.exports = {
         let info = [];
         for (let mod in stats) {
             info.push({ "name": mod, "value": `${stats[mod]}`, "inline": false });
-        };
+        }
 
 
 

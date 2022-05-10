@@ -48,10 +48,8 @@ client.on("messageCreate", async (message) => {
 
   let userVerif = () => {
     return !!(
-      (
-        message.author.id === client.application?.owner.id || 248069530381844481
-      ) /*Quentin*/
-    );
+      message.author.id === client.application?.owner.id || 248069530381844481
+    ) /*Quentin*/;
   };
 
   if (message.content.toLowerCase().split(" ")[0] == "!deploy" && userVerif) {

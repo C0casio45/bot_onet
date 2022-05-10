@@ -114,7 +114,6 @@ module.exports = {
             collected.first().reply({ content: "Format de données invalide." });
             setTimeout(() => {
               getDays(i, liengame, rmsg, pseudo);
-              return;
             }, 300);
           } else {
             const isAvertissement = jours == "Avertissement" ? 0 : days;
