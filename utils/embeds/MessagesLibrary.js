@@ -3,22 +3,22 @@ const MessageFactory = require("./EmbedMessageFactory");
 class Message {
 
     static success(content) {
-        return new MessageFactory(content).success().embed();
+        return new MessageFactory(content).success().embed;
     }
     static error(code = 0, message = "") {
-        return new MessageFactory().error(code, message).embed();
+        return new MessageFactory().error(code, message).embed;
     }
 
     static requestGameLink() {
-        return new MessageFactory(`Merci de mettre le lien faceit de **la partie**.`).embed();
+        return new MessageFactory(`Merci de mettre le lien faceit de **la partie**.`).embed;
     }
 
     static requestUserLink() {
-        return new MessageFactory(`Merci de mettre le lien faceit de **l'utilisateur a bannir**.`).embed();
+        return new MessageFactory(`Merci de mettre le lien faceit de **l'utilisateur a bannir**.`).embed;
     }
 
     static requestMoveToMp() {
-        return new MessageFactory(`Merci d'aller voir vos messages privés`).rappelUnban().embed();
+        return new MessageFactory(`Merci d'aller voir vos messages privés`).rappelUnban().embed;
     }
 
     static requestOtherBans(nbEntreeBan, array) {
@@ -33,30 +33,30 @@ class Message {
 
     static requestRaison(pseudo) {
         const content = `Merci d'indiquer la raison du banissement de l'utilisateur : ${pseudo}`;
-        return new MessageFactory(content).embed();
+        return new MessageFactory(content).embed;
     }
 
     static requestBanDuration(pseudo) {
         const content = `Merci d'indiquer la durée du banissement de l'utilisateur : ${pseudo}\nVous pouvez utiliser les boutons pour bannir de manière permanente ou inscrire la durée`;
-        return new MessageFactory(content).embed();
+        return new MessageFactory(content).embed;
     }
 
     static banLog(nbEntreeBan, array, userid, unban) {
-        return new MessageFactory().banLog(nbEntreeBan, array, userid, unban).embed();
+        return new MessageFactory().banLog(nbEntreeBan, array, userid, unban).embed;
     }
 
     static unbanLog(pseudo, modo) {
-        return new MessageFactory().unbanLog(pseudo, modo).embed();
+        return new MessageFactory().unbanLog(pseudo, modo).embed;
     }
 
     static takeTicket(modo) {
         const content = `Ton ticket a été pris en charge par <@!${modo}>.
         Merci de nous transmettre toutes les informations qui pourraient nous aider a traiter votre ticket plus rapidement.`;
-        return new MessageFactory(content, "Bonjour !").embed();
+        return new MessageFactory(content, "Bonjour !").embed;
     }
 
     static closeTicket(ticketName) {
-        return new MessageFactory(`Le ${ticketName} a bien été fermé`).embed();
+        return new MessageFactory(`Le ${ticketName} a bien été fermé`).embed;
     }
 }
 module.exports = Message;

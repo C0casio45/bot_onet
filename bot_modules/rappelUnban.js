@@ -5,6 +5,7 @@ const db = require("../utils/db/dbLibrary.js");
 module.exports = {
   send: async function (interaction, client) {
     const rappelUnbanList = await db.getRappelUnbanList();
+    console.log(rappelUnbanList);
     let embedsArr = [];
     let months = [
       "Janvier",
@@ -22,7 +23,7 @@ module.exports = {
     ];
 
     if (interaction == "none") {
-      rappelUnbanList[0].forEach((unban) => {
+      rappelUnbanList.forEach((unban) => {
         var a = new Date(unban.timecode * 1000);
 
         let year = a.getFullYear();
@@ -82,5 +83,6 @@ module.exports = {
 function sendEmbed(pseudo, duree, date) {
   let content = `Le joueur **${pseudo}** a été banni pour une durée de **${duree} jours** le ${date}.
   Il a été débanni a ce jour.`
-  return new Message(content, "Rappel unban").embed();
+  console.log(Message(content, "Rappel unban").embed);
+  return Message(content, "Rappel unban").embed;
 }

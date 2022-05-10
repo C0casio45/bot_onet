@@ -72,7 +72,7 @@ client.on("interactionCreate", async (interaction) => {
       monitor.error(error);
       return interaction.reply({
         content:
-          "Il y a eu une erreur lors de l'exécution de ta commande (redx be like)",
+          "Il y a eu une erreur lors de l'exécution de ta commande (shoxie be like)",
         ephemeral: true,
       });
     }
@@ -90,7 +90,7 @@ client.on("interactionCreate", async (interaction) => {
     console.log(error);
     return interaction.reply({
       content:
-        "Il y a eu une erreur lors de l'exécution de ta commande (redx be like)",
+        "Il y a eu une erreur lors de l'exécution de ta commande (shoxie be like)",
       ephemeral: true,
     });
   }

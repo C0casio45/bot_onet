@@ -8,9 +8,9 @@ module.exports = {
     execute(interaction, client) {
         let ticketValue = interaction.options._hoistedOptions[0].value;
 
-        db.closeTicketSimp(ticketValue).then(() => {
-            interaction.reply({ embeds: [Message.closeTicket(ticket.Name)], ephemeral: true });
-            dp.dply(client, "0", interaction.guildId);
-        });
+        db.closeTicketSimp(ticketValue);
+        const ticketName = client.guilds.cache.get(interaction.guildId).channels.cache.filter(c => c.id === ticketValue).first().name
+        interaction.reply({ embeds: [Message.closeTicket(ticketName)], ephemeral: true });
+        dp.dply(client, "0", interaction.guildId);
     }
 }

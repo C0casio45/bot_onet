@@ -28,7 +28,7 @@ module.exports = {
         channel.send({ embeds: [Message.takeTicket(interaction.user.id)] });
 
 
-        db.takeTickets(ticket, pseudo, discordID);
+        db.takeTicket(ticket, pseudo, discordID);
 
         const dp = require(`${__dirname}/../bot_modules/deploy.js`);
         dp.dply(client, "0", interaction.guildId);
