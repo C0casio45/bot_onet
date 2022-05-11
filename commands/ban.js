@@ -171,7 +171,7 @@ module.exports = {
               ) {
                 quiz(i + 1);
               } else {
-                closeTickets(liengame);
+                closeTickets(liengame, rmsg);
               }
             })
             .catch((err) => {
@@ -181,11 +181,11 @@ module.exports = {
         });
     }
 
-    function closeTickets(liengame) {
+    function closeTickets(liengame, rmsg) {
       //load data in database
       array.forEach((row) => {
         // id_Ticket, pseudo_accusé, Lien_Accusé, Lien_Partie, Duree_jours, raison, Fermé?
-        db.closeTicket(options, row[0], 'https://www.faceit.com/fr/players/${row[0]}', liengame, row[1], row[2]);
+        db.closeTicket(options, row[0], liengame, row[1], row[2]);
 
         if (!row[1] == 0) {
           //ban player in faceit
@@ -205,19 +205,21 @@ module.exports = {
                     Message.success("Ticket fermé avec succès."),
                   ],
                 });
+
+              //send message in private to user who banned the player
+              //rmsg.channel.send({embeds : [Message.banLog(array.length,array)]});
+              //send message in discord channel
+              ban.send({
+                embeds: [Message.banLog(array.length, array, userid, unban)],
+              });
+              //update discord cache
+              dp.dply(client, "0", interaction.guildId);
             }
           );
         }
       });
 
-      //send message in private to user who banned the player
-      //rmsg.channel.send({embeds : [Message.banLog(array.length,array)]});
-      //send message in discord channel
-      ban.send({
-        embeds: [Message.banLog(array.length, array, userid, unban)],
-      });
-      //update discord cache
-      dp.dply(client, "0", interaction.guildId);
+
     }
   },
 };
