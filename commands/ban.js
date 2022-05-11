@@ -75,7 +75,7 @@ module.exports = {
         .then((collected) => {
           if (collected.first().content.match(regexPlayer)) {
             let link = collected.first().content.split("/");
-            let pseudo = link[link.length - 1];
+            let pseudo = link[5];
             array[i][0] = pseudo;
             getDays(i, liengame, msg, pseudo);
           } else {
