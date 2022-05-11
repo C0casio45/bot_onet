@@ -1,11 +1,11 @@
 const { MessageActionRow, MessageButton, MessageEmbed } = require('discord.js');
-const con = require("../commands/dbconnect")
+const con = require("../utils/dbconnect.js");
 const db = con.database();
 
 module.exports = {
     name: 'setpage',
     description: "Méthode changer la page actuelle",
-    execute: function (interaction, client) {
+    execute: function (interaction) {
 
         let param = interaction.customId.split(" ");
 
@@ -15,7 +15,7 @@ module.exports = {
         }
         db.query(`call bot_onet.stats_all();`, function (err, result) {
             if (err) throw err;
-            stats = {};
+            let stats = {};
             result[0].forEach(ticket => {
                 if (isNaN(stats[ticket.Pseudo])) stats[ticket.Pseudo] = 0;
                 stats[ticket.Pseudo]++;
@@ -26,7 +26,7 @@ module.exports = {
             let info = [];
             for (let mod in stats) {
                 info.push({ "name": mod, "value": `${stats[mod]}`, "inline": false });
-            };
+            }
 
 
 
