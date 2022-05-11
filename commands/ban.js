@@ -181,7 +181,7 @@ module.exports = {
         });
     }
 
-    function closeTickets(liengame, rmsg) {
+    async function closeTickets(liengame, rmsg) {
       //load data in database
       array.forEach((row) => {
         // id_Ticket, pseudo_accusé, Lien_Accusé, Lien_Partie, Duree_jours, raison, Fermé?
@@ -195,25 +195,26 @@ module.exports = {
             (row[1] == 99999 ? "perm" : row[1] + "j") +
             ". Plus d'informations sur notre discord.",
             (failed, error = null) => {
-              if (failed)
+              if (failed) {
                 rmsg.channel.send({
                   embeds: [Message.error(`${error}`)],
                 });
-              else
+              } else {
                 rmsg.channel.send({
                   embeds: [
                     Message.success("Ticket fermé avec succès."),
                   ],
                 });
 
-              //send message in private to user who banned the player
-              //rmsg.channel.send({embeds : [Message.banLog(array.length,array)]});
-              //send message in discord channel
-              ban.send({
-                embeds: [Message.banLog(array.length, array, userid, unban)],
-              });
-              //update discord cache
-              dp.dply(client, "0", interaction.guildId);
+                //send message in private to user who banned the player
+                //rmsg.channel.send({embeds : [Message.banLog(array.length,array)]});
+                //send message in discord channel
+                ban.send({
+                  embeds: [Message.banLog(array.length, array, userid, unban)],
+                });
+                //update discord cache
+                dp.dply(client, "0", interaction.guildId);
+              }
             }
           );
         }
