@@ -105,6 +105,7 @@ module.exports = {
         .awaitMessages({ filter, max: 1, time: 300000, errors: ["time"] })
         .then((collected) => {
           let jours = collected.first().content;
+          if (!jours.match(/[0-9]/)) jours = "aa";
           let days = parseInt(jours);
           if (
             isNaN(days) &&
