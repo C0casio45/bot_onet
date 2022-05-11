@@ -55,7 +55,7 @@ module.exports = {
         db.unbanUser(unban.id, unban.idT);
 
         unbanChannel.send({
-          embeds: [sendEmbed(unban.Pseudo, unban.duree, Fdate)],
+          embeds: [Message.unbanLog(unban.Pseudo, unban.duree, Fdate)],
         });
       });
     } else if (result[0].length == 0) {
@@ -72,17 +72,10 @@ module.exports = {
 
         let Fdate = date + " " + month + " " + year;
 
-        embedsArr.push(sendEmbed(unban.Pseudo, unban.duree, Fdate));
+        embedsArr.push(Message.unbanLog(unban.Pseudo, unban.duree, Fdate));
       });
 
       return interaction.reply({ embeds: embedsArr });
     }
   },
 };
-
-function sendEmbed(pseudo, duree, date) {
-  let content = `Le joueur **${pseudo}** a été banni pour une durée de **${duree} jours** le ${date}.
-  Il a été débanni a ce jour.`
-  console.log(Message(content, "Rappel unban").embed);
-  return Message(content, "Rappel unban").embed;
-}
