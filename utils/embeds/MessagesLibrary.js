@@ -22,13 +22,15 @@ class Message {
     }
 
     static requestOtherBans(nbEntreeBan, array) {
-        const isAvertissement = banDuration == 0 ? "averti" : `banni pendant ${ban[1]} jours`;
-        array.map(ban => `- Utilisateur ${ban[0]} ${ban[1] == 99999
-            ? "ban permanent"
-            : isAvertissement
-            }`)
+        array.map(ban => `- Utilisateur ${ban[0]} ${textBuilder(ban[1])}`);
         const content = `Vous avez actuellement ${nbEntreeBan} enregistrés :\n${array.join("\n")}\n\nVoulez vous ajouter une sanction à un autre utilisateur ?`;
         return new MessageFactory(content);
+
+        function textBuilder(ban) {
+            if (ban[1] == 99999) return "ban permanent";
+            if (ban[1] == 0) return "averti";
+            return `banni pendant ${ban[1]} jours`;
+        }
     }
 
     static requestRaison(pseudo) {
