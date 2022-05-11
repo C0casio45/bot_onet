@@ -4,9 +4,10 @@ class DbLibrary {
 
     /**
      * 
-     * @param {string} ticketName 
-     * @param {string} pseudo 
-     * @param {string} discordId 
+     * @param {string} ticketName - name of the ticket
+     * @param {string} pseudo - name of the moderator
+     * @param {string} discordId - discord id of the moderator
+     * @returns - moderator id
      */
     static takeTicket(ticketName, pseudo, discordId) {
         const query = `call bot_onet.create_ticket('${ticketName}', '${pseudo}', '${discordId}');`;
@@ -25,11 +26,12 @@ class DbLibrary {
 
     /**
      * 
-     * @param {number} ticketId 
-     * @param {string} pseudoAccuse 
-     * @param {string} lienPartie 
+     * @param {number} ticketId - id of the ticket
+     * @param {string} pseudoAccuse - name of the accused user
+     * @param {string} lienPartie - link to the game
      * @param {number} dureeJours - 0 avertissement, 99999 permanent
-     * @param {string} raison 
+     * @param {string} raison - ban reason
+     * @returns
      */
     static closeTicket(ticketId, pseudoAccuse, lienPartie, dureeJours, raison) {
         const query = `call bot_onet.close_ticket(${ticketId}, '${pseudoAccuse}', 'https://www.faceit.com/fr/players/${pseudoAccuse}', '${lienPartie}', ${dureeJours}, '${raison}', TRUE);`;
@@ -42,6 +44,7 @@ class DbLibrary {
     /**
      * 
      * @param {number} ticketId 
+     * @returns
      */
     static closeTicketSimp(ticketId) {
         return new Promise((resolve, reject) => {
@@ -52,6 +55,10 @@ class DbLibrary {
         });
     }
 
+    /**
+     * 
+     * @returns {Promise} - list of tickets
+     */
     static getTicketList() {
         return new Promise((resolve, reject) => {
             return new DatabaseFactory(`call bot_onet.ticket_list();`, function (err, result) {
@@ -65,6 +72,10 @@ class DbLibrary {
         });
     }
 
+    /**
+     * 
+     * @returns {Promise} - list of banned users
+     */
     static getBannedList() {
         return new Promise((resolve, reject) => {
             return new DatabaseFactory(`call bot_onet.banned_list();`, function (err, result) {
@@ -78,6 +89,10 @@ class DbLibrary {
         });
     }
 
+    /**
+     * 
+     * @returns {Promise} - list of user to unban
+     */
     static getRappelUnbanList() {
         return new Promise((resolve, reject) => {
             return new DatabaseFactory(`call bot_onet.rappel_unban();`, function (err, result) {
@@ -87,6 +102,10 @@ class DbLibrary {
         });
     }
 
+    /**
+     * 
+     * @returns {Promise} - moderators stats
+     */
     static getStats() {
         return new Promise((resolve, reject) => {
             return new DatabaseFactory(`call bot_onet.stats_all();`, function (err, result) {
@@ -101,6 +120,12 @@ class DbLibrary {
         });
     }
 
+    /**
+     * 
+     * @param {number} userId - id of the user
+     * @param {string} ticketId - id of the ticket
+     * @returns {Promise} - result of the query
+     */
     static unbanUser(userId, ticketId) {
         return new Promise((resolve, reject) => {
             return new DatabaseFactory(`call bot_onet.unban(${userId},${ticketId});`, function (err, result) {
