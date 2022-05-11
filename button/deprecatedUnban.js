@@ -1,12 +1,20 @@
 const { MessageActionRow, MessageButton } = require('discord.js');
+const { deprecate } = require('util');
 const db = require("../utils/db/dbLibrary.js");
 
 module.exports = {
-    unban: function (interaction) {
-
+    name: 'unban',
+    description: "Méthode Enregistrer qu'un utilisateur a bien été débanni",
+    execute: function (interaction) {
+        /**
+         * 
+         * @deprecated
+         */
         let ub = interaction.customId.split(" ");
 
-        db.unbanUser(ub[0], ub[1])
+
+        //unban(id accusé, id ticket)
+        db.unbanUser(ub[1], ub[2])
 
         const row = new MessageActionRow()
             .addComponents(
