@@ -1,11 +1,10 @@
 const fs = require("fs");
-const { folder } = require("./config.json");
 const { token } = require("./config.json");
-const sending = require(`./bot_modules/sendFunction.js`);
-const btn = require(`./bot_modules/unbanFunction.js`);
+const sending = require(`./bot_modules/rappelUnban.js`);
 const { Client, Collection, Intents } = require("discord.js");
 const monitor = require("./bot_modules/monitor.js");
 const rappl = require("./bot_modules/rappelModo.js");
+
 
 const client = new Client({
   intents: [
@@ -48,10 +47,8 @@ client.on("messageCreate", async (message) => {
 
   let userVerif = () => {
     return !!(
-      (
-        message.author.id === client.application?.owner.id || 248069530381844481
-      ) /*Quentin*/
-    );
+      message.author.id === client.application?.owner.id || 248069530381844481
+    ) /*Quentin*/;
   };
 
   if (message.content.toLowerCase().split(" ")[0] == "!deploy" && userVerif) {
@@ -75,7 +72,7 @@ client.on("interactionCreate", async (interaction) => {
       monitor.error(error);
       return interaction.reply({
         content:
-          "Il y a eu une erreur lors de l'exécution de ta commande (redx be like)",
+          "Il y a eu une erreur lors de l'exécution de ta commande (shoxie be like)",
         ephemeral: true,
       });
     }
@@ -93,7 +90,7 @@ client.on("interactionCreate", async (interaction) => {
     console.log(error);
     return interaction.reply({
       content:
-        "Il y a eu une erreur lors de l'exécution de ta commande (redx be like)",
+        "Il y a eu une erreur lors de l'exécution de ta commande (shoxie be like)",
       ephemeral: true,
     });
   }

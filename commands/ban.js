@@ -1,22 +1,11 @@
-const { MessageEmbed } = require("discord.js");
-const con = require("./dbconnect.js");
-const db = con.database();
+const db = require("../utils/db/dbLibrary.js");
 const dp = require(`../bot_modules/deploy.js`);
 
-const { mp_sanction_buttons } = require("./utils/buttons/mp_sanction_buttons");
-const { mp_loop_buttons } = require("./utils/buttons/mp_loop_buttons");
-const { send_ban } = require("./utils/embeds/send_ban.js");
+const { mp_sanction_buttons } = require("../utils/buttons/mp_sanction_buttons");
+const { mp_loop_buttons } = require("../utils/buttons/mp_loop_buttons");
 const faceit = require("../bot_modules/faceit.js");
 
-const request_mp = require("./utils/embeds/request_mp");
-const request_gameLink = require("./utils/embeds/request_gameLink");
-const request_userdays = require("./utils/embeds/request_userdays");
-const request_raison = require("./utils/embeds/request_raison");
-const request_other = require("./utils/embeds/request_other");
-const request_userlink = require("./utils/embeds/request_userlink");
-const result_success = require("./utils/embeds/result_success");
-const result_error = require("./utils/embeds/result_error");
-const error = require("./utils/embeds/error");
+const Message = require("../utils/embeds/MessagesLibrary");
 const { setTimeout } = require("timers");
 
 module.exports = {
@@ -32,30 +21,25 @@ module.exports = {
     let userid = user.id;
     let array = [];
 
-    interaction.reply({ embeds: [request_mp()], ephemeral: true });
+    interaction.reply({ embeds: [Message.requestMoveToMp()], ephemeral: true });
 
     const filter = (m) => [user.id, client.user.id].includes(m.author.id);
-    const is = (m) => m.includes("BOT");
 
     // FACEIT ROOM EXEMPLE
     // https://www.faceit.com/fr/csgo/room/1-0def9859-57d0-4613-a578-eb3c6ec04176
-    const regexRoom = new RegExp(
-      "https://www.faceit.com/([a-zA-Z0-9-]{2})/csgo/room/([a-zA-Z0-9-]*)"
-    );
+    const regexRoom = /https:\/\/www.faceit.com\/([a-zA-Z0-9-]{2})\/csgo\/room\/([a-zA-Z0-9-]*)/;
 
     // FACEIT PROFIL EXEMPLE
     // https://www.faceit.com/fr/players-modal/k-dev
     // OR
     // https://www.faceit.com/fr/players/k-dev
-    const regexPlayer = new RegExp(
-      "(https://www.faceit.com/([a-zA-Z0-9-]{2})/players-modal/([a-zA-Z0-9_-]*))|(https://www.faceit.com/([a-zA-Z0-9-]{2})/players/([a-zA-Z0-9_-]*))"
-    );
+    const regexPlayer = /(https:\/\/www.faceit.com\/([a-zA-Z0-9-]{2})\/players-modal\/([a-zA-Z0-9_-]*))|(https:\/\/www.faceit.com\/([a-zA-Z0-9-]{2})\/players\/([a-zA-Z0-9_-]*))/;
 
     getGame();
 
     function getGame() {
       user
-        .send({ embeds: [request_gameLink()] })
+        .send({ embeds: [Message.requestGameLink()] })
         .then(async (tmsg) => listenGame(tmsg));
     }
 
@@ -72,7 +56,7 @@ module.exports = {
         })
         .catch((err) => {
           console.log(err);
-          tmsg.channel.send({ embeds: [error()] });
+          tmsg.channel.send({ embeds: [Message.error()] });
         });
     }
 
@@ -81,7 +65,7 @@ module.exports = {
     function quiz(i, liengame) {
       array.push([]);
       user
-        .send({ embeds: [request_userlink()] })
+        .send({ embeds: [Message.requestUserLink()] })
         .then(async (msg) => listenQuizz(i, liengame, msg));
     }
 
@@ -91,9 +75,9 @@ module.exports = {
         .then((collected) => {
           if (collected.first().content.match(regexPlayer)) {
             let link = collected.first().content.split("/");
-            let pseudo = link[link.length - 1];
+            let pseudo = link[5];
             array[i][0] = pseudo;
-            getDays(i, array, liengame, msg, pseudo);
+            getDays(i, liengame, msg, pseudo);
           } else {
             collected.first().reply({ content: "Format de données invalide." });
             setTimeout(() => quiz(i, liengame), 300);
@@ -101,77 +85,75 @@ module.exports = {
         })
         .catch((err) => {
           console.log(err);
-          msg.channel.send({ embeds: [error(1)] });
+          msg.channel.send({ embeds: [Message.error(1)] });
         });
     }
 
-    function getDays(i, array, liengame, msg, pseudo) {
+    function getDays(i, liengame, msg, pseudo) {
       msg.channel
         .send({
-          embeds: [request_userdays(pseudo)],
+          embeds: [Message.requestBanDuration(pseudo)],
           components: [mp_sanction_buttons()],
         })
         .then(async (rmsg) => {
-          listenDay(i, array, liengame, rmsg, pseudo);
+          listenDay(i, liengame, rmsg, pseudo);
         });
     }
 
-    function listenDay(i, array, liengame, rmsg, pseudo) {
+    function listenDay(i, liengame, rmsg, pseudo) {
       rmsg.channel
         .awaitMessages({ filter, max: 1, time: 300000, errors: ["time"] })
         .then((collected) => {
           let jours = collected.first().content;
-          let days = parseInt(jours);
           if (
-            isNaN(days) &&
+            !jours.match(/\d/) &&
             jours != "Avertissement" &&
             jours != "Banissement permanant"
           ) {
             collected.first().reply({ content: "Format de données invalide." });
             setTimeout(() => {
-              getDays(i, array, liengame, rmsg, pseudo);
-              return;
+              getDays(i, liengame, rmsg, pseudo);
             }, 300);
           } else {
+            let days = parseInt(jours);
+            const isAvertissement = jours == "Avertissement" ? 0 : days;
             days =
-              jours == "Avertissement"
-                ? 0
-                : jours == "Banissement permanant"
+              jours == "Banissement permanant"
                 ? 99999
-                : days;
+                : isAvertissement;
             array[i][1] = days;
             if (array[i][1] > 99999) array[i][1] = 99999;
-            getReason(i, array, liengame, rmsg, pseudo);
+            getReason(i, liengame, rmsg, pseudo);
           }
         })
         .catch((err) => {
           console.log(err);
-          rmsg.channel.send({ embeds: [error(1)] });
+          rmsg.channel.send({ embeds: [Message.error(1)] });
         });
     }
 
-    function getReason(i, array, liengame, msg, pseudo) {
+    function getReason(i, liengame, msg, pseudo) {
       msg.channel
-        .send({ embeds: [request_raison(pseudo)] })
+        .send({ embeds: [Message.requestRaison(pseudo)] })
         .then(async (rmsg) => {
           rmsg.channel
             .awaitMessages({ filter, max: 1, time: 300000, errors: ["time"] })
             .then((collected) => {
               let raison = collected.first().content;
               array[i][2] = raison;
-              isLoop(i, array, liengame, rmsg, pseudo);
+              isLoop(i, liengame, rmsg);
             })
             .catch((err) => {
               console.log(err);
-              rmsg.channel.send({ embeds: [error(1)] });
+              rmsg.channel.send({ embeds: [Message.error(1)] });
             });
         });
     }
 
-    function isLoop(i, array, liengame, msg, pseudo) {
+    function isLoop(i, liengame, msg) {
       msg.channel
         .send({
-          embeds: [request_other(array.length, array)],
+          embeds: [Message.requestOtherBans(array.length, array)],
           components: [mp_loop_buttons()],
         })
         .then(async (rmsg) => {
@@ -189,58 +171,56 @@ module.exports = {
               ) {
                 quiz(i + 1);
               } else {
-                if (!db._connectCalled) {
-                  db.connect();
-                }
-
-                //load data in database
-                array.forEach((row) => {
-                  // id_Ticket, pseudo_accusé, Lien_Accusé, Lien_Partie, Duree_jours, raison, Fermé?
-                  db.query(
-                    `call bot_onet.close_ticket(${options}, '${row[0]}', 'https://www.faceit.com/fr/players/${row[0]}', '${liengame}', ${row[1]}, '${row[2]}', TRUE);`,
-                    function (err) {
-                      console.log(err);
-                      if (err) throw err;
-                    }
-                  );
-                  if (!row[1] == 0) {
-                    //ban player in faceit
-                    faceit.BanPlayer(
-                      row[0],
-                      "Ban " +
-                        (row[1] == 99999 ? "perm" : row[1] + "j") +
-                        ". Plus d'informations sur notre discord.",
-                      (failed, error = null) => {
-                        if (failed)
-                          rmsg.channel.send({
-                            embeds: [result_error(`${error}`)],
-                          });
-                        else
-                          rmsg.channel.send({
-                            embeds: [
-                              result_success("Ticket fermé avec succès."),
-                            ],
-                          });
-                      }
-                    );
-                  }
-                });
-
-                //send message in private to user who banned the player
-                //rmsg.channel.send({embeds : [send_ban(array.length,array)]});
-                //send message in discord channel
-                ban.send({
-                  embeds: [send_ban(array.length, array, userid, unban)],
-                });
-                //update discord cache
-                dp.dply(client, "0", interaction.guildId);
+                closeTickets(liengame, rmsg);
               }
             })
             .catch((err) => {
               console.log(err);
-              rmsg.channel.send({ embeds: [error(1)] });
+              rmsg.channel.send({ embeds: [Message.error(1)] });
             });
         });
+    }
+
+    async function closeTickets(liengame, rmsg) {
+      //load data in database
+      array.forEach((row) => {
+        // id_Ticket, pseudo_accusé, Lien_Accusé, Lien_Partie, Duree_jours, raison, Fermé?
+        db.closeTicket(options, row[0], liengame, row[1], row[2]);
+
+        if (!row[1] == 0) {
+          //ban player in faceit
+          faceit.BanPlayer(
+            row[0],
+            "Ban " +
+            (row[1] == 99999 ? "perm" : row[1] + "j") +
+            ". Plus d'informations sur notre discord.",
+            (failed, error = null) => {
+              if (failed) {
+                rmsg.channel.send({
+                  embeds: [Message.error(`${error}`)],
+                });
+              } else {
+                rmsg.channel.send({
+                  embeds: [
+                    Message.success("Ticket fermé avec succès."),
+                  ],
+                });
+
+                //send message in private to user who banned the player
+                //rmsg.channel.send({embeds : [Message.banLog(array.length,array)]});
+                //send message in discord channel
+                ban.send({
+                  embeds: [Message.banLog(array.length, array, userid, unban)],
+                });
+                //update discord cache
+                dp.dply(client, "0", interaction.guildId);
+              }
+            }
+          );
+        }
+      });
+
+
     }
   },
 };
