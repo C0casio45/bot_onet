@@ -83,15 +83,6 @@ class MessageFactory {
     this.setDescription(description);
   }
 
-  /***
-   * @param pseudo {string}
-   * @param modo {string} - discord modo id
-   */
-  unbanLog(pseudo, modoId) {
-    const content = `Le joueur ${pseudo} a été débanni par <@!${modoId}>.`;
-    this.setDescription(content);
-  }
-
   /**
    * @param color {string} - hexadecimal, default #e34c3b
    */

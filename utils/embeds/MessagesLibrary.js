@@ -45,8 +45,24 @@ class Message {
         return new MessageFactory().banLog(nbEntreeBan, array, userid, unban).embed;
     }
 
-    static unbanLog(pseudo, modo) {
-        return new MessageFactory().unbanLog(pseudo, modo).embed;
+    /***
+   * @param pseudo {string}
+   * @param modo {string} - discord modo id
+   */
+    unbanLogAuto(pseudo, modoId) {
+        const content = `Le joueur ${pseudo} a été débanni par <@!${modoId}>.`;
+        return new MessageFactory(content).embed;
+    }
+
+    /**
+     * 
+     * @param {string} pseudo - pseudo de l'accuse
+     * @param {string} modoId - discord modo id
+     */
+    static unbanLog(pseudo, duree, date) {
+        const content = `Le joueur **${pseudo}** a été banni pour une durée de **${duree} jours** le ${date}.
+        Il a été débanni a ce jour.`;
+        return new MessageFactory(content, "Rappel Unban").embed;
     }
 
     static takeTicket(modo) {
