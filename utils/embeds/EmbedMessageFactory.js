@@ -34,18 +34,22 @@ class MessageFactory {
         this.setDescription(`Erreur inconnue`);
         break;
     }
+    return this;
   }
 
   success() {
     this.setColor("#00ff00");
+    return this;
   }
 
   newban() {
     this.setAuthor("Nouvelle entrée de banissement");
+    return this;
   }
 
   rappelUnban() {
     this.setAuthor("Rappel de débannissement");
+    return this;
   }
 
   /**
@@ -81,6 +85,7 @@ class MessageFactory {
 
     this.newban();
     this.setDescription(description);
+    return this;
   }
 
   /**
@@ -88,6 +93,7 @@ class MessageFactory {
    */
   setColor(color) {
     this.color = color;
+    return this;
   }
 
   /**
@@ -95,6 +101,7 @@ class MessageFactory {
    */
   setAuthor(author) {
     this.author = author;
+    return this;
   }
 
   /**
@@ -102,6 +109,7 @@ class MessageFactory {
    */
   setDescription(description) {
     this.description = description;
+    return this;
   }
 
   get embed() {
