@@ -44,9 +44,11 @@ class DbLibrary {
      * @param {number} ticketId 
      */
     static closeTicketSimp(ticketId) {
-        return new DatabaseFactory(`call bot_onet.close_ticket_simp(${ticketId});`, function (err, result) {
-            if (err) throw err;
-            return result
+        return new Promise((resolve, reject) => {
+            return new DatabaseFactory(`call bot_onet.close_ticket_simp(${ticketId});`, function (err, result) {
+                if (err) reject(err);
+                resolve(result);
+            });
         });
     }
 
