@@ -105,10 +105,8 @@ module.exports = {
         .awaitMessages({ filter, max: 1, time: 300000, errors: ["time"] })
         .then((collected) => {
           let jours = collected.first().content;
-          if (!jours.match(/[0-9]/)) jours = "aa";
-          let days = parseInt(jours);
           if (
-            isNaN(days) &&
+            !jours.match(/\d/) &&
             jours != "Avertissement" &&
             jours != "Banissement permanant"
           ) {
@@ -117,6 +115,7 @@ module.exports = {
               getDays(i, liengame, rmsg, pseudo);
             }, 300);
           } else {
+            let days = parseInt(jours);
             const isAvertissement = jours == "Avertissement" ? 0 : days;
             days =
               jours == "Banissement permanant"
