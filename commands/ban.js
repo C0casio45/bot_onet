@@ -8,6 +8,8 @@ const faceit = require("../bot_modules/faceit.js");
 const Message = require("../utils/embeds/MessagesLibrary");
 const { setTimeout } = require("timers");
 
+const { BanTest } = require('./utils/BanTest');
+
 module.exports = {
   name: "ban",
   description: "Méthode pour bannir les gens",
@@ -47,10 +49,14 @@ module.exports = {
       tmsg.channel
         .awaitMessages({ filter, max: 1, time: 300000, errors: ["time"] })
         .then((collected) => {
-          if (collected.first().content.match(regexRoom))
-            quiz(0, collected.first().content);
+          const message = collected.first();
+          if (message.content.match('test')) {
+            return new BanTest(interaction, client, user);
+          }
+          else if (message.content.match(regexRoom))
+            quiz(0, message.content);
           else {
-            collected.first().reply({ content: "Format de données invalide." });
+            message.reply({ content: "Format de données invalide." });
             setTimeout(() => getGame(), 300);
           }
         })
