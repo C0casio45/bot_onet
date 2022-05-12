@@ -25,6 +25,20 @@ module.exports = {
                     }];
 
                     dataGuild.push({
+                        "name": 'ban_test',
+                        "description": "Méthode pour tester la méthode ban",
+                        "options": [
+                            {
+                                "name": 'ticket',
+                                "description": 'Nom du ticket',
+                                "type": 'STRING',
+                                "required": true,
+                                "choices": tickets
+                            }
+                        ]
+                    });
+
+                    dataGuild.push({
                         "name": 'close',
                         "description": "Méthode fermer les tickets",
                         "options": [

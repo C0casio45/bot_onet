@@ -11,7 +11,7 @@ const { setTimeout } = require("timers");
 module.exports = {
   name: "ban",
   description: "Méthode pour bannir les gens",
-  async execute(interaction, client) {
+  async execute(interaction, client, test = false) {
     let unban = client.channels.cache.find(
       (channel) => channel.name == "rappel-unban"
     );
@@ -182,6 +182,7 @@ module.exports = {
     }
 
     async function closeTickets(liengame, rmsg) {
+      if (test) return rmsg.channel.send({ embeds: [Message.banLog(array.length, array, userid, unban)] });
       //load data in database
       array.forEach((row) => {
         // id_Ticket, pseudo_accusé, Lien_Accusé, Lien_Partie, Duree_jours, raison, Fermé?
