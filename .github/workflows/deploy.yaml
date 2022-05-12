@@ -38,7 +38,7 @@ jobs:
     - name: Create DBConnect.js
       env:
         DBCONNECT: ${{ secrets.DBCONNECT }}
-      run: echo "$DBCONNECT" > /var/www/bot/discord/commands/dbconnect.js
+      run: echo "$DBCONNECT" > /var/www/bot/discord/utils/dbconnect.js
     - name: run bot
       run: |
         pm2 stop bot
