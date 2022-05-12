@@ -14,11 +14,11 @@ const button_close = () => {
     .setStyle("DANGER");
 };
 
-const mp_loop_buttons = () => {
+const mpLoop = () => {
   return new MessageActionRow()
     .addComponents(button_continue())
     .addComponents(button_close());
 };
 module.exports = {
-  mp_loop_buttons,
+  mpLoop,
 };

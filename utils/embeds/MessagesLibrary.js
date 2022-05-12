@@ -27,9 +27,9 @@ class Message {
         return new MessageFactory(content);
 
         function textBuilder(ban) {
-            if (ban[1] == 99999) return "ban permanent";
-            if (ban[1] == 0) return "averti";
-            return `banni pendant ${ban[1]} jours`;
+            if (ban == 99999) return "ban permanent";
+            if (ban == 0) return "averti";
+            return `banni pendant ${ban} jours`;
         }
     }
 
