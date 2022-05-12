@@ -1,14 +1,9 @@
+const { builtinModules } = require("module");
 const { logs } = require("../config.json");
 
 class Monitor {
-  client;
-  cocasio;
-  kdev;
-  constructor(client) {
+  init(client) {
     this.client = client;
-  }
-
-  init() {
     if (!logs) return;
     client.application?.fetch().then(async () => {
       this.cocasio = client.application?.owner;
@@ -16,7 +11,7 @@ class Monitor {
 
       const fs = require("fs");
 
-      fs.readFile(logs, "utf8", (err, data) => {
+      fs.readFile(logs, "utf8", async (err, data) => {
         if (err) {
           console.error(err);
           return;
@@ -38,8 +33,8 @@ class Monitor {
             content: `le bot a redémarré. Le message est trop long (${data.length} charactères)`,
             files: [logs],
           }
-          this.cocasio.send(content);
-          this.kdev.send(content);
+          await this.cocasio.send(content);
+          await this.kdev.send(content);
         }
 
         fs.writeFile(logs, "", (error) => {
@@ -49,14 +44,19 @@ class Monitor {
           }
           console.log("done");
         });
+
+        let now = new Date();
+        this.cocasio.send({ content: "Launched at : " + now.toLocaleString() });
+        this.kdev.send({ content: "Launched at : " + now.toLocaleString() });
       });
     });
   }
-
   log(message) {
     this.cocasio.send(message);
     this.kdev.send(message);
   }
 }
 
-module.exports = Monitor;
+const monitor = new Monitor();
+
+module.exports = monitor;
