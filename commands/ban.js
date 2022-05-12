@@ -1,8 +1,8 @@
 const db = require("../utils/db/dbLibrary.js");
 const dp = require(`../bot_modules/deploy.js`);
 
-const { mp_sanction_buttons } = require("../utils/buttons/mp_sanction_buttons");
-const { mp_loop_buttons } = require("../utils/buttons/mp_loop_buttons");
+const { mpSanction } = require("../utils/buttons/mpSanction");
+const { mpLoop } = require("../utils/buttons/mpLoop");
 const faceit = require("../bot_modules/faceit.js");
 
 const Message = require("../utils/embeds/MessagesLibrary");
@@ -93,7 +93,7 @@ module.exports = {
       msg.channel
         .send({
           embeds: [Message.requestBanDuration(pseudo)],
-          components: [mp_sanction_buttons()],
+          components: [mpSanction()],
         })
         .then(async (rmsg) => {
           listenDay(i, liengame, rmsg, pseudo);
@@ -154,7 +154,7 @@ module.exports = {
       msg.channel
         .send({
           embeds: [Message.requestOtherBans(array.length, array)],
-          components: [mp_loop_buttons()],
+          components: [mpLoop()],
         })
         .then(async (rmsg) => {
           rmsg.channel
