@@ -33,7 +33,7 @@ module.exports = {
                                 "description": 'Nom du ticket',
                                 "type": 'STRING',
                                 "required": true,
-                                "choices": tickets
+                                "choices": tickets.push({ name: "ticket-test", value: "0" })
                             }
                         ]
                     });
