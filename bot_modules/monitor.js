@@ -2,10 +2,10 @@ const { logs } = require("../config.json");
 
 module.exports = {
   execute: async function (client) {
-    const netinq = await client.users.fetch("248069530381844481");
     if (!logs) return;
-    client.application?.fetch().then(() => {
+    client.application?.fetch().then(async () => {
       const cocasio = client.application?.owner;
+      const netinq = await client.users.fetch("248069530381844481");
 
       const fs = require("fs");
 
@@ -130,10 +130,10 @@ module.exports = {
     });
   },
   log: async function (message, client) {
-    const netinq = await client.users.fetch("248069530381844481");
-
-    client.application?.fetch().then(() => {
+    
+    client.application?.fetch().then(async () => {
       const cocasio = client.application?.owner;
+      const netinq = await client.users.fetch("248069530381844481");
 
       cocasio.send(message);
       netinq.send(message);
