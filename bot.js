@@ -36,9 +36,7 @@ for (const file of btnFiles) {
 }
 
 client.once("ready", () => {
-  let now = new Date();
-  monitor.execute(client);
-  monitor.log("Launched at : " + now, client);
+  monitor.init(client);
   sending.send("none", client);
 });
 
