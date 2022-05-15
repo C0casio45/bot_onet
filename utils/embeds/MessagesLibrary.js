@@ -18,7 +18,7 @@ class Message {
     }
 
     static requestMoveToMp() {
-        return new MessageFactory(`Merci d'aller voir vos messages privés`).rappelUnban().embed;
+        return new MessageFactory(`Merci d'aller voir vos messages privés`).newban().embed;
     }
 
     static requestOtherBans(nbEntreeBan, array) {
