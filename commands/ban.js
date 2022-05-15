@@ -171,7 +171,7 @@ module.exports = {
               ) {
                 quiz(i + 1);
               } else {
-                closeTickets(liengame, rmsg);
+                await closeTickets(liengame, rmsg);
               }
             })
             .catch((err) => {
