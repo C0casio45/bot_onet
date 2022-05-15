@@ -23,9 +23,8 @@ module.exports = {
       const options = {
         hostname: "open.faceit.com",
         port: 443,
-        path: `/data/v4/search/players?nickname=${
-          pseudo[pseudo.length - 1]
-        }&offset=0&limit=1`,
+        path: `/data/v4/search/players?nickname=${pseudo[pseudo.length - 1]
+          }&offset=0&limit=1`,
         method: "GET",
         headers: {
           Authorization: `Bearer ${faceit.clientAPIKey}`,
@@ -61,7 +60,14 @@ module.exports = {
     // Body:
     // {"hubId":"HUB_ID","reason":"REASON","userId":"USER_ID"}
 
-    let userId = await this.GetUserToken(userLink);
+    let userId;
+
+    try {
+      userId = await this.GetUserToken(userLink);
+    } catch (expression) {
+      return callback(true, `User not found : ${expression}`);
+    }
+
     let modToken = faceit.token;
 
     const data = JSON.stringify({
