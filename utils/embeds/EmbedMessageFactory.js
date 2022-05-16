@@ -42,7 +42,7 @@ class MessageFactory {
     return this;
   }
 
-  newban() {
+  newBan() {
     this.setAuthor("Nouvelle entrée de banissement");
     return this;
   }
