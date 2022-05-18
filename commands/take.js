@@ -19,6 +19,8 @@ module.exports = {
         let pseudo = interaction.user.username;
         let discordID = interaction.user.id;
 
+        const take_channel = client.channels.cache.find((channel) => channel.name == "take");
+
         // TODO - @ le mec qui créé le ticket
         // channel.messages.fetch({ limit: 100 }).then(messages => {
         //     last = messages[Object.keys(messages)[Object.keys(messages).length - 1]];
@@ -33,8 +35,7 @@ module.exports = {
         const dp = require(`${__dirname}/../bot_modules/deploy.js`);
         await dp.dply(client, "0", interaction.guildId);
 
-
-
-        return interaction.reply(`Le <#${channel.id}> a été pris par <@!${interaction.user.id}>`);
+        take_channel.send({content: `Le <#${channel.id}> (${ticket}) a été pris par <@!${interaction.user.id}>`})
+        return interaction.reply({ content: `Vous avez pris le ticket <#${channel.id}>`, ephemeral: true });
     }
 }
