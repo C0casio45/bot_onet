@@ -186,7 +186,7 @@ module.exports = {
                       (failed, error = null) => {
                         if (failed) {
                           rmsg.channel.send({
-                            embeds: [Message.error(`${error}`)],
+                            embeds: [Message.error(0,`${error}`)],
                           });
                         } else {
                           rmsg.channel.send({
