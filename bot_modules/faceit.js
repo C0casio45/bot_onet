@@ -104,15 +104,19 @@ module.exports = {
             if (r.error == "invalid_token") {
               console.log(r);
               throw "INVALID_TOKEN";
-            } else if (r.errors) {
+            } else if (typeof r.errors != "undefined") {
               console.log(r);
-              throw r.errors[0].message;
+              throw r.errors[0];
             } else {
               console.log(r);
             }
             callback(false);
           } catch (exception) {
-            callback(true, exception);
+            if (exception.code == "comp_br33") {
+              callback(true, `Le joueur ${userLink} est déjà banni`);
+            } else {
+              callback(true, exception.message);
+            }
           }
         });
       });
