@@ -37,10 +37,10 @@ class Ban {
 
     while (endTicket) {
       let gameUrl = await this.request(Message.requestGameLink(), this.listenGameUrl.bind(this));
-      let player = await this.request(Message.requestUserLink(), this.listenPlayerUrl.bind(this));
-      let duration = await this.request(Message.requestBanDuration(player), this.listenBanTime.bind(this), [mpSanction()]);
-      let reason = await this.request(Message.requestRaison(player), this.listenBanReason.bind(this));
-      this.banList[iteration] = { "gameUrl": gameUrl, "player": player, "duration": duration, "reason": reason };
+      this.player = await this.request(Message.requestUserLink(), this.listenPlayerUrl.bind(this));
+      let duration = await this.request(Message.requestBanDuration(this.player), this.listenBanTime.bind(this), [mpSanction()]);
+      let reason = await this.request(Message.requestRaison(this.player), this.listenBanReason.bind(this));
+      this.banList[iteration] = { "gameUrl": gameUrl, "player": this.player, "duration": duration, "reason": reason };
       endTicket = await this.request(Message.requestOtherBans(iteration + 1, this.banList), this.listenEndTicket.bind(this), [mpLoop()]);
       iteration++;
     }
@@ -94,13 +94,14 @@ class Ban {
    * @returns player pseudo
    */
   async listenPlayerUrl(message) {
-    let linkArray = message.content.split("/");
+    const linkArray = message.content.split("/");
+    let pseudo = linkArray[linkArray.length - 1];
     if (!message.content.match(this.regexPlayer)) {
       message.reply({ content: "Format de données invalide." });
       await this.delay(300);
-      linkArray = await this.request(Message.requestUserLink(), this.listenPlayerUrl.bind(this));
+      pseudo = await this.request(Message.requestUserLink(), this.listenPlayerUrl.bind(this));
     }
-    return linkArray[5];
+    return pseudo;
   }
 
   /**
@@ -116,7 +117,7 @@ class Ban {
       jours != "Banissement permanant") {
       message.reply({ content: "Format de données invalide." });
       await this.delay(300);
-      jours = await this.request(Message.requestBanDuration(), this.listenBanTime.bind(this));
+      jours = await this.request(Message.requestBanDuration(this.pseudo), this.listenBanTime.bind(this), [mpSanction()]);
     }
     let days = parseInt(jours);
     if (days > 99999) days = 99999;
