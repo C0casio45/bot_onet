@@ -103,7 +103,8 @@ class Ban {
       link = await this.request(Message.requestUserLink(), this.listenPlayerUrl.bind(this));
     }
     const linkArray = link.split("/");
-    return linkArray[5];
+    console.log(link);
+    return linkArray[5] ?? link;
   }
 
   /**
