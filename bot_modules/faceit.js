@@ -13,19 +13,17 @@ module.exports = {
       guid + "@faceit.com" + "\x00" + guid + "\x00" + token
     ).toString("base64");
   },
-  GetUserToken(link) {
+  GetUserToken(pseudo) {
     // GET https://api.faceit.com/data/v4/search/players?nickname=test&offset=0&limit=50
     // Authorization: Bearer {token}
     return new Promise((resolve) => {
-      let pseudo = link.split("/");
 
       const https = require("https");
       const options = {
         hostname: "open.faceit.com",
         port: 443,
-        path: `/data/v4/search/players?nickname=${
-          pseudo[pseudo.length - 1]
-        }&offset=0&limit=1`,
+        path: `/data/v4/search/players?nickname=${pseudo[pseudo.length - 1]
+          }&offset=0&limit=1`,
         method: "GET",
         headers: {
           Authorization: `Bearer ${faceit.clientAPIKey}`,
@@ -53,7 +51,7 @@ module.exports = {
       req.end();
     });
   },
-  async BanPlayer(userLink, reason, callback) {
+  async BanPlayer(userNickname, reason, callback) {
     // POST https://api.faceit.com/hubs/v1/hub/{hubId}/ban/{userId}
     // Authorization: Bearer {userToken}
     // Content-Type: application/json
@@ -61,7 +59,7 @@ module.exports = {
     // Body:
     // {"hubId":"HUB_ID","reason":"REASON","userId":"USER_ID"}
 
-    let userId = await this.GetUserToken(userLink);
+    let userId = await this.GetUserToken(userNickname);
     let modToken = faceit.token;
 
     const data = JSON.stringify({
