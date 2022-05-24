@@ -9,6 +9,8 @@ module.exports = {
                 case "0":
                     const tickets = await db.getTicketList();
                     const user = await db.getBannedList();
+                    let ticketTest = tickets;
+                    ticketTest.unshift({ name: "ticket-test", value: "0" });
 
                     const dataGuild = [{
                         "name": 'ban',
@@ -52,7 +54,7 @@ module.exports = {
                         ]
                     });
 
-                    tickets.push({ name: "ticket-test", value: "0" })
+
 
                     dataGuild.push({
                         "name": 'ban_test',
@@ -63,7 +65,7 @@ module.exports = {
                                 "description": 'Nom du ticket',
                                 "type": 'STRING',
                                 "required": true,
-                                "choices": tickets
+                                "choices": ticketTest
                             }
                         ]
                     });
