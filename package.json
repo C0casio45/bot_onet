@@ -1,4 +1,12 @@
 {
+  "name": "bot_onet",
+  "description": "A bot for the OneT discord server providing a variety of useful commands.",
+  "version": "4.2.2",
+  "author": "Tom LUCAS <c0casio45.to@gmail.com>",
+  "contributors": [
+    "Quentin Sar <pro@sarquentin.fr>"
+  ],
+  "repository": "C0casio45/bot_onet",
   "dependencies": {
     "discord.js": "^13.2.0",
     "mysql": "^2.18.1",

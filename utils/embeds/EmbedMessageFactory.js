@@ -14,26 +14,28 @@ class MessageFactory {
   }
 
   /**
-   * @param code {number} - 1 = too late, 2 = try again, 3 = unknown
+   * @param code {number} - 0 = unknown, 1 = too late, 2 = try again
    * @param message {string} - custom error message
    */
   error(code, message) {
     this.setColor("#F58B00");
     if (message != "") {
       this.setDescription(message);
-    }
-    switch (code) {
-      case 1:
-        this.setDescription(`Vous avez mis trop de temps a répondre, merci de recommencer la démarche en écrivant /ban [ticket]`);
-        break;
-      case 2:
-        this.setDescription(`Merci de relancer une demande d'unban en indiquant un numéro la prochaine fois`);
-        break;
+    } else {
+      switch (code) {
+        case 1:
+          this.setDescription(`Vous avez mis trop de temps a répondre, merci de recommencer la démarche en écrivant /ban [ticket]`);
+          break;
+        case 2:
+          this.setDescription(`Merci de relancer une demande d'unban en indiquant un numéro la prochaine fois`);
+          break;
 
-      default:
-        this.setDescription(`Erreur inconnue`);
-        break;
+        default:
+          this.setDescription(`Erreur inconnue`);
+          break;
+      }
     }
+
     return this;
   }
 
@@ -42,7 +44,7 @@ class MessageFactory {
     return this;
   }
 
-  newban() {
+  newBan() {
     this.setAuthor("Nouvelle entrée de banissement");
     return this;
   }
@@ -83,7 +85,7 @@ class MessageFactory {
       description += `Un rappel sera fait dans le channel <#${unban.id}> le jour de l'unban à 9h.`;
     }
 
-    this.newban();
+    this.newBan();
     this.setDescription(description);
     return this;
   }
