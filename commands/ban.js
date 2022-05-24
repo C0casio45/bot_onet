@@ -62,7 +62,14 @@ class Ban {
         this.user.send({ embeds: [Message.error(1)] });
         return this.request(message, listener, btn);
       });
-    return listener(collected.first());
+    if (this.ticket == 0) {
+      if (listener == this.listenEndTicket.bind(this)) {
+        return listener(collected.first());
+      }
+      return collected.first().content;
+    } else {
+      return listener(collected.first());
+    }
   }
 
   /**
