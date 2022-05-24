@@ -22,8 +22,7 @@ module.exports = {
       const options = {
         hostname: "open.faceit.com",
         port: 443,
-        path: `/data/v4/search/players?nickname=${pseudo[pseudo.length - 1]
-          }&offset=0&limit=1`,
+        path: `/data/v4/search/players?nickname=${pseudo}&offset=0&limit=1`,
         method: "GET",
         headers: {
           Authorization: `Bearer ${faceit.clientAPIKey}`,
@@ -112,7 +111,7 @@ module.exports = {
             callback(false);
           } catch (exception) {
             if (exception.code == "comp_br33") {
-              callback(true, `Le joueur ${userLink} est déjà banni`);
+              callback(true, `Le joueur ${userNickname} est déjà banni`);
             } else {
               callback(true, exception.message);
             }
