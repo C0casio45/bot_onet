@@ -3,6 +3,7 @@ const dp = require(`../bot_modules/deploy.js`);
 
 const { mpSanction } = require("../utils/buttons/mpSanction");
 const { mpLoop } = require("../utils/buttons/mpLoop");
+const { mpGameUrl } = require("../utils/buttons/mpGameUrl.js");
 const faceit = require("../bot_modules/faceit.js");
 
 const Message = require("../utils/embeds/MessagesLibrary");
@@ -34,9 +35,9 @@ class Ban {
     let iteration = 0;
     let endTicket = true;
 
+    let gameUrl = await this.request(Message.requestGameLink(), this.listenGameUrl.bind(this), [mpGameUrl()]);
 
     while (endTicket) {
-      let gameUrl = await this.request(Message.requestGameLink(), this.listenGameUrl.bind(this));
       this.player = await this.request(Message.requestUserLink(), this.listenPlayerUrl.bind(this));
       let duration = await this.request(Message.requestBanDuration(this.player), this.listenBanTime.bind(this), [mpSanction()]);
       let reason = await this.request(Message.requestRaison(this.player), this.listenBanReason.bind(this));
@@ -80,6 +81,7 @@ class Ban {
    */
   async listenGameUrl(message) {
     let content = message.content;
+    if (message.content === "Il n'y a pas de partie liée au banissement") return null;
     if (!message.content.match(this.regexRoom)) {
       message.reply({ content: "Format de données invalide." });
       await this.delay(300);
@@ -94,14 +96,14 @@ class Ban {
    * @returns player pseudo
    */
   async listenPlayerUrl(message) {
-    const linkArray = message.content.split("/");
-    let pseudo = linkArray[linkArray.length - 1];
+    let link = message.content;
     if (!message.content.match(this.regexPlayer)) {
       message.reply({ content: "Format de données invalide." });
       await this.delay(300);
-      pseudo = await this.request(Message.requestUserLink(), this.listenPlayerUrl.bind(this));
+      link = await this.request(Message.requestUserLink(), this.listenPlayerUrl.bind(this));
     }
-    return pseudo;
+    const linkArray = link.split("/");
+    return linkArray[5];
   }
 
   /**
@@ -173,6 +175,8 @@ class Ban {
               this.user.send({
                 embeds: [Message.error(0, `${error}`)],
               });
+              const index = this.banList.indexOf(ban);
+              this.banList.splice(index, 1);
             } else {
               this.user.send({
                 embeds: [
@@ -180,14 +184,16 @@ class Ban {
                 ],
               });
 
-              //send message in private to user who banned the player
-              //this.user.send({ embeds: [Message.banLog(array.length, array)] });
-              //send message in discord channel
-              this.banChannel.send({
-                embeds: [Message.banLog(this.banList.length, this.banList, this.userid, this.unbanChannel)],
-              });
-              //update discord cache
-              dp.dply(this.client, "0", this.guildId);
+              if (this.banList[this.banList.length - 1] == ban) {
+                //send message in private to user who banned the player
+                //this.user.send({ embeds: [Message.banLog(array.length, array)] });
+                //send message in discord channel
+                this.banChannel.send({
+                  embeds: [Message.banLog(this.banList.length, this.banList, this.userid, this.unbanChannel)],
+                });
+                //update discord cache
+                dp.dply(this.client, "0", this.guildId);
+              }
             }
           }
         );
