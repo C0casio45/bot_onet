@@ -57,8 +57,10 @@ class Ban {
   async request(message, listener, btn = null) {
     let msg = await this.user.send({ embeds: [message], components: btn });
     let collected = await msg.channel.awaitMessages({ filter: this.filter, max: 1, time: 300000, errors: ["time"] })
-      .catch((e) => {
+      .catch(async (e) => {
         console.log(e);
+        this.user.send({ embeds: [Message.error(1)] });
+        return this.request(message, listener, btn);
       });
     return listener(collected.first());
   }
