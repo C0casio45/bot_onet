@@ -16,7 +16,7 @@ module.exports = {
   GetUserToken(pseudo) {
     // GET https://api.faceit.com/data/v4/search/players?nickname=test&offset=0&limit=50
     // Authorization: Bearer {token}
-    return new Promise((resolve) => {
+    return new Promise((resolve, rejects) => {
 
       const https = require("https");
       const options = {
@@ -39,7 +39,11 @@ module.exports = {
 
         res.on("end", (_d) => {
           let userData = JSON.parse(Buffer.concat(chunks).toString());
-          resolve(userData.items[0].player_id);
+          if (userData.items.length > 0) {
+            resolve(userData.items[0].player_id);
+          } else {
+            rejects("Il n'y a pas de compte avec ce pseudo");
+          }
         });
       });
 
@@ -63,7 +67,7 @@ module.exports = {
     try {
       userId = await this.GetUserToken(userNickname);
     } catch (expression) {
-      return callback(true, `User not found : ${expression}`);
+      return callback(true, `Utilisateur non trouvé : ${expression}`);
     }
 
     let modToken = faceit.token;
