@@ -9,8 +9,8 @@ module.exports = {
                 case "0":
                     const tickets = await db.getTicketList();
                     const user = await db.getBannedList();
-                    let ticketTest = tickets;
-                    ticketTest.unshift({ name: "ticket-test", value: "0" });
+                    let ticketTest = [{ name: "ticket-test", value: "0" }];
+                    ticketTest = ticketTest.concat(tickets);
 
                     const dataGuild = [{
                         "name": 'ban',
