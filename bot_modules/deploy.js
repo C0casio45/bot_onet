@@ -7,8 +7,8 @@ module.exports = {
 
             switch (p) {
                 case "0":
-                    const tickets = await db.getTicketList()
-                    const user = await db.getBannedList()
+                    const tickets = await db.getTicketList();
+                    const user = await db.getBannedList();
 
                     const dataGuild = [{
                         "name": 'ban',
@@ -23,20 +23,6 @@ module.exports = {
                             }
                         ]
                     }];
-
-                    dataGuild.push({
-                        "name": 'ban_test',
-                        "description": "Méthode pour tester la méthode ban",
-                        "options": [
-                            {
-                                "name": 'ticket',
-                                "description": 'Nom du ticket',
-                                "type": 'STRING',
-                                "required": true,
-                                "choices": tickets.push({ name: "ticket-test", value: "0" })
-                            }
-                        ]
-                    });
 
                     dataGuild.push({
                         "name": 'close',
@@ -62,6 +48,22 @@ module.exports = {
                                 "type": "STRING",
                                 "required": true,
                                 "choices": user
+                            }
+                        ]
+                    });
+
+                    tickets.push({ name: "ticket-test", value: "0" })
+
+                    dataGuild.push({
+                        "name": 'ban_test',
+                        "description": "Méthode pour tester la méthode ban",
+                        "options": [
+                            {
+                                "name": 'ticket',
+                                "description": 'Nom du ticket',
+                                "type": 'STRING',
+                                "required": true,
+                                "choices": tickets
                             }
                         ]
                     });
@@ -106,7 +108,7 @@ module.exports = {
                     break;
 
                 default:
-                    reject();
+                    resolve();
                     break;
 
             }
