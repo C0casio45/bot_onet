@@ -10,6 +10,7 @@ const { setTimeout } = require("timers");
 
 class Ban {
   constructor(interaction, client, test) {
+    this.client = client;
     this.unbanChannel = client.channels.cache.find(
       (channel) => channel.name == "rappel-unban"
     );
@@ -169,7 +170,7 @@ class Ban {
           (failed, error = null) => {
             if (failed) {
               this.user.send({
-                embeds: [Message.error(`${error}`)],
+                embeds: [Message.error(0, `${error}`)],
               });
             } else {
               this.user.send({
@@ -181,11 +182,11 @@ class Ban {
               //send message in private to user who banned the player
               //this.user.send({ embeds: [Message.banLog(array.length, array)] });
               //send message in discord channel
-              banChannel.send({
+              this.banChannel.send({
                 embeds: [Message.banLog(this.banList.length, this.banList, this.userid, this.unbanChannel)],
               });
               //update discord cache
-              dp.dply(client, "0", this.guildId);
+              dp.dply(this.client, "0", this.guildId);
             }
           }
         );
