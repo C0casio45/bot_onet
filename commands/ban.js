@@ -60,7 +60,6 @@ class Ban {
     let msg = await this.user.send({ embeds: [message], components: btn });
     let collected = await msg.channel.awaitMessages({ filter: this.filter, max: 1, time: 300000, errors: ["time"] })
       .catch(async (e) => {
-        console.log(e);
         this.user.send({ embeds: [Message.error(1)] });
         return this.request(message, listener, btn);
       });
@@ -103,7 +102,6 @@ class Ban {
       link = await this.request(Message.requestUserLink(), this.listenPlayerUrl.bind(this));
     }
     const linkArray = link.split("/");
-    console.log(link);
     return linkArray[5] ?? link;
   }
 
