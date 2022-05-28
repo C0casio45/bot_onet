@@ -60,7 +60,7 @@ class MessageFactory {
   * @param userid {string} - discord user id
   * @param unban {string} - unban channel id
   */
-  banLog(nbEntreeBan, array, userid, unban, ticketName = null) {
+  banLog(nbEntreeBan, array, userid, unban, ticketName) {
     let description = "";
 
     if (ticketName != null)`Suite au ticket ${ticketName} :\n`;

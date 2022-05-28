@@ -174,7 +174,7 @@ module.exports = {
                 //load data in database
                 array.forEach((row) => {
                   // id_Ticket, pseudo_accusé, Lien_Accusé, Lien_Partie, Duree_jours, raison, Fermé?
-                  db.closeTicket(options, row[0], liengame, row[1], row[2]);
+                  let ticketName = await db.closeTicket(options, row[0], liengame, row[1], row[2]);
 
                   if (!row[1] == 0) {
                     //ban player in faceit
@@ -186,7 +186,7 @@ module.exports = {
                       (failed, error = null) => {
                         if (failed) {
                           rmsg.channel.send({
-                            embeds: [Message.error(0,`${error}`)],
+                            embeds: [Message.error(0, `${error}`)],
                           });
                         } else {
                           rmsg.channel.send({
@@ -199,7 +199,7 @@ module.exports = {
                           //rmsg.channel.send({embeds : [Message.banLog(array.length,array)]});
                           //send message in discord channel
                           ban.send({
-                            embeds: [Message.banLog(array.length, array, userid, unban)],
+                            embeds: [Message.banLog(array.length, array, userid, unban, ticketName)],
                           });
                           //update discord cache
                           dp.dply(client, "0", interaction.guildId);
