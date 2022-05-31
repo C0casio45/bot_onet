@@ -52,7 +52,7 @@ class Message {
    * @param pseudo {string}
    * @param modo {string} - discord modo id
    */
-    unbanLogAuto(pseudo, modoId) {
+    static unbanLogAuto(pseudo, modoId) {
         const content = `Le joueur ${pseudo} a été débanni par <@!${modoId}>.`;
         return new MessageFactory(content).embed;
     }
@@ -76,6 +76,25 @@ class Message {
 
     static closeTicket(ticketName) {
         return new MessageFactory(`Le ${ticketName} a bien été fermé`).embed;
+    }
+
+    /**
+     * 
+     * @param {string} pseudo - pseudo de l'accuse
+     * @param {list[sanction]} sanctionArray - array of sanction<duration, reason>
+     * @returns 
+     */
+    static accuseInfo(pseudo, sanctionArray) {
+        if (sanctionArray.length == 0) return new MessageFactory(`Aucune sanction n'a été enregistrée pour l'utilisateur ${pseudo}`).embed;
+        const rawSactionArray = sanctionArray.map(sanction => `- ${textBuilder(sanction.duree)} | ${sanction.raison}`).join("\n");
+        let content = `L'utilisateur ${pseudo} a déjà été report pour les raisons suivantes :\n${rawSactionArray}`;
+        return new MessageFactory(content).embed;
+
+        function textBuilder(ban) {
+            if (ban == 99999) return "perm";
+            if (ban == 0) return "averti";
+            return `${ban}j`;
+        }
     }
 }
 module.exports = Message;

@@ -135,6 +135,19 @@ class DbLibrary {
         });
     }
 
+    /**
+     * 
+     * @param {string} pseudo accuse pseudo
+     * @returns 
+     */
+    static getAccuseInfo(pseudo) {
+        return new Promise((resolve, reject) => {
+            return new DatabaseFactory(`call bot_onet.info_accuse('${pseudo}');`, function (err, result) {
+                if (err) reject(err);
+                resolve(result[0]);
+            })
+        });
+    }
 
 }
 
