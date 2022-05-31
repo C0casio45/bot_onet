@@ -22,8 +22,9 @@ class Message {
     }
 
     static requestOtherBans(nbEntreeBan, array) {
-        array.map(ban => `- Utilisateur ${ban[0]} ${textBuilder(ban[1])}`);
-        const content = `Vous avez actuellement ${nbEntreeBan == 1 ? nbEntreeBan + "enregistré" : nbEntreeBan + "enregistrés"} :\n${array.join("\n")}\n\nVoulez vous ajouter une sanction à un autre utilisateur ?`;
+        const rawBanList = array.map(u => `${u.player},${u.duration},${u.reason}`).join("\n")
+        array.map(ban => `- Utilisateur ${ban.player} ${textBuilder(ban.duration)}`);
+        const content = `Vous avez actuellement ${nbEntreeBan == 0 ? nbEntreeBan + " enregistré" : nbEntreeBan + " enregistrés"} :\n${rawBanList}\n\nVoulez vous ajouter une sanction à un autre utilisateur ?`;
         return new MessageFactory(content);
 
         function textBuilder(ban) {

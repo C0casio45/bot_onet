@@ -5,3 +5,5 @@ package-lock.json
 bordel/
 dbconnect.js
 .idea/
+logs.txt
+launch.json

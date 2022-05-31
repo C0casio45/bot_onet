@@ -13,18 +13,16 @@ module.exports = {
       guid + "@faceit.com" + "\x00" + guid + "\x00" + token
     ).toString("base64");
   },
-  GetUserToken(link) {
+  GetUserToken(pseudo) {
     // GET https://api.faceit.com/data/v4/search/players?nickname=test&offset=0&limit=50
     // Authorization: Bearer {token}
-    return new Promise((resolve) => {
-      let pseudo = link.split("/");
+    return new Promise((resolve, rejects) => {
 
       const https = require("https");
       const options = {
         hostname: "open.faceit.com",
         port: 443,
-        path: `/data/v4/search/players?nickname=${pseudo[pseudo.length - 1]
-          }&offset=0&limit=1`,
+        path: `/data/v4/search/players?nickname=${pseudo}&offset=0&limit=1`,
         method: "GET",
         headers: {
           Authorization: `Bearer ${faceit.clientAPIKey}`,
@@ -41,7 +39,11 @@ module.exports = {
 
         res.on("end", (_d) => {
           let userData = JSON.parse(Buffer.concat(chunks).toString());
-          resolve(userData.items[0].player_id);
+          if (userData.items.length > 0) {
+            resolve(userData.items[0].player_id);
+          } else {
+            rejects("Il n'y a pas de compte avec ce pseudo");
+          }
         });
       });
 
@@ -52,7 +54,7 @@ module.exports = {
       req.end();
     });
   },
-  async BanPlayer(userLink, reason, callback) {
+  async BanPlayer(userNickname, reason, callback) {
     // POST https://api.faceit.com/hubs/v1/hub/{hubId}/ban/{userId}
     // Authorization: Bearer {userToken}
     // Content-Type: application/json
@@ -63,9 +65,9 @@ module.exports = {
     let userId;
 
     try {
-      userId = await this.GetUserToken(userLink);
+      userId = await this.GetUserToken(userNickname);
     } catch (expression) {
-      return callback(true, `User not found : ${expression}`);
+      return callback(true, `Utilisateur non trouvé : ${expression}`);
     }
 
     let modToken = faceit.token;
@@ -113,7 +115,7 @@ module.exports = {
             callback(false);
           } catch (exception) {
             if (exception.code == "comp_br33") {
-              callback(true, `Le joueur ${userLink} est déjà banni`);
+              callback(true, `Le joueur ${userNickname} est déjà banni`);
             } else {
               callback(true, exception.message);
             }

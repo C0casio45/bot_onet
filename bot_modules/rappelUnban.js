@@ -5,7 +5,6 @@ const db = require("../utils/db/dbLibrary.js");
 module.exports = {
   send: async function (interaction, client) {
     const rappelUnbanList = await db.getRappelUnbanList();
-    console.log(rappelUnbanList);
     let embedsArr = [];
     let months = [
       "Janvier",

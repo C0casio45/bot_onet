@@ -42,7 +42,6 @@ class Monitor {
             console.error(error);
             return;
           }
-          console.log("done");
         });
 
         let now = new Date();
