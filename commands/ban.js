@@ -163,7 +163,7 @@ class Ban {
     //load data in database
     this.banList.forEach((ban) => {
       // id_Ticket, pseudo_accusé, Lien_Accusé, Lien_Partie, Duree_jours, raison, Fermé?
-      db.closeTicket(this.ticket, ban.player, ban.gameUrl, ban.duration, ban.reason);
+      let ticketName = db.closeTicket(this.ticket, ban.player, ban.gameUrl, ban.duration, ban.reason);
 
       if (!ban.duration == 0) {
         //ban player in faceit
@@ -188,7 +188,7 @@ class Ban {
                 //this.user.send({ embeds: [Message.banLog(array.length, array)] });
                 //send message in discord channel
                 this.banChannel.send({
-                  embeds: [Message.banLog(this.banList.length, this.banList, this.userid, this.unbanChannel)],
+                  embeds: [Message.banLog(this.banList.length, this.banList, this.userid, this.unbanChannel, ticketName)],
                 });
                 //update discord cache
                 dp.dply(this.client, "0", this.guildId);
