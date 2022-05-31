@@ -22,8 +22,9 @@ class Message {
     }
 
     static requestOtherBans(nbEntreeBan, array) {
-        array.map(ban => `- Utilisateur ${ban[0]} ${textBuilder(ban[1])}`);
-        const content = `Vous avez actuellement ${nbEntreeBan == 1 ? nbEntreeBan + "enregistré" : nbEntreeBan + "enregistrés"} :\n${array.join("\n")}\n\nVoulez vous ajouter une sanction à un autre utilisateur ?`;
+        const rawBanList = array.map(u => `${u.player},${u.duration},${u.reason}`).join("\n")
+        array.map(ban => `- Utilisateur ${ban.player} ${textBuilder(ban.duration)}`);
+        const content = `Vous avez actuellement ${nbEntreeBan == 0 ? nbEntreeBan + " enregistré" : nbEntreeBan + " enregistrés"} :\n${rawBanList}\n\nVoulez vous ajouter une sanction à un autre utilisateur ?`;
         return new MessageFactory(content);
 
         function textBuilder(ban) {
@@ -43,15 +44,15 @@ class Message {
         return new MessageFactory(content).embed;
     }
 
-    static banLog(nbEntreeBan, array, userid, unban) {
-        return new MessageFactory().banLog(nbEntreeBan, array, userid, unban).embed;
+    static banLog(nbEntreeBan, array, userid, unban, ticketName = null) {
+        return new MessageFactory().banLog(nbEntreeBan, array, userid, unban, ticketName).embed;
     }
 
     /***
    * @param pseudo {string}
    * @param modo {string} - discord modo id
    */
-    unbanLogAuto(pseudo, modoId) {
+    static unbanLogAuto(pseudo, modoId) {
         const content = `Le joueur ${pseudo} a été débanni par <@!${modoId}>.`;
         return new MessageFactory(content).embed;
     }
@@ -75,6 +76,25 @@ class Message {
 
     static closeTicket(ticketName) {
         return new MessageFactory(`Le ${ticketName} a bien été fermé`).embed;
+    }
+
+    /**
+     * 
+     * @param {string} pseudo - pseudo de l'accuse
+     * @param {list[sanction]} sanctionArray - array of sanction<duration, reason>
+     * @returns 
+     */
+    static accuseInfo(pseudo, sanctionArray) {
+        if (sanctionArray.length == 0) return new MessageFactory(`Aucune sanction n'a été enregistrée pour l'utilisateur ${pseudo}`).embed;
+        const rawSactionArray = sanctionArray.map(sanction => `- ${textBuilder(sanction.duree)} | ${sanction.raison}`).join("\n");
+        let content = `L'utilisateur ${pseudo} a déjà été report pour les raisons suivantes :\n${rawSactionArray}`;
+        return new MessageFactory(content).embed;
+
+        function textBuilder(ban) {
+            if (ban == 99999) return "perm";
+            if (ban == 0) return "averti";
+            return `${ban}j`;
+        }
     }
 }
 module.exports = Message;

@@ -33,11 +33,13 @@ class DbLibrary {
      * @param {string} raison - ban reason
      * @returns
      */
-    static closeTicket(ticketId, pseudoAccuse, lienPartie, dureeJours, raison) {
-        const query = `call bot_onet.close_ticket(${ticketId}, '${pseudoAccuse}', 'https://www.faceit.com/fr/players/${pseudoAccuse}', '${lienPartie}', ${dureeJours}, '${raison}', TRUE);`;
-        return new DatabaseFactory(query, function (err, result) {
-            if (err) throw err;
-            return result
+    static async closeTicket(ticketId, pseudoAccuse, lienPartie, dureeJours, raison) {
+        return new Promise((resolve, reject) => {
+            const query = `call bot_onet.close_ticket(${ticketId}, '${pseudoAccuse}', 'https://www.faceit.com/fr/players/${pseudoAccuse}', '${lienPartie}', ${dureeJours}, '${raison}', TRUE);`;
+            return new DatabaseFactory(query, function (err, result) {
+                if (err) reject(err);
+                resolve(result);
+            });
         });
     }
 
@@ -135,6 +137,19 @@ class DbLibrary {
         });
     }
 
+    /**
+     * 
+     * @param {string} pseudo accuse pseudo
+     * @returns 
+     */
+    static getAccuseInfo(pseudo) {
+        return new Promise((resolve, reject) => {
+            return new DatabaseFactory(`call bot_onet.info_accuse('${pseudo}');`, function (err, result) {
+                if (err) reject(err);
+                resolve(result[0]);
+            })
+        });
+    }
 
 }
 

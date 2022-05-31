@@ -7,8 +7,10 @@ module.exports = {
 
             switch (p) {
                 case "0":
-                    const tickets = await db.getTicketList()
-                    const user = await db.getBannedList()
+                    const tickets = await db.getTicketList();
+                    const user = await db.getBannedList();
+                    let ticketTest = [{ name: "ticket-test", value: "0" }];
+                    ticketTest = ticketTest.concat(tickets);
 
                     const dataGuild = [{
                         "name": 'ban',
@@ -39,6 +41,25 @@ module.exports = {
                     });
 
                     dataGuild.push({
+                        "name": 'info',
+                        "description": "Méthode pour obtenir des informations sur un accusé",
+                        "options": [
+                            {
+                                "name": 'link',
+                                "description": 'Lien de l\'accusé',
+                                "type": 'STRING',
+                                "required": false
+                            },
+                            {
+                                "name": 'pseudo',
+                                "description": 'Pseudo de l\'accusé',
+                                "type": 'STRING',
+                                "required": false
+                            }
+                        ]
+                    });
+
+                    dataGuild.push({
                         "name": 'unban',
                         "description": "Méthode débannir des gens",
                         "options": [
@@ -48,6 +69,22 @@ module.exports = {
                                 "type": "STRING",
                                 "required": true,
                                 "choices": user
+                            }
+                        ]
+                    });
+
+
+
+                    dataGuild.push({
+                        "name": 'ban_test',
+                        "description": "Méthode pour tester la méthode ban",
+                        "options": [
+                            {
+                                "name": 'ticket',
+                                "description": 'Nom du ticket',
+                                "type": 'STRING',
+                                "required": true,
+                                "choices": ticketTest
                             }
                         ]
                     });
@@ -92,7 +129,7 @@ module.exports = {
                     break;
 
                 default:
-                    reject();
+                    resolve();
                     break;
 
             }
