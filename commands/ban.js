@@ -206,6 +206,12 @@ module.exports = {
                         }
                       }
                     );
+                  } else {
+                    rmsg.channel.send({
+                      embeds: [
+                        Message.success("Ticket fermé avec succès."),
+                      ],
+                    });
                   }
                 });
               }
