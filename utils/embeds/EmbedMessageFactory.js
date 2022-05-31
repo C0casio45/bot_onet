@@ -18,7 +18,7 @@ class MessageFactory {
    * @param message {string} - custom error message
    */
   error(code, message) {
-    this.setColor("#F58B00");
+    this.setColor("#E0322B");
     if (message != "") {
       this.setDescription(message);
     } else {
@@ -40,7 +40,7 @@ class MessageFactory {
   }
 
   success() {
-    this.setColor("#00ff00");
+    this.setColor("#34EBA1");
     return this;
   }
 
