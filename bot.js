@@ -53,11 +53,12 @@ client.on("messageCreate", async (message) => {
     const dp = require(`./bot_modules/deploy.js`);
     const param = message.content.split(" ");
     dp.dply(client, param[1], param[2]);
-    monitor.log(client, "deployed on " + param[2]);
+    monitor.log(`deployed on <#${message.channel.id}>`);
   }
 
   if (message.content.toLowerCase().split(" ")[0] == "!r" && userVerif()) {
-    process.exit();
+    monitor.log(`bot relaunch by <@${message.author.id}>`);
+    setTimeout(() => { process.exit() }, 2000);
   }
 });
 

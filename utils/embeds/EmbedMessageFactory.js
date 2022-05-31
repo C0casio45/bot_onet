@@ -18,7 +18,7 @@ class MessageFactory {
    * @param message {string} - custom error message
    */
   error(code, message) {
-    this.setColor("#F58B00");
+    this.setColor("#E0322B");
     if (message != "") {
       this.setDescription(message);
     } else {
@@ -40,7 +40,7 @@ class MessageFactory {
   }
 
   success() {
-    this.setColor("#00ff00");
+    this.setColor("#34EBA1");
     return this;
   }
 
@@ -66,22 +66,22 @@ class MessageFactory {
     if (ticketName != null)`Suite au ticket ${ticketName} :\n`;
 
     if (nbEntreeBan == 1) {
-      if (array[0][1] == 99999) {
-        description = `Le joueur **${array[0][0]}** a été banni de **manière permanante** par <@${userid}> pour la raison suivante : ${array[0][2]}.`;
-      } else if (array[0][1] == 0) {
-        description = `Le joueur **${array[0][0]}** a reçu un **avertissement** par <@${userid}> pour la raison suivante : ${array[0][2]}.`;
+      if (array[0].duration == 99999) {
+        description = `Le joueur **${array[0].player}** a été banni de **manière permanante** par <@${userid}> pour la raison suivante : ${array[0].reason}.`;
+      } else if (array[0].duration == 0) {
+        description = `Le joueur **${array[0].player}** a reçu un **avertissement** par <@${userid}> pour la raison suivante : ${array[0][2]}.`;
       } else {
-        description = `Le joueur **${array[0][0]}** a été banni par <@${userid}> pour une durée de **${array[0][1]} jours** pour la raison suivante : ${array[0][2]}.\nUn rappel sera fait dans le channel <#${unban.id}> le jour de l'unban à 9h.`;
+        description = `Le joueur **${array[0].player}** a été banni par <@${userid}> pour une durée de **${array[0].duration} jours** pour la raison suivante : ${array[0].reason}.\nUn rappel sera fait dans le channel <#${unban.id}> le jour de l'unban à 9h.`;
       }
     } else {
       description = `Les joueur suivants ont été modéré par <@${userid}> :\n`;
       array.forEach((ban) => {
         if (ban[1] == 0) {
-          description += `- L'utilisateur ${ban[0]} a reçu un avertissement pour la raison suivante : ${ban[2]}\n`;
+          description += `- L'utilisateur ${ban.player} a reçu un avertissement pour la raison suivante : ${ban.reason}\n`;
         } else if (ban[1] == 99999) {
-          description += `- L'utilisateur ${ban[0]} a été banni de manière permanante pour la raison suivante : ${ban[2]}\n`;
+          description += `- L'utilisateur ${ban.player} a été banni de manière permanante pour la raison suivante : ${ban.reason}\n`;
         } else {
-          description += `- L'utilisateur ${ban[0]} a été banni pendant ${ban[1]} jours pour la raison suivante : ${ban[2]}\n`;
+          description += `- L'utilisateur ${ban.player} a été banni pendant ${ban.duration} jours pour la raison suivante : ${ban.reason}\n`;
         }
       });
       description += `Un rappel sera fait dans le channel <#${unban.id}> le jour de l'unban à 9h.`;

@@ -3,218 +3,234 @@ const dp = require(`../bot_modules/deploy.js`);
 
 const { mpSanction } = require("../utils/buttons/mpSanction");
 const { mpLoop } = require("../utils/buttons/mpLoop");
+const { mpGameUrl } = require("../utils/buttons/mpGameUrl.js");
 const faceit = require("../bot_modules/faceit.js");
 
 const Message = require("../utils/embeds/MessagesLibrary");
 const { setTimeout } = require("timers");
 
+class Ban {
+  constructor(interaction, client, test) {
+    this.client = client;
+    this.unbanChannel = client.channels.cache.find(
+      (channel) => channel.name == "rappel-unban"
+    );
+    this.banChannel = client.channels.cache.find((channel) => channel.name == "ban");
+    this.ticket = interaction.options._hoistedOptions[0].value;
+    this.user = interaction.user;
+    this.userid = interaction.user.id;
+    this.guildId = interaction.guildId;
+    this.banList = [];
+    this.test = test;
+    //FACEIT ROOM EXEMPLE: https://www.faceit.com/fr/csgo/room/1-0def9859-57d0-4613-a578-eb3c6ec04176
+    this.regexRoom = /https:\/\/www.faceit.com\/([a-zA-Z0-9-]{2})\/csgo\/room\/([a-zA-Z0-9-]*)/;
+    // FACEIT PROFIL EXEMPLE : https://www.faceit.com/fr/players-modal/k-dev OR https://www.faceit.com/fr/players/k-dev
+    this.regexPlayer = /(https:\/\/www.faceit.com\/([a-zA-Z0-9-]{2})\/players-modal\/([a-zA-Z0-9_-]*))|(https:\/\/www.faceit.com\/([a-zA-Z0-9-]{2})\/players\/([a-zA-Z0-9_-]*))/;
+
+    interaction.reply({ embeds: [Message.requestMoveToMp()], ephemeral: true });
+  }
+
+  async Quizz() {
+
+    let iteration = 0;
+    let endTicket = true;
+
+    let gameUrl = await this.request(Message.requestGameLink(), this.listenGameUrl.bind(this), [mpGameUrl()]);
+
+    while (endTicket) {
+      this.player = await this.request(Message.requestUserLink(), this.listenPlayerUrl.bind(this));
+      let duration = await this.request(Message.requestBanDuration(this.player), this.listenBanTime.bind(this), [mpSanction()]);
+      let reason = await this.request(Message.requestRaison(this.player), this.listenBanReason.bind(this));
+      this.banList[iteration] = { "gameUrl": gameUrl, "player": this.player, "duration": duration, "reason": reason };
+      endTicket = await this.request(Message.requestOtherBans(iteration + 1, this.banList), this.listenEndTicket.bind(this), [mpLoop()]);
+      iteration++;
+    }
+
+    this.closeTickets()
+  }
+
+  /**
+   * 
+   * @param {EmbedMessage} message Embed message to send
+   * @param {function} listener function to listen
+   * @param {MessageActionRow} btn Button row to send
+   * @returns result of the listener
+   */
+  async request(message, listener, btn = null) {
+    let msg = await this.user.send({ embeds: [message], components: btn });
+    let collected = await msg.channel.awaitMessages({ filter: this.filter, max: 1, time: 300000, errors: ["time"] })
+      .catch(async (e) => {
+        this.user.send({ embeds: [Message.error(1)] });
+        return this.request(message, listener, btn);
+      });
+    if (this.ticket == 0) {
+      if (listener == this.listenEndTicket.bind(this)) {
+        return listener(collected.first());
+      }
+      return collected.first().content;
+    } else {
+      return listener(collected.first());
+    }
+  }
+
+  /**
+   * 
+   * @param {Object} message message collected
+   * @returns url of the game
+   */
+  async listenGameUrl(message) {
+    let content = message.content;
+    if (message.content === "Il n'y a pas de partie liée au banissement") return null;
+    if (!message.content.match(this.regexRoom)) {
+      message.reply({ content: "Format de données invalide." });
+      await this.delay(300);
+      content = await this.request(Message.requestGameLink(), this.listenGameUrl.bind(this));
+    }
+    return content;
+  }
+
+  /**
+   * 
+   * @param {Object} message message collected
+   * @returns player pseudo
+   */
+  async listenPlayerUrl(message) {
+    let link = message.content;
+    if (!message.content.match(this.regexPlayer)) {
+      message.reply({ content: "Format de données invalide." });
+      await this.delay(300);
+      link = await this.request(Message.requestUserLink(), this.listenPlayerUrl.bind(this));
+    }
+    const linkArray = link.split("/");
+    return linkArray[5] ?? link;
+  }
+
+  /**
+   * 
+   * @param {Object} message message collected
+   * @returns ban time
+   */
+  async listenBanTime(message) {
+    let jours = message.content;
+
+    if (!jours.match(/\d/) &&
+      jours != "Avertissement" &&
+      jours != "Banissement permanant") {
+      message.reply({ content: "Format de données invalide." });
+      await this.delay(300);
+      jours = await this.request(Message.requestBanDuration(this.pseudo), this.listenBanTime.bind(this), [mpSanction()]);
+    }
+    let days = parseInt(jours);
+    if (days > 99999) days = 99999;
+    const isAvertissement = jours == "Avertissement" ? 0 : days;
+    days =
+      jours == "Banissement permanant"
+        ? 99999
+        : isAvertissement;
+    return days;
+  }
+
+  /**
+   * 
+   * @param {Object} message message collected
+   * @returns ban reason
+   */
+  async listenBanReason(message) {
+    let reason = message.content;
+    if (message.content.length > 100) {
+      message.reply({ content: "Format de données invalide." });
+      await this.delay(300);
+      reason = await this.request(Message.requestRaison(), this.listenBanReason.bind(this));
+    }
+    return reason;
+  }
+
+  /**
+   * 
+   * @param {Object} message message collected
+   * @returns boolean
+   */
+  async listenEndTicket(message) {
+    return message.content.toLowerCase() == "oui" ||
+      message.content.toLowerCase() == "yes" ||
+      message.content.toLowerCase() == "o" ||
+      message.content.toLowerCase() == "y" ||
+      message.content.toLowerCase() == "ajout d'un nouvel accusé";
+  }
+
+  async closeTickets() {
+    if (this.test) return this.user.send({ embeds: [Message.banLog(this.banList.length, this.banList, this.userid, this.unbanChannel)] });
+    //load data in database
+    this.banList.forEach((ban) => {
+      // id_Ticket, pseudo_accusé, Lien_Accusé, Lien_Partie, Duree_jours, raison, Fermé?
+      let ticketName = db.closeTicket(this.ticket, ban.player, ban.gameUrl, ban.duration, ban.reason);
+
+      if (!ban.duration == 0) {
+        //ban player in faceit
+        faceit.BanPlayer(
+          ban.player, this.faceitMessageBuilder(ban.duration),
+          (failed, error = null) => {
+            if (failed) {
+              this.user.send({
+                embeds: [Message.error(0, `${error}`)],
+              });
+              const index = this.banList.indexOf(ban);
+              this.banList.splice(index, 1);
+            } else {
+              this.user.send({
+                embeds: [
+                  Message.success("Ticket fermé avec succès."),
+                ],
+              });
+
+              if (this.banList[this.banList.length - 1] == ban) {
+                //send message in private to user who banned the player
+                //this.user.send({ embeds: [Message.banLog(array.length, array)] });
+                //send message in discord channel
+                this.banChannel.send({
+                  embeds: [Message.banLog(this.banList.length, this.banList, this.userid, this.unbanChannel, ticketName)],
+                });
+                //update discord cache
+                dp.dply(this.client, "0", this.guildId);
+              }
+            }
+          }
+        );
+      }
+    });
+  }
+
+  /**
+   * 
+   * @param {number} jours number of days
+   * @returns Faceit message
+   */
+  faceitMessageBuilder(jours) {
+    return "Ban " +
+      (jours == 99999 ? "perm" : jours + "j") +
+      ". Plus d'informations sur notre discord."
+  }
+
+  /**
+   * 
+   * @param {number} t time delay in ms
+   * @param {dynamic} val value to return
+   * @returns val
+   */
+  delay(t, val) {
+    return new Promise(function (resolve) {
+      setTimeout(function () {
+        resolve(val);
+      }, t);
+    });
+  }
+}
+
 module.exports = {
   name: "ban",
   description: "Méthode pour bannir les gens",
-  async execute(interaction, client) {
-    let unban = client.channels.cache.find(
-      (channel) => channel.name == "rappel-unban"
-    );
-    let ban = client.channels.cache.find((channel) => channel.name == "ban");
-    let options = interaction.options._hoistedOptions[0].value;
-    let user = interaction.user;
-    let userid = user.id;
-    let array = [];
-
-    interaction.reply({ embeds: [Message.requestMoveToMp()], ephemeral: true });
-
-    const filter = (m) => [user.id, client.user.id].includes(m.author.id);
-
-    // FACEIT ROOM EXEMPLE
-    // https://www.faceit.com/fr/csgo/room/1-0def9859-57d0-4613-a578-eb3c6ec04176
-    const regexRoom = /https:\/\/www.faceit.com\/([a-zA-Z0-9-]{2})\/csgo\/room\/([a-zA-Z0-9-]*)/;
-
-    // FACEIT PROFIL EXEMPLE
-    // https://www.faceit.com/fr/players-modal/k-dev
-    // OR
-    // https://www.faceit.com/fr/players/k-dev
-    const regexPlayer = /(https:\/\/www.faceit.com\/([a-zA-Z0-9-]{2})\/players-modal\/([a-zA-Z0-9_-]*))|(https:\/\/www.faceit.com\/([a-zA-Z0-9-]{2})\/players\/([a-zA-Z0-9_-]*))/;
-
-    getGame();
-
-    function getGame() {
-      user
-        .send({ embeds: [Message.requestGameLink()] })
-        .then(async (tmsg) => listenGame(tmsg));
-    }
-
-    function listenGame(tmsg) {
-      tmsg.channel
-        .awaitMessages({ filter, max: 1, time: 300000, errors: ["time"] })
-        .then((collected) => {
-          if (collected.first().content.match(regexRoom))
-            quiz(0, collected.first().content);
-          else {
-            collected.first().reply({ content: "Format de données invalide." });
-            setTimeout(() => getGame(), 300);
-          }
-        })
-        .catch((err) => {
-          console.log(err);
-          tmsg.channel.send({ embeds: [Message.error()] });
-        });
-    }
-
-    return;
-
-    function quiz(i, liengame) {
-      array.push([]);
-      user
-        .send({ embeds: [Message.requestUserLink()] })
-        .then(async (msg) => listenQuizz(i, liengame, msg));
-    }
-
-    function listenQuizz(i, liengame, msg) {
-      msg.channel
-        .awaitMessages({ filter, max: 1, time: 300000, errors: ["time"] })
-        .then((collected) => {
-          if (collected.first().content.match(regexPlayer)) {
-            let link = collected.first().content.split("/");
-            let pseudo = link[5];
-            array[i][0] = pseudo;
-            getDays(i, liengame, msg, pseudo);
-          } else {
-            collected.first().reply({ content: "Format de données invalide." });
-            setTimeout(() => quiz(i, liengame), 300);
-          }
-        })
-        .catch((err) => {
-          console.log(err);
-          msg.channel.send({ embeds: [Message.error(1)] });
-        });
-    }
-
-    function getDays(i, liengame, msg, pseudo) {
-      msg.channel
-        .send({
-          embeds: [Message.requestBanDuration(pseudo)],
-          components: [mpSanction()],
-        })
-        .then(async (rmsg) => {
-          listenDay(i, liengame, rmsg, pseudo);
-        });
-    }
-
-    function listenDay(i, liengame, rmsg, pseudo) {
-      rmsg.channel
-        .awaitMessages({ filter, max: 1, time: 300000, errors: ["time"] })
-        .then((collected) => {
-          let jours = collected.first().content;
-          if (
-            !jours.match(/\d/) &&
-            jours != "Avertissement" &&
-            jours != "Banissement permanant"
-          ) {
-            collected.first().reply({ content: "Format de données invalide." });
-            setTimeout(() => {
-              getDays(i, liengame, rmsg, pseudo);
-            }, 300);
-          } else {
-            let days = parseInt(jours);
-            const isAvertissement = jours == "Avertissement" ? 0 : days;
-            days =
-              jours == "Banissement permanant"
-                ? 99999
-                : isAvertissement;
-            array[i][1] = days;
-            if (array[i][1] > 99999) array[i][1] = 99999;
-            getReason(i, liengame, rmsg, pseudo);
-          }
-        })
-        .catch((err) => {
-          console.log(err);
-          rmsg.channel.send({ embeds: [Message.error(1)] });
-        });
-    }
-
-    function getReason(i, liengame, msg, pseudo) {
-      msg.channel
-        .send({ embeds: [Message.requestRaison(pseudo)] })
-        .then(async (rmsg) => {
-          rmsg.channel
-            .awaitMessages({ filter, max: 1, time: 300000, errors: ["time"] })
-            .then((collected) => {
-              let raison = collected.first().content;
-              array[i][2] = raison;
-              isLoop(i, liengame, rmsg);
-            })
-            .catch((err) => {
-              console.log(err);
-              rmsg.channel.send({ embeds: [Message.error(1)] });
-            });
-        });
-    }
-
-    function isLoop(i, liengame, msg) {
-      msg.channel
-        .send({
-          embeds: [Message.requestOtherBans(array.length, array)],
-          components: [mpLoop()],
-        })
-        .then(async (rmsg) => {
-          rmsg.channel
-            .awaitMessages({ filter, max: 1, time: 300000, errors: ["time"] })
-            .then((collected) => {
-              let choix = collected.first().content;
-
-              if (
-                choix.toLowerCase() == "oui" ||
-                choix.toLowerCase() == "yes" ||
-                choix.toLowerCase() == "o" ||
-                choix.toLowerCase() == "y" ||
-                choix.toLowerCase() == "ajout d'un nouvel accusé"
-              ) {
-                quiz(i + 1);
-              } else {
-                //load data in database
-                array.forEach((row) => {
-                  // id_Ticket, pseudo_accusé, Lien_Accusé, Lien_Partie, Duree_jours, raison, Fermé?
-                  let ticketName = await db.closeTicket(options, row[0], liengame, row[1], row[2]);
-
-                  if (!row[1] == 0) {
-                    //ban player in faceit
-                    faceit.BanPlayer(
-                      row[0],
-                      "Ban " +
-                      (row[1] == 99999 ? "perm" : row[1] + "j") +
-                      ". Plus d'informations sur notre discord.",
-                      (failed, error = null) => {
-                        if (failed) {
-                          rmsg.channel.send({
-                            embeds: [Message.error(0, `${error}`)],
-                          });
-                        } else {
-                          rmsg.channel.send({
-                            embeds: [
-                              Message.success("Ticket fermé avec succès."),
-                            ],
-                          });
-
-                          //send message in private to user who banned the player
-                          //rmsg.channel.send({embeds : [Message.banLog(array.length,array)]});
-                          //send message in discord channel
-                          ban.send({
-                            embeds: [Message.banLog(array.length, array, userid, unban, ticketName)],
-                          });
-                          //update discord cache
-                          dp.dply(client, "0", interaction.guildId);
-                        }
-                      }
-                    );
-                  }
-                });
-              }
-            })
-            .catch((err) => {
-              console.log(err);
-              rmsg.channel.send({ embeds: [Message.error(1)] });
-            });
-        });
-    }
+  async execute(interaction, client, test = false) {
+    let ban = new Ban(interaction, client, test);
+    ban.Quizz();
   },
 };
