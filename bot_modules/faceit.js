@@ -41,7 +41,11 @@ module.exports = {
           let userData = JSON.parse(Buffer.concat(chunks).toString());
           console.log(userData);
           if (userData.errors != undefined) {
-            rejects(userData.errors[0].message);
+            if (userData.errors[0].message == "The resource was not found.") {
+              rejects(`Le joueur ${pseudo} n'a pas été trouvé.`);
+            } else {
+              rejects("Erreur inconnue");
+            }
           } else {
             resolve(userData.player_id);
           }
