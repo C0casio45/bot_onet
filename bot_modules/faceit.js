@@ -184,9 +184,47 @@ module.exports = {
       callback(true, exception);
     }
   },
-  SpecificBan() {
+  isBanned(pseudo) {
     // GET https://api.faceit.com/hubs/v1/hub/{hubId}/ban?userNickname={nickname}&offset=0&limit=1
     // Authorization: Bearer {token}
+    return new Promise((resolve, rejects) => {
+      const https = require("https");
+      const options = {
+        hostname: "api.faceit.com",
+        port: 443,
+        path: `/hubs/v1/hub/${faceit.hubId}/ban?userNickname=${pseudo}&offset=0&limit=1`,
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${faceit.token}`,
+          "Content-Type": "application/json",
+        },
+      };
+
+      try {
+        const req = https.request(options, (res) => {
+          let chunks = [];
+
+          res.on("data", (chunk) => chunks.push(chunk));
+          res.on("end", (_d) => {
+            try {
+              const json = JSON.parse(Buffer.concat(chunks).toString()).payload;
+              if (json.items.length == 0) {
+                resolve(false);
+              }
+              rejects(`Le joueur ${pseudo} est banni depuis ${json.items[0].createdAt}`);
+            } catch (exception) {
+              rejects(exception);
+            }
+          });
+        });
+
+        req.on("error", (error) => callback(true, error));
+        req.end();
+      } catch (exception) {
+        callback(true, exception);
+      }
+    });
+
   },
   BanList() {
     // GET https://api.faceit.com/hubs/v1/hub/{hubId}/ban?offset=0&limit=50

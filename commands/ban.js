@@ -92,17 +92,40 @@ class Ban {
   /**
    * 
    * @param {Object} message message collected
-   * @returns player pseudo
+   * @returns player informations
    */
   async listenPlayerUrl(message) {
     let link = message.content;
-    if (!message.content.match(this.regexPlayer)) {
+    let validator = false;
+
+    if (!message.content.match(this.regexPlayer)) onError();
+
+    const linkArray = link.split("/");
+    const pseudo = linkArray[5] ?? link;
+
+    let userDatas = await faceit.GetUserToken(pseudo)
+      .catch(async (e) => {
+        message.reply({ content: e });
+        await this.delay(300);
+        validator = false;
+      });
+
+    await faceit.isBanned(pseudo, (isBanned, err) => {
+      if (isBanned) {
+        message.reply({ content: err });
+        validator = true;
+      }
+    });
+
+    if (validator) onError();
+
+    return userDatas;
+
+    function onError() {
       message.reply({ content: "Format de données invalide." });
       await this.delay(300);
       link = await this.request(Message.requestUserLink(), this.listenPlayerUrl.bind(this));
     }
-    const linkArray = link.split("/");
-    return linkArray[5] ?? link;
   }
 
   /**
