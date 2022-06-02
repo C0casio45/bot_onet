@@ -22,7 +22,7 @@ module.exports = {
       const options = {
         hostname: "open.faceit.com",
         port: 443,
-        path: `/data/v4/search/players?nickname=${pseudo}&offset=0&limit=1`,
+        path: `/data/v4/players?nickname=${pseudo}`,
         method: "GET",
         headers: {
           Authorization: `Bearer ${faceit.clientAPIKey}`,
@@ -39,10 +39,15 @@ module.exports = {
 
         res.on("end", (_d) => {
           let userData = JSON.parse(Buffer.concat(chunks).toString());
-          if (userData.items.length > 0) {
-            resolve(userData.items[0].player_id);
+          console.log(userData);
+          if (userData.errors != undefined) {
+            if (userData.errors[0].message == "The resource was not found.") {
+              rejects(`Le joueur ${pseudo} n'a pas été trouvé.`);
+            } else {
+              rejects("Erreur inconnue");
+            }
           } else {
-            rejects("Il n'y a pas de compte avec ce pseudo");
+            resolve(userData.player_id);
           }
         });
       });
