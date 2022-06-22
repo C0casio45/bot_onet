@@ -161,13 +161,12 @@ class Ban {
   async closeTickets() {
     if (this.test) return this.user.send({ embeds: [Message.banLog(this.banList.length, this.banList, this.userid, this.unbanChannel)] });
     //load data in database
-    this.banList.forEach((ban) => {
+    this.banList.forEach(async (ban) => {
       // id_Ticket, pseudo_accusé, Lien_Accusé, Lien_Partie, Duree_jours, raison, Fermé?
-      let ticketName = db.closeTicket(this.ticket, ban.player, ban.gameUrl, ban.duration, ban.reason);
 
       if (!ban.duration == 0) {
         //ban player in faceit
-        const isBanned = await FaceitRepository().banPlayerByNickname(ban.player, faceitMessageBuilder(ban.duration), ban.reason)
+        const isBanned = await new FaceitRepository().banPlayerByNickname(ban.player, this.faceitMessageBuilder(ban.duration), ban.reason)
           .catch((error) => {
             this.user.send({
               embeds: [Message.error(0, `${error}`)],
@@ -178,6 +177,9 @@ class Ban {
           });
 
         if (!isBanned) return;
+
+
+        let ticketName = db.closeTicket(this.ticket, ban.player, ban.gameUrl, ban.duration, ban.reason);
 
         this.user.send({
           embeds: [
