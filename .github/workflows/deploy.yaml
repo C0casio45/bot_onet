@@ -39,7 +39,16 @@ jobs:
       env:
         DBCONNECT: ${{ secrets.DBCONNECT }}
       run: echo "$DBCONNECT" > /var/www/bot/discord/utils/dbconnect.js
-    - name: run bot
-      run: |
-        pm2 stop bot
-        pm2 start bot
+    - name: Create docker .env
+      uses: SpicyPizza/create-envfile@v1.3.0
+        with:
+          MYSQL_DATABASE: ${{ secrets.MYSQL_DATABASE }}
+          MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
+          MYSQL_USER: ${{ secrets.MYSQL_USER }}
+          MYSQL_USER_PASSWORD: ${{ secrets.MYSQL_USER_PASSWORD }}
+    - name: Run docker
+      runs:
+        using: 'docker'
+        image: 'Dockerfile'
+        args:
+          - ${{ inputs.who-to-greet }}
