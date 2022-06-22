@@ -1,4 +1,4 @@
-const { OpenFaceitRepository, FaceitRepository } = require("./repository/faceit_repository");
+const { FaceitRepository } = require("./repository/faceit_repository");
 const Message = require("../utils/embeds/MessagesLibrary");
 const db = require("../utils/db/dbLibrary.js");
 
