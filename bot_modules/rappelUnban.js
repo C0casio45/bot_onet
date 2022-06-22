@@ -36,7 +36,7 @@ module.exports = {
         );
 
         faceit.RemoveBan(
-          `https://www.faceit.com/fr/players/${unban.Pseudo}`,
+          unban.Pseudo,
           (failed, error = null) => {
             if (failed)
               unbanChannel.send({
