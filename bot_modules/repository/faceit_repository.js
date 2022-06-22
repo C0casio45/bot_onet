@@ -32,19 +32,17 @@ class FaceitRepository extends BaseRepository {
                 reason: reason,
                 userId: userId,
             });
-            super.post(`/hubs/v1/hub/${faceit.hubId}/ban/${userId}`, data);
-
-            let message = Buffer.concat(chunks).toString();
-            const r = JSON.parse(message);
-            if (r.error == "invalid_token") {
-                console.log(r);
+            let message = await super.post(`/hubs/v1/hub/${faceit.hubId}/ban/${userId}`, data);
+            message = JSON.parse(message);
+            if (message.error == "invalid_token") {
+                console.log(message);
                 rejects("invalid token");
             }
-            if (typeof r.errors != "undefined") {
-                console.log(r);
+            if (typeof message.errors != "undefined") {
+                console.log(message);
                 rejects(`Le joueur ${userNickname} est déjà banni`);
             }
-            resolve(r);
+            resolve(message);
         });
     }
 
