@@ -181,7 +181,7 @@ class Ban {
 
         this.user.send({
           embeds: [
-            Message.success("Ticket fermé avec succès."),
+            Message.success(`${ban.player} a été banni avec succès.`),
           ],
         });
 
