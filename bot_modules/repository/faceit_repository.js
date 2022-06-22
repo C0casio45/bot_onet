@@ -18,7 +18,7 @@ class FaceitRepository extends BaseRepository {
      * @param {string} reason - reason of the ban
      * @returns {Promize<bool>} - return true if user has been banned
      */
-    async banPlayer(userId, reason) {
+    async banPlayerById(userId, reason) {
         // POST https://api.faceit.com/hubs/v1/hub/{hubId}/ban/{userId}
         // Authorization: Bearer {userToken}
         // Content-Type: application/json
@@ -46,16 +46,40 @@ class FaceitRepository extends BaseRepository {
             }
             resolve(r);
         });
-
-
     }
+
+    /**
+     * 
+     * @param {string} pseudo - user nickname
+     * @param {string} reason - reason of the ban
+     * @returns {Promise<bool>} - return true if user has been banned
+     */
+    async banPlayerByNickname(pseudo, reason) {
+        return new Promise(async (resolve, rejects) => {
+
+            const dataPlayer = await new OpenFaceitRepository().getUserDatas(pseudo)
+                .catch(err => {
+                    rejects(err);
+                });
+            if (dataPlayer == undefined) rejects("Erreur inconnue");
+            const result = await new FaceitRepository().banPlayerById(dataPlayer.player_id, reason)
+                .catch(err => {
+                    rejects(err);
+                });
+
+            if (result != undefined) {
+                resolve(true);
+            }
+        });
+    }
+
     /**
      * 
      * @param {string} userId - user id
      * @param {string} pseudo - user nickname
      * @returns {Promise<bool>} - return true if user has been unbanned
      */
-    async unbanPlayer(userId, pseudo) {
+    async unbanPlayerById(userId) {
         // DELETE https://api.faceit.com/hubs/v1/hub/{hubId}/ban/{userId}
         // Authorization: Bearer {userToken}
         return new Promise(async (resolve, rejects) => {
@@ -65,9 +89,37 @@ class FaceitRepository extends BaseRepository {
 
             deleteResponse = JSON.parse(deleteResponse);
             if (deleteResponse.errors[0].message.startsWith("The ban with guid user:")) {
-                rejects(`Le joueur ${pseudo} n'est actuellement pas banni.`);
+                rejects(`NOT_BANNED`);
             } else {
                 rejects("Erreur inconnue");
+            }
+        });
+    }
+
+    /**
+     * 
+     * @param {string} pseudo - user nickname
+     * @returns {Promise<bool>} - return true if user has been unbanned 
+     */
+    async unbanPlayerByNickname(pseudo) {
+        return new Promise(async (resolve, rejects) => {
+
+            const dataPlayer = await new OpenFaceitRepository().getUserDatas(pseudo)
+                .catch(err => {
+                    rejects(err);
+                });
+            if (dataPlayer == undefined) rejects("Erreur inconnue");
+            const result = await new FaceitRepository().banPlayerById(dataPlayer.player_id)
+                .catch(err => {
+                    if (err == "NOT_BANNED") {
+                        rejects(`Le joueur ${pseudo} n'est pas banni`);
+                    } else {
+                        rejects(err);
+                    }
+                });
+
+            if (result != undefined) {
+                resolve(true);
             }
         });
     }
