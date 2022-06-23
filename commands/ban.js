@@ -4,7 +4,7 @@ const dp = require(`../bot_modules/deploy.js`);
 const { mpSanction } = require("../utils/buttons/mpSanction");
 const { mpLoop } = require("../utils/buttons/mpLoop");
 const { mpGameUrl } = require("../utils/buttons/mpGameUrl.js");
-const faceit = require("../bot_modules/faceit.js");
+const { FaceitRepository } = require("../bot_modules/repository/faceit_repository");
 
 const Message = require("../utils/embeds/MessagesLibrary");
 const { setTimeout } = require("timers");
@@ -59,7 +59,7 @@ class Ban {
   async request(message, listener, btn = null) {
     let msg = await this.user.send({ embeds: [message], components: btn });
     let collected = await msg.channel.awaitMessages({ filter: this.filter, max: 1, time: 300000, errors: ["time"] })
-      .catch(async (e) => {
+      .catch(async (_e) => {
         this.user.send({ embeds: [Message.error(1)] });
         return this.request(message, listener, btn);
       });
@@ -161,41 +161,42 @@ class Ban {
   async closeTickets() {
     if (this.test) return this.user.send({ embeds: [Message.banLog(this.banList.length, this.banList, this.userid, "test")] });
     //load data in database
-    this.banList.forEach((ban) => {
+    this.banList.forEach(async (ban) => {
       // id_Ticket, pseudo_accusé, Lien_Accusé, Lien_Partie, Duree_jours, raison, Fermé?
-      let ticketName = db.closeTicket(this.ticket, ban.player, ban.gameUrl, ban.duration, ban.reason);
 
       if (!ban.duration == 0) {
         //ban player in faceit
-        faceit.BanPlayer(
-          ban.player, this.faceitMessageBuilder(ban.duration),
-          (failed, error = null) => {
-            if (failed) {
-              this.user.send({
-                embeds: [Message.error(0, `${error}`)],
-              });
-              const index = this.banList.indexOf(ban);
-              this.banList.splice(index, 1);
-            } else {
-              this.user.send({
-                embeds: [
-                  Message.success("Ticket fermé avec succès."),
-                ],
-              });
+        const isBanned = await new FaceitRepository().banPlayerByNickname(ban.player, this.faceitMessageBuilder(ban.duration), ban.reason)
+          .catch((error) => {
+            this.user.send({
+              embeds: [Message.error(0, `${error}`)],
+            });
+            const index = this.banList.indexOf(ban);
+            this.banList.splice(index, 1);
 
-              if (this.banList[this.banList.length - 1] == ban) {
-                //send message in private to user who banned the player
-                //this.user.send({ embeds: [Message.banLog(array.length, array)] });
-                //send message in discord channel
-                this.banChannel.send({
-                  embeds: [Message.banLog(this.banList.length, this.banList, this.userid, ticketName)],
-                });
-                //update discord cache
-                dp.dply(this.client, "0", this.guildId);
-              }
-            }
-          }
-        );
+          });
+
+        if (!isBanned) return;
+
+
+        let ticketName = db.closeTicket(this.ticket, ban.player, ban.gameUrl, ban.duration, ban.reason);
+
+        this.user.send({
+          embeds: [
+            Message.success(`${ban.player} a été banni avec succès.`),
+          ],
+        });
+
+        if (this.banList[this.banList.length - 1] == ban) {
+          //send message in private to user who banned the player
+          //this.user.send({ embeds: [Message.banLog(array.length, array)] });
+          //send message in discord channel
+          this.banChannel.send({
+            embeds: [Message.banLog(this.banList.length, this.banList, this.userid, this.unbanChannel, ticketName)],
+          });
+          //update discord cache
+          dp.dply(this.client, "0", this.guildId);
+        }
       }
     });
   }
