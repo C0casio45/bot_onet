@@ -159,7 +159,7 @@ class Ban {
   }
 
   async closeTickets() {
-    if (this.test) return this.user.send({ embeds: [Message.banLog(this.banList.length, this.banList, this.userid, this.unbanChannel)] });
+    if (this.test) return this.user.send({ embeds: [Message.banLog(this.banList.length, this.banList, this.userid, "test")] });
     //load data in database
     this.banList.forEach(async (ban) => {
       // id_Ticket, pseudo_accusé, Lien_Accusé, Lien_Partie, Duree_jours, raison, Fermé?
@@ -197,7 +197,6 @@ class Ban {
           //update discord cache
           dp.dply(this.client, "0", this.guildId);
         }
-
       }
     });
   }
