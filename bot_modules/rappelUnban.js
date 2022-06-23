@@ -1,4 +1,4 @@
-const faceit = require("./faceit.js");
+const { FaceitRepository } = require("./repository/faceit_repository");
 const Message = require("../utils/embeds/MessagesLibrary");
 const db = require("../utils/db/dbLibrary.js");
 
@@ -34,28 +34,20 @@ module.exports = {
         const unbanChannel = client.channels.cache.find(
           (channel) => channel.name == "rappel-unban"
         );
-
-        faceit.RemoveBan(
-          `https://www.faceit.com/fr/players/${unban.Pseudo}`,
-          (failed, error = null) => {
-            if (failed)
-              unbanChannel.send({
-                embeds: [Message.error(`${error}`)],
-              });
-            else
-              unbanChannel.send({
-                embeds: [
-                  Message.success(`Joueur ${unban.Pseudo} unban avec succès.`),
-                ],
-              });
-          }
-        );
-
-        db.unbanUser(unban.id, unban.idT);
-
-        unbanChannel.send({
-          embeds: [Message.unbanLog(unban.Pseudo, unban.duree, Fdate)],
+        const isUnbanned = new FaceitRepository().unbanPlayerByNickname(unban.Pseudo).catch((err) => {
+          if (err)
+            unbanChannel.send({
+              embeds: [Message.error(`${err}`)],
+            });
         });
+
+        if (isUnbanned) {
+          db.unbanUser(unban.id, unban.idT);
+
+          unbanChannel.send({
+            embeds: [Message.unbanLog(unban.Pseudo, unban.duree, Fdate)],
+          });
+        }
       });
     } else if (result[0].length == 0) {
       return interaction.reply(

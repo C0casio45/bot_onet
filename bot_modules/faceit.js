@@ -140,49 +140,52 @@ module.exports = {
       callback(true);
     }
   },
-  async RemoveBan(userLink, callback) {
-    // DELETE https://api.faceit.com/hubs/v1/hub/{hubId}/ban/{userId}
-    // Authorization: Bearer {userToken}
-    let userId = await this.GetUserToken(userLink);
-    //Need to wait for response
-    let modToken = faceit.token;
+  async RemoveBan(userLink) {
+    return new Promise(async (resolve, rejects) => {
+      // DELETE https://api.faceit.com/hubs/v1/hub/{hubId}/ban/{userId}
+      // Authorization: Bearer {userToken}
+      let userId = await this.GetUserToken(userLink);
+      //Need to wait for response
+      let modToken = faceit.token;
 
-    const https = require("https");
-    const options = {
-      hostname: "api.faceit.com",
-      port: 443,
-      path: `/hubs/v1/hub/${faceit.hubId}/ban/${userId}`,
-      method: "DELETE",
-      headers: {
-        Authorization: `Bearer ${modToken}`,
-        "Content-Type": "application/json",
-      },
-    };
+      const https = require("https");
+      const options = {
+        hostname: "api.faceit.com",
+        port: 443,
+        path: `/hubs/v1/hub/${faceit.hubId}/ban/${userId}`,
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${modToken}`,
+          "Content-Type": "application/json",
+        },
+      };
 
-    try {
-      const req = https.request(options, (res) => {
-        let chunks = [];
+      try {
+        const req = https.request(options, (res) => {
+          let chunks = [];
 
-        res.on("data", (chunk) => chunks.push(chunk));
-        res.on("end", (_d) => {
-          try {
-            const json = Buffer.concat(chunks).toString();
-            if (json) {
-              const response = JSON.parse(json);
-              if (response.errors) throw response.errors[0].message;
+          res.on("data", (chunk) => chunks.push(chunk));
+          res.on("end", (_d) => {
+            try {
+              const json = Buffer.concat(chunks).toString();
+              if (json) {
+                const response = JSON.parse(json);
+                if (response.errors) throw response.errors[0].message;
+              }
+              resolve(json);
+            } catch (exception) {
+              rejects(exception);
             }
-            callback(false);
-          } catch (exception) {
-            callback(true, exception);
-          }
+          });
         });
-      });
 
-      req.on("error", (error) => callback(true, error));
-      req.end();
-    } catch (exception) {
-      callback(true, exception);
-    }
+        req.on("error", (error) => callback(true, error));
+        req.end();
+      } catch (exception) {
+        rejects(exception);
+      }
+
+    });
   },
   SpecificBan() {
     // GET https://api.faceit.com/hubs/v1/hub/{hubId}/ban?userNickname={nickname}&offset=0&limit=1
