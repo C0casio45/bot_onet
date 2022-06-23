@@ -11,5 +11,11 @@
     "discord.js": "^13.2.0",
     "mysql": "^2.18.1",
     "utils": "^0.2.2"
+  },
+  "devDependencies": {
+    "jest": "^28.1.1"
+  },
+  "scripts": {
+    "test": "jest"
   }
 }
