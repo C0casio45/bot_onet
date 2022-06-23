@@ -44,8 +44,8 @@ class Message {
         return new MessageFactory(content).embed;
     }
 
-    static banLog(nbEntreeBan, array, userid, unban, ticketName = null) {
-        return new MessageFactory().banLog(nbEntreeBan, array, userid, unban, ticketName).embed;
+    static banLog(nbEntreeBan, array, userid, ticketName = null) {
+        return new MessageFactory().banLog(nbEntreeBan, array, userid, ticketName).embed;
     }
 
     /***

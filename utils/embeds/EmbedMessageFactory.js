@@ -60,22 +60,22 @@ class MessageFactory {
   * @param userid {string} - discord user id
   * @param unban {string} - unban channel id
   */
-  banLog(nbEntreeBan, array, userid, unban, ticketName) {
+  banLog(nbEntreeBan, array, userid, ticketName) {
     let description = "";
 
-    if (ticketName != null)`Suite au ticket ${ticketName} :\n`;
+    if (ticketName != null) description = `Suite au ticket ${ticketName} :\n`;
 
     if (nbEntreeBan == 1) {
       switch (array[0].duration) {
         case 0:
-          description = `Le joueur **${array[0].player}** a reçu un **avertissement** par <@${userid}> pour la raison suivante : ${array[0][2]}.`;
+          description += `Le joueur **${array[0].player}** a reçu un **avertissement** par <@${userid}> pour la raison suivante : ${array[0][2]}.`;
           break;
         case 99999:
-          description = `Le joueur **${array[0].player}** a été banni de **manière permanante** par <@${userid}> pour la raison suivante : ${array[0].reason}.`;
+          description += `Le joueur **${array[0].player}** a été banni de **manière permanante** par <@${userid}> pour la raison suivante : ${array[0].reason}.`;
           break;
 
         default:
-          description = `Le joueur **${array[0].player}** a été banni par <@${userid}> pour une durée de **${array[0].duration} jours** pour la raison suivante : ${array[0].reason}.`;
+          description += `Le joueur **${array[0].player}** a été banni par <@${userid}> pour une durée de **${array[0].duration} jours** pour la raison suivante : ${array[0].reason}.`;
           break;
       }
     } else {
