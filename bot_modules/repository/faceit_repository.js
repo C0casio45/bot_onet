@@ -38,9 +38,9 @@ class FaceitRepository extends BaseRepository {
                 console.log(message);
                 rejects("invalid token");
             }
-            if (typeof message.errors != "undefined") {
+            if (typeof message.errors != undefined) {
                 console.log(message);
-                rejects(`Le joueur ${userNickname} est déjà banni`);
+                rejects(`Le joueur est déjà banni`);
             }
             resolve(message);
         });
