@@ -94,7 +94,7 @@ class BaseRepository {
                 });
             });
             req.on("error", (error) => rejects(error));
-            if (typeof data == 'undefined') req.write(data);
+            if (typeof data != 'undefined') req.write(data);
             req.end();
         });
     }

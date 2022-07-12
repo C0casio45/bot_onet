@@ -38,7 +38,7 @@ class FaceitRepository extends BaseRepository {
                 console.log(message);
                 rejects("invalid token");
             }
-            if (typeof message.errors != undefined) {
+            if (typeof message.errors != 'undefined') {
                 console.log(message);
                 rejects(`Le joueur est déjà banni`);
             }
@@ -65,8 +65,10 @@ class FaceitRepository extends BaseRepository {
                     rejects(err);
                 });
 
-            if (typeof result == 'undefined') {
+            if (typeof result != 'undefined') {
                 resolve(true);
+            } else {
+                rejects("Erreur inconnue")
             }
         });
     }
