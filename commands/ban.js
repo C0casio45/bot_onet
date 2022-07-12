@@ -166,8 +166,10 @@ class Ban {
 
       if (!ban.duration == 0) {
         //ban player in faceit
-        const isBanned = await new FaceitRepository().banPlayerByNickname(ban.player, this.faceitMessageBuilder(ban.duration), ban.reason)
+        const FRepo = new FaceitRepository();
+        const isBanned = await FRepo.banPlayerByNickname(ban.player, this.faceitMessageBuilder(ban.duration), ban.reason)
           .catch((error) => {
+            console.log(error);
             this.user.send({
               embeds: [Message.error(0, `${error}`)],
             });
@@ -177,7 +179,6 @@ class Ban {
           });
 
         if (!isBanned) return;
-
 
         let ticketName = db.closeTicket(this.ticket, ban.player, ban.gameUrl, ban.duration, ban.reason);
 

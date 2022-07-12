@@ -3,7 +3,7 @@ const db = require("../utils/db/dbLibrary.js");
 module.exports = {
     dply: function (client, p, id) {
         return new Promise(async (resolve, reject) => {
-            id = id == undefined ? "870319455115284481" : id;
+            id = typeof id == 'undefined' ? "870319455115284481" : id;
 
             switch (p) {
                 case "0":
