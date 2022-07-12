@@ -109,7 +109,7 @@ class FaceitRepository extends BaseRepository {
                     rejects(err);
                 });
             if (typeof dataPlayer == 'undefined') rejects("Erreur inconnue");
-            const result = await new FaceitRepository().banPlayerById(dataPlayer.player_id)
+            const result = await new FaceitRepository().unbanPlayerById(dataPlayer.player_id)
                 .catch(err => {
                     if (err == "NOT_BANNED") {
                         rejects(`Le joueur ${pseudo} n'est pas banni`);
