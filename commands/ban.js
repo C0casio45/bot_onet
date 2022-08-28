@@ -198,6 +198,20 @@ class Ban {
           //update discord cache
           dp.dply(this.client, "0", this.guildId);
         }
+      } else {
+        let ticketName = db.closeTicket(this.ticket, ban.player, ban.gameUrl, ban.duration, ban.reason);
+
+        this.user.send({
+          embeds: [
+            Message.success(`${ban.player} a été banni avec succès.`),
+          ],
+        });
+        if (this.banList[this.banList.length - 1] == ban) {
+          this.banChannel.send({
+            embeds: [Message.banLog(this.banList.length, this.banList, this.userid, this.unbanChannel, ticketName)],
+          });
+          dp.dply(this.client, "0", this.guildId);
+        }
       }
     });
   }
