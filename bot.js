@@ -3,7 +3,6 @@ const { token } = require("./config.json");
 const sending = require(`./bot_modules/rappelUnban.js`);
 const { Client, Collection, Intents } = require("discord.js");
 const monitor = require("./bot_modules/monitor.js");
-const rappl = require("./bot_modules/rappelModo.js");
 
 
 const client = new Client({
@@ -101,9 +100,6 @@ setInterval(() => {
   let d = actualDate.getDay();
   if (h == 9) {
     sending.send("none", client);
-  }
-  if (d == 1 && h == 9) {
-    rappl.execute(client);
   }
 }, 60 * 60 * 1000);
 
