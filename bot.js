@@ -39,6 +39,10 @@ client.once("ready", () => {
   sending.send("none", client);
 });
 
+client.on('error', error => {
+  monitor.log('The WebSocket encountered an error:', error);
+});
+
 client.on("messageCreate", async (message) => {
   if (!client.application?.owner) await client.application?.fetch();
 
