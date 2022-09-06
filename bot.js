@@ -39,6 +39,10 @@ client.once("ready", () => {
   sending.send("none", client);
 });
 
+client.on('error', error => {
+  monitor.log('The WebSocket encountered an error:', error);
+});
+
 client.on("messageCreate", async (message) => {
   if (!client.application?.owner) await client.application?.fetch();
 
@@ -97,7 +101,6 @@ client.on("interactionCreate", async (interaction) => {
 setInterval(() => {
   const actualDate = new Date();
   let h = actualDate.getHours();
-  let d = actualDate.getDay();
   if (h == 9) {
     sending.send("none", client);
   }
