@@ -97,7 +97,6 @@ client.on("interactionCreate", async (interaction) => {
 setInterval(() => {
   const actualDate = new Date();
   let h = actualDate.getHours();
-  let d = actualDate.getDay();
   if (h == 9) {
     sending.send("none", client);
   }
