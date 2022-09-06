@@ -13,6 +13,15 @@ jobs:
         node-version: [16.x]
 
     steps:
+    # - name: Major update case
+    #   if: "contains(github.event.head_commit.message, '[MAJOR]')"
+    #   run: script for condition 1
+    # - name: Minor update case
+    #   if: "contains(github.event.head_commit.message, '[MINOR]')"
+    #   run: script for condition 1
+    # - name: Fix update case
+    #   if: "contains(github.event.head_commit.message, '[FIX]')"
+    #   run: script for condition 1
     - uses: actions/checkout@v2
     - name: Uses Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v1
@@ -39,6 +48,8 @@ jobs:
       env:
         DBCONNECT: ${{ secrets.DBCONNECT }}
       run: echo "$DBCONNECT" > /var/www/bot/discord/utils/dbconnect.js
+    - name: Display update information
+      run: echo {title:${{ github.event.pull_request.title }} ,desc:${{ github.event.pull_request.body }}} > /home/pi/.pm2/logs/bot-error.log
     - name: run bot
       run: |
         pm2 stop bot
