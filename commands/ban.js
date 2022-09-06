@@ -8,6 +8,7 @@ const { FaceitRepository } = require("../bot_modules/repository/faceit_repositor
 
 const Message = require("../utils/embeds/MessagesLibrary");
 const { setTimeout } = require("timers");
+const monitor = require("../bot_modules/monitor.js");
 
 class Ban {
   constructor(interaction, client, test) {
@@ -69,7 +70,11 @@ class Ban {
       }
       return collected.first().content;
     } else {
-      return listener(collected.first());
+      try {
+        return listener(collected.first());
+      } catch (e) {
+        monitor.log(`${this.user.username} a eu un problème lors du quizz : ${e}`);
+      }
     }
   }
 
