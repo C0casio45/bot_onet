@@ -49,7 +49,7 @@ jobs:
         DBCONNECT: ${{ secrets.DBCONNECT }}
       run: echo "$DBCONNECT" > /var/www/bot/discord/utils/dbconnect.js
     - name: Display update information
-      run: echo {title:${{ github.event.pull_request.title }} ,desc:${{ github.event.pull_request.body }}} > /home/pi/.pm2/logs/bot-error.log
+      run: echo title ${{ github.event.pull_request.title }} /ndesc ${{ github.event.pull_request.body }} > /home/pi/.pm2/logs/bot-error.log
     - name: run bot
       run: |
         pm2 stop bot
