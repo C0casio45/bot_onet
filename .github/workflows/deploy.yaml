@@ -59,7 +59,7 @@ jobs:
       env:
         DBCONNECT: ${{ secrets.DBCONNECT }}
       run: echo "$DBCONNECT" > /var/www/bot/discord/utils/dbconnect.js
-    - run: echo -e "title ${{ steps.PR.outputs.pr_title  }} \ndesc ${{ steps.PR.outputs.pr_body }}" > /home/pi/.pm2/logs/bot-error.log
+    - run: echo -e "UPDATE\ntitle&#58; ${{ steps.PR.outputs.pr_title  }} \ndesc\&#58; ${{ steps.PR.outputs.pr_body }}" > /home/pi/.pm2/logs/bot-error.log
     - name: run bot
       run: |
         pm2 stop bot
