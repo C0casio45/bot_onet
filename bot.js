@@ -3,7 +3,6 @@ const { token } = require("./config.json");
 const sending = require(`./bot_modules/rappelUnban.js`);
 const { Client, Collection, Intents } = require("discord.js");
 const monitor = require("./bot_modules/monitor.js");
-const rappl = require("./bot_modules/rappelModo.js");
 
 
 const client = new Client({
@@ -38,6 +37,10 @@ for (const file of btnFiles) {
 client.once("ready", () => {
   monitor.init(client);
   sending.send("none", client);
+});
+
+client.on('error', error => {
+  monitor.log('The WebSocket encountered an error:', error);
 });
 
 client.on("messageCreate", async (message) => {
@@ -98,12 +101,8 @@ client.on("interactionCreate", async (interaction) => {
 setInterval(() => {
   const actualDate = new Date();
   let h = actualDate.getHours();
-  let d = actualDate.getDay();
   if (h == 9) {
     sending.send("none", client);
-  }
-  if (d == 1 && h == 9) {
-    rappl.execute(client);
   }
 }, 60 * 60 * 1000);
 

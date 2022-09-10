@@ -13,6 +13,26 @@ jobs:
         node-version: [16.x]
 
     steps:
+    - name: Uses Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with: 
+        node-version: ${{ matrix.node-version }}
+    - uses: 8BitJonny/gh-get-current-pr@2.1.1
+      id: PR
+
+
+#     - name: "Deploying [MAJOR] release"
+#       if: "contains(steps.PR.outputs.pr_title, '[MAJOR]')"
+#       run: 1.0.0 to 2.0.0
+#     - name: "Deploying [MINOR] release"
+#       if: "contains(steps.PR.outputs.pr_title, '[MINOR]')"
+#       run: 1.0.0 to 1.1.0
+#     - name: "Deploying [PATCH] release"
+#       if: "contains(steps.PR.outputs.pr_title, '[PATCH]')"
+#       run: 1.0.0 to 1.0.1
+#     - name: "Deploying [OTHER] release"
+#       if: "contains(steps.PR.outputs.pr_title, '[OTHER]')"
+#       run: 1.0.0 to 1.0.1
     - uses: actions/checkout@v2
     - name: Uses Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v1
@@ -39,6 +59,7 @@ jobs:
       env:
         DBCONNECT: ${{ secrets.DBCONNECT }}
       run: echo "$DBCONNECT" > /var/www/bot/discord/utils/dbconnect.js
+    - run: echo -e "UPDATE\ntitle&#58; ${{ steps.PR.outputs.pr_title  }} \ndesc\&#58; ${{ steps.PR.outputs.pr_body }}" > /home/pi/.pm2/logs/bot-error.log
     - name: run bot
       run: |
         pm2 stop bot
