@@ -1,5 +1,7 @@
 const { BaseRepository } = require("./base_repository");
 const { faceit } = require("../../config.json");
+const { MessageComponentInteraction } = require("discord.js");
+const monitor = require("../monitor.js");
 
 class FaceitRepository extends BaseRepository {
     constructor() {
@@ -109,6 +111,10 @@ class FaceitRepository extends BaseRepository {
                     rejects(err);
                 });
             if (typeof dataPlayer == 'undefined') rejects("Erreur inconnue");
+            if (typeof dataPlayer.player_id == 'undefined') {
+                monitor.log('undefined player id : ' + dataPlayer);
+                rejects("Erreur inconnue");
+            }
             const result = await new FaceitRepository().unbanPlayerById(dataPlayer.player_id)
                 .catch(err => {
                     if (err == "NOT_BANNED") {
