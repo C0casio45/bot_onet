@@ -7,7 +7,6 @@ class Monitor {
     if (!logs) return;
     client.application?.fetch().then(async () => {
       this.cocasio = client.application?.owner;
-      this.kdev = await client.users.fetch("248069530381844481");
 
       const fs = require("fs");
 
@@ -27,14 +26,12 @@ class Monitor {
             content: `Le bot a redémarré a cause de l'erreur suivante : \`\`\`js\n${data}\`\`\``,
           }
           this.cocasio.send(content);
-          this.kdev.send(content);
         } else {
           const content = {
             content: `le bot a redémarré. Le message est trop long (${data.length} charactères)`,
             files: [logs],
           }
           await this.cocasio.send(content);
-          await this.kdev.send(content);
         }
 
         fs.writeFile(logs, "", (error) => {
@@ -46,13 +43,11 @@ class Monitor {
 
         let now = new Date();
         this.cocasio.send({ content: "Launched at : " + now.toLocaleString() });
-        this.kdev.send({ content: "Launched at : " + now.toLocaleString() });
       });
     });
   }
   log(message) {
     this.cocasio.send(message);
-    this.kdev.send(message);
   }
 }
 
