@@ -40,7 +40,7 @@ class MessageFactory {
   }
 
   success() {
-    this.setColor("#34EBA1");
+    this.setColor("#FAE100");
     return this;
   }
 
