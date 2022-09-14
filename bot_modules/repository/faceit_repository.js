@@ -161,7 +161,13 @@ class OpenFaceitRepository extends BaseRepository {
         // Authorization: Bearer {token}
         return new Promise(async (resolve, rejects) => {
             let userDatas = await super.get(`/data/v4/players?nickname=${pseudo}`);
-            userDatas = JSON.parse(userDatas);
+            try {
+                userDatas = JSON.parse(userDatas);
+            } catch {
+                monitor.log("Error while parsing userDatas : " + userDatas);
+                rejects("Erreur inconnue");
+            }
+
             if (typeof userDatas.errors !== "undefined") {
                 if (userDatas.errors[0].message === "The resource was not found.") {
                     rejects(`Le joueur ${pseudo} n'a pas été trouvé.`);
