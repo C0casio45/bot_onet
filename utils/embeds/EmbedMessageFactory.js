@@ -7,7 +7,7 @@ class MessageFactory {
  * @param author {string}
  * @param color {string} - hexadecimal, default #e34c3b
  */
-  constructor(content = "", author = "Utilitaire de banissement", color = "#e34c3b") {
+  constructor(content = "", author = "Utilitaire de banissement", color = "#FAE100") {
     this.description = content;
     this.author = author;
     this.color = color;
@@ -40,7 +40,7 @@ class MessageFactory {
   }
 
   success() {
-    this.setColor("#FAE100");
+    this.setColor("#34EBA1");
     return this;
   }
 
