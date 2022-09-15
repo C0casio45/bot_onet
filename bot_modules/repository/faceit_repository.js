@@ -62,6 +62,10 @@ class FaceitRepository extends BaseRepository {
                     rejects(err);
                 });
             if (typeof dataPlayer === 'undefined') rejects("Erreur inconnue");
+            if (typeof dataPlayer.player_id === 'undefined') {
+                monitor.log('undefined player id : ' + dataPlayer);
+                rejects("Erreur inconnue");
+            }
             const result = await new FaceitRepository().banPlayerById(dataPlayer.player_id, reason)
                 .catch(err => {
                     rejects(err);
