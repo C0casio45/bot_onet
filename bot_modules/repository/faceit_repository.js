@@ -1,5 +1,7 @@
 const { BaseRepository } = require("./base_repository");
 const { faceit } = require("../../config.json");
+const { MessageComponentInteraction } = require("discord.js");
+const monitor = require("../monitor.js");
 
 class FaceitRepository extends BaseRepository {
     constructor() {
@@ -34,11 +36,11 @@ class FaceitRepository extends BaseRepository {
             });
             let message = await super.post(`/hubs/v1/hub/${faceit.hubId}/ban/${userId}`, data);
             message = JSON.parse(message);
-            if (message.error == "invalid_token") {
+            if (message.error === "invalid_token") {
                 console.log(message);
                 rejects("invalid token");
             }
-            if (typeof message.errors != 'undefined') {
+            if (typeof message.errors !== 'undefined') {
                 console.log(message);
                 rejects(`Le joueur est déjà banni`);
             }
@@ -59,13 +61,17 @@ class FaceitRepository extends BaseRepository {
                 .catch(err => {
                     rejects(err);
                 });
-            if (typeof dataPlayer == 'undefined') rejects("Erreur inconnue");
+            if (typeof dataPlayer === 'undefined') rejects("Erreur inconnue");
+            if (typeof dataPlayer.player_id === 'undefined') {
+                monitor.log('undefined player id : ' + dataPlayer);
+                rejects("Erreur inconnue");
+            }
             const result = await new FaceitRepository().banPlayerById(dataPlayer.player_id, reason)
                 .catch(err => {
                     rejects(err);
                 });
 
-            if (typeof result != 'undefined') {
+            if (typeof result !== 'undefined') {
                 resolve(true);
             } else {
                 rejects("Erreur inconnue")
@@ -108,17 +114,21 @@ class FaceitRepository extends BaseRepository {
                 .catch(err => {
                     rejects(err);
                 });
-            if (typeof dataPlayer == 'undefined') rejects("Erreur inconnue");
+            if (typeof dataPlayer === 'undefined') rejects("Erreur inconnue");
+            if (typeof dataPlayer.player_id === 'undefined') {
+                monitor.log('undefined player id : ' + dataPlayer);
+                rejects("Erreur inconnue");
+            }
             const result = await new FaceitRepository().unbanPlayerById(dataPlayer.player_id)
                 .catch(err => {
-                    if (err == "NOT_BANNED") {
+                    if (err === "NOT_BANNED") {
                         rejects(`Le joueur ${pseudo} n'est pas banni`);
                     } else {
                         rejects(err);
                     }
                 });
 
-            if (typeof result == 'undefined') {
+            if (typeof result === 'undefined') {
                 resolve(true);
             }
         });
@@ -155,9 +165,15 @@ class OpenFaceitRepository extends BaseRepository {
         // Authorization: Bearer {token}
         return new Promise(async (resolve, rejects) => {
             let userDatas = await super.get(`/data/v4/players?nickname=${pseudo}`);
-            userDatas = JSON.parse(userDatas);
-            if (typeof userDatas.errors != "undefined") {
-                if (userDatas.errors[0].message == "The resource was not found.") {
+            try {
+                userDatas = JSON.parse(userDatas);
+            } catch {
+                monitor.log("Error while parsing userDatas : " + userDatas);
+                rejects("Erreur inconnue");
+            }
+
+            if (typeof userDatas.errors !== "undefined") {
+                if (userDatas.errors[0].message === "The resource was not found.") {
                     rejects(`Le joueur ${pseudo} n'a pas été trouvé.`);
                 } else {
                     rejects("Erreur inconnue");

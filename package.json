@@ -1,7 +1,7 @@
 {
   "name": "bot_onet",
   "description": "A bot for the OneT discord server providing a variety of useful commands.",
-  "version": "4.2.2",
+  "version": "4.4.0",
   "author": "Tom LUCAS <c0casio45.to@gmail.com>",
   "contributors": [
     "Quentin Sar <pro@sarquentin.fr>"
