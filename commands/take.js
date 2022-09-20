@@ -1,5 +1,6 @@
 const db = require('../utils/db/dbLibrary.js');
 const Message = require("../utils/embeds/MessagesLibrary.js");
+const Button = require("../utils/buttons/tiLanguageSelection.js");
 
 module.exports = {
     name: "take",
@@ -27,7 +28,7 @@ module.exports = {
         //     console.log(messages);
         //   })
 
-        channel.send({ embeds: [Message.takeTicket(interaction.user.id)] });
+        channel.send({ embeds: [Message.takeTicketSelection()], components: [Button.tiLanguageSelection()] });
 
 
         await db.takeTicket(ticket, pseudo, discordID);
@@ -35,7 +36,7 @@ module.exports = {
         const dp = require(`${__dirname}/../bot_modules/deploy.js`);
         await dp.dply(client, "0", interaction.guildId);
 
-        take_channel.send({content: `Le <#${channel.id}> (${ticket}) a été pris par <@!${interaction.user.id}>`})
+        take_channel.send({ content: `Le <#${channel.id}> (${ticket}) a été pris par <@!${interaction.user.id}>` })
         return interaction.reply({ content: `Vous avez pris le ticket <#${channel.id}>`, ephemeral: true });
     }
 }
