@@ -68,10 +68,25 @@ class Message {
         return new MessageFactory(content, "Rappel Unban").embed;
     }
 
-    static takeTicket(modo) {
-        const content = `Ton ticket a été pris en charge par <@!${modo}>.
-        Merci de nous transmettre toutes les informations qui pourraient nous aider a traiter votre ticket plus rapidement.`;
-        return new MessageFactory(content, "Bonjour !").embed;
+    static takeTicketSelection() {
+        const content = `Choose you language
+        Choisissez votre langue`;
+        return new MessageFactory(content, "Hello ! Bonjour !").embed;
+    }
+
+    static takeTicket(modo, lang) {
+        let content = "";
+        let title = "";
+        if (lang == "en") {
+            title = "Hello !";
+            content = `Your ticket has been handled by <@!${modo}>.
+                Please send us any information that may help us process your ticket faster.`;
+        } else {
+            title = "Bonjour !";
+            content = `Votre ticket a été pris en charge par <@!${modo}>.
+                Merci de nous envoyer toutes les informations qui pourraient nous aider à traiter votre ticket plus rapidement.`;
+        }
+        return new MessageFactory(content, title).embed;
     }
 
     static closeTicket(ticketName) {

@@ -71,10 +71,10 @@ client.on("interactionCreate", async (interaction) => {
     try {
       await client.buttons.get(param[0]).execute(interaction, client);
     } catch (error) {
-      monitor.error(error);
+      monitor.log(error);
       return interaction.reply({
         content:
-          "Il y a eu une erreur lors de l'exécution de ta commande (shoxie be like)",
+          "Il y a eu une erreur lors de l'exécution de ta commande",
         ephemeral: true,
       });
     }
@@ -92,7 +92,7 @@ client.on("interactionCreate", async (interaction) => {
     console.log(error);
     return interaction.reply({
       content:
-        "Il y a eu une erreur lors de l'exécution de ta commande (shoxie be like)",
+        "Il y a eu une erreur lors de l'exécution de ta commande",
       ephemeral: true,
     });
   }
