@@ -10,7 +10,7 @@ const button_fr = () => {
 
 const button_en = () => {
     return new MessageButton()
-        .setCustomId(`fr`)
+        .setCustomId(`en`)
         .setLabel("English")
         .setStyle("PRIMARY")
         .setEmoji("🇬🇧");
