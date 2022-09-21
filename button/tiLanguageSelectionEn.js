@@ -5,7 +5,6 @@ module.exports = {
     name: "en",
     description: "Méthode pour créer un ban permnant",
     execute: function (interaction, client) {
-        interaction.channel.send({ content: "Banissement permanant" });
 
         const row = new MessageActionRow().addComponents(
             new MessageButton()
@@ -16,6 +15,6 @@ module.exports = {
                 .setDisabled("true")
         );
 
-        interaction.update({ content: [Message.takeTicket(interaction.user.id, "en")], components: [row] });
+        interaction.update({ embeds: [Message.takeTicket(interaction.user.id, "en")], components: [row] });
     },
 };
