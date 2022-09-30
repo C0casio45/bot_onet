@@ -125,13 +125,21 @@ class Ban {
       await this.delay(300);
       jours = await this.request(Message.requestBanDuration(this.pseudo), this.listenBanTime.bind(this), [mpSanction()]);
     }
-    let days = parseInt(jours);
-    if (days > 99999) days = 99999;
-    const isAvertissement = jours == "Avertissement" ? 0 : days;
-    days =
-      jours == "Banissement permanant"
-        ? 99999
-        : isAvertissement;
+    let days = 0;
+    switch (jours) {
+      case "Avertissement":
+        break;
+      case "Banissement permanant":
+        days = 99999;
+        break;
+
+      default:
+        days = parseInt(jours);
+        if (days > 99999) days = 99999;
+        if (days < 0) days = 0;
+        if (isNaN(days)) throw new Error("Ban time is not a number");
+        break;
+    }
     return days;
   }
 
