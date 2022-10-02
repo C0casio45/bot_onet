@@ -41,25 +41,6 @@ module.exports = {
                     });
 
                     dataGuild.push({
-                        "name": 'info',
-                        "description": "Méthode pour obtenir des informations sur un accusé",
-                        "options": [
-                            {
-                                "name": 'link',
-                                "description": 'Lien de l\'accusé',
-                                "type": 'STRING',
-                                "required": false
-                            },
-                            {
-                                "name": 'pseudo',
-                                "description": 'Pseudo de l\'accusé',
-                                "type": 'STRING',
-                                "required": false
-                            }
-                        ]
-                    });
-
-                    dataGuild.push({
                         "name": 'unban',
                         "description": "Méthode débannir des gens",
                         "options": [
@@ -105,6 +86,24 @@ module.exports = {
                                 description: 'Nom du ticket',
                                 type: 'CHANNEL',
                                 required: true
+                            }
+                        ]
+                    },
+                    {
+                        name: 'info',
+                        description: "Méthode pour obtenir des informations sur un accusé",
+                        options: [
+                            {
+                                name: 'link',
+                                description: 'Lien de l\'accusé',
+                                type: 'STRING',
+                                required: false
+                            },
+                            {
+                                name: 'pseudo',
+                                description: 'Pseudo de l\'accusé',
+                                type: 'STRING',
+                                required: false
                             }
                         ]
                     },
