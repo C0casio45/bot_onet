@@ -139,12 +139,12 @@ class DbLibrary {
 
     /**
      * 
-     * @param {string} pseudo accuse pseudo
+     * @param {string} idFaceit Faceit identifier
      * @returns 
      */
-    static getAccuseInfo(pseudo) {
+    static getAccuseInfo(idFaceit) {
         return new Promise((resolve, reject) => {
-            return new DatabaseFactory(`call bot_onet.info_accuse('${pseudo}');`, function (err, result) {
+            return new DatabaseFactory(`call bot_onet.info_accuse('${idFaceit}');`, function (err, result) {
                 if (err) reject(err);
                 resolve(result[0]);
             })
