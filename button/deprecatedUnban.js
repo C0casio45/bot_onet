@@ -5,11 +5,12 @@ const db = require("../utils/db/dbLibrary.js");
 module.exports = {
     name: 'unban',
     description: "Méthode Enregistrer qu'un utilisateur a bien été débanni",
+    /**
+     * 
+     * @deprecated
+     */
     execute: function (interaction) {
-        /**
-         * 
-         * @deprecated
-         */
+
         let ub = interaction.customId.split(" ");
 
 

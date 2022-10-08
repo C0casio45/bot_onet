@@ -6,6 +6,8 @@ module.exports = {
     description: "Méthode pour créer un ban permnant",
     execute: function (interaction, client) {
 
+        const idModo = interaction.customId.split(" ")[1];
+
         const row = new MessageActionRow().addComponents(
             new MessageButton()
                 .setCustomId(`done`)
@@ -15,6 +17,6 @@ module.exports = {
                 .setDisabled("true")
         );
 
-        interaction.update({ embeds: [Message.takeTicket(interaction.user.id, "en")], components: [row] });
+        interaction.update({ embeds: [Message.takeTicket(idModo, "en")], components: [row] });
     },
 };

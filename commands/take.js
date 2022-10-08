@@ -28,7 +28,7 @@ module.exports = {
         //     console.log(messages);
         //   })
 
-        channel.send({ embeds: [Message.takeTicketSelection()], components: [Button.tiLanguageSelection()] });
+        channel.send({ embeds: [Message.takeTicketSelection()], components: [Button.tiLanguageSelection(discordID)] });
 
 
         await db.takeTicket(ticket, pseudo, discordID);
