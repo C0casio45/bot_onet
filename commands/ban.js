@@ -54,7 +54,7 @@ class Ban {
    * 
    * @param {EmbedMessage} message Embed message to send
    * @param {function} listener function to listen
-   * @param {MessageActionRow} btn Button row to send
+   * @param {ActionRowBuilder} btn Button row to send
    * @returns result of the listener
    */
   async request(message, listener, btn = null) {
@@ -187,9 +187,9 @@ class Ban {
       }
 
       const OFRepo = new OpenFaceitRepository();
-      const playerId = await OFRepo.getUserDatas(ban.player);
+      const player = await OFRepo.getUserDatas(ban.player);
 
-      let ticketName = db.closeTicket(this.ticket, ban.player, playerId, ban.gameUrl, ban.duration, ban.reason);
+      let ticketName = db.closeTicket(this.ticket, ban.player, player.player_id, ban.gameUrl, ban.duration, ban.reason);
 
       this.user.send({
         embeds: [

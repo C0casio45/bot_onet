@@ -1,4 +1,4 @@
-const { MessageActionRow, MessageButton, MessageEmbed } = require('discord.js');
+const { ActionRowBuilder, ButtonBuilder, MessageEmbed, ButtonStyle } = require('discord.js');
 const con = require("../utils/dbconnect.js");
 const db = con.database();
 
@@ -64,7 +64,7 @@ module.exports = {
 }
 
 function btn(number, rst, pos) {
-    let bt = new MessageActionRow()
+    let bt = new ActionRowBuilder()
     for (let i = 0; i < number; i++) {
         let datas = "";
         rst[i].forEach(mod => {
@@ -72,18 +72,18 @@ function btn(number, rst, pos) {
         })
         if (i == pos) {
             bt.addComponents(
-                new MessageButton()
+                new ButtonBuilder()
                     .setCustomId(`setpage`)
                     .setLabel(`${i}`)
-                    .setStyle('PRIMARY')
+                    .setStyle(ButtonStyle.Primary)
                     .setDisabled(true),
             );
         } else {
             bt.addComponents(
-                new MessageButton()
+                new ButtonBuilder()
                     .setCustomId(`setpage ${i}`)
                     .setLabel(`${i}`)
-                    .setStyle('PRIMARY'),
+                    .setStyle(ButtonStyle.Primary),
             );
         }
     }

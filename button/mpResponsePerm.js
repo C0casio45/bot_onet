@@ -1,4 +1,4 @@
-const { MessageActionRow, MessageButton } = require("discord.js");
+const { ActionRowBuilder, ButtonBuilder, ButtonStyle } = require("discord.js");
 
 module.exports = {
   name: "perm",
@@ -6,13 +6,13 @@ module.exports = {
   execute: function (interaction, client) {
     interaction.channel.send({ content: "Banissement permanant" });
 
-    const row = new MessageActionRow().addComponents(
-      new MessageButton()
+    const row = new ActionRowBuilder().addComponents(
+      new ButtonBuilder()
         .setCustomId("done")
         .setLabel(`Ban permanant`)
-        .setStyle("SUCCESS")
+        .setStyle(ButtonStyle.Success)
         .setEmoji("🚨")
-        .setDisabled("true")
+        .setDisabled(true)
     );
 
     interaction.update({ components: [row] });

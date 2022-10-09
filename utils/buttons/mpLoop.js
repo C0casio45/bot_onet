@@ -1,21 +1,21 @@
-const { MessageActionRow, MessageButton } = require("discord.js");
+const { ActionRowBuilder, ButtonBuilder, ButtonStyle } = require("discord.js");
 
 const button_continue = () => {
-  return new MessageButton()
+  return new ButtonBuilder()
     .setCustomId(`mp_loop_button_continue`)
     .setLabel("Ajouter")
-    .setStyle("SUCCESS");
+    .setStyle(ButtonStyle.Success);
 };
 
 const button_close = () => {
-  return new MessageButton()
+  return new ButtonBuilder()
     .setCustomId(`mp_loop_button_close`)
     .setLabel("Fermer")
-    .setStyle("DANGER");
+    .setStyle(ButtonStyle.Danger);
 };
 
 const mpLoop = () => {
-  return new MessageActionRow()
+  return new ActionRowBuilder()
     .addComponents(button_continue())
     .addComponents(button_close());
 };

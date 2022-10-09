@@ -1,4 +1,4 @@
-const { MessageActionRow, MessageButton } = require('discord.js');
+const { ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 const { deprecate } = require('util');
 const db = require("../utils/db/dbLibrary.js");
 
@@ -17,13 +17,13 @@ module.exports = {
         //unban(id accusé, id ticket)
         db.unbanUser(ub[1], ub[2])
 
-        const row = new MessageActionRow()
+        const row = new ActionRowBuilder()
             .addComponents(
-                new MessageButton()
+                new ButtonBuilder()
                     .setCustomId('done')
                     .setLabel(`Fait`)
-                    .setStyle('SUCCESS')
-                    .setDisabled('true'),
+                    .setStyle(ButtonStyle.Success)
+                    .setDisabled(true),
             );
 
         interaction.update({ components: [row] });

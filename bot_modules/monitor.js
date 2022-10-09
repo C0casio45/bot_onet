@@ -1,4 +1,3 @@
-const { builtinModules } = require("module");
 const { logs } = require("../config.json");
 
 class Monitor {
@@ -37,7 +36,6 @@ class Monitor {
         fs.writeFile(logs, "", (error) => {
           if (error) {
             console.error(error);
-            return;
           }
         });
 

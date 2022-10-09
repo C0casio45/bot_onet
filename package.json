@@ -8,7 +8,7 @@
   ],
   "repository": "C0casio45/bot_onet",
   "dependencies": {
-    "discord.js": "^13.2.0",
+    "discord.js": "^14.5.0",
     "mysql": "^2.18.1",
     "utils": "^0.2.2"
   },

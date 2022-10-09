@@ -1,4 +1,4 @@
-const { MessageActionRow, MessageButton } = require("discord.js");
+const { ActionRowBuilder, ButtonBuilder, ButtonStyle } = require("discord.js");
 const Message = require("../utils/embeds/MessagesLibrary.js");
 
 module.exports = {
@@ -8,13 +8,13 @@ module.exports = {
 
         const idModo = interaction.customId.split(" ")[1];
 
-        const row = new MessageActionRow().addComponents(
-            new MessageButton()
+        const row = new ActionRowBuilder().addComponents(
+            new ButtonBuilder()
                 .setCustomId(`done`)
                 .setLabel("English")
-                .setStyle("PRIMARY")
+                .setStyle(ButtonStyle.Primary)
                 .setEmoji("🇬🇧")
-                .setDisabled("true")
+                .setDisabled(true)
         );
 
         interaction.update({ embeds: [Message.takeTicket(idModo, "en")], components: [row] });
