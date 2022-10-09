@@ -44,6 +44,7 @@ class Ban {
       let reason = await this.request(Message.requestRaison(this.player), this.listenBanReason.bind(this));
       this.banList[iteration] = { "gameUrl": gameUrl, "player": this.player, "duration": duration, "reason": reason };
       endTicket = await this.request(Message.requestOtherBans(iteration + 1, this.banList), this.listenEndTicket.bind(this), [mpLoop()]);
+      console.log(endTicket);
       iteration++;
     }
 
@@ -65,7 +66,8 @@ class Ban {
         return this.request(message, listener, btn);
       });
     if (this.ticket == 0) {
-      if (listener == this.listenEndTicket.bind(this)) {
+      console.log(listener);
+      if (listener.name === "bound listenEndTicket") {
         return listener(collected.first());
       }
       return collected.first().content;
