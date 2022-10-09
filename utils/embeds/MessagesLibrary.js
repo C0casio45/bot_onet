@@ -25,7 +25,7 @@ class Message {
         const rawBanList = array.map(u => `${u.player},${u.duration},${u.reason}`).join("\n")
         array.map(ban => `- Utilisateur ${ban.player} ${this.textBuilder(ban.duration)}`);
         const content = `Vous avez actuellement ${nbEntreeBan == 0 ? nbEntreeBan + " enregistré" : nbEntreeBan + " enregistrés"} :\n${rawBanList}\n\nVoulez vous ajouter une sanction à un autre utilisateur ?`;
-        return new MessageFactory(content);
+        return new MessageFactory(content).embed;
     }
 
     static requestRaison(pseudo) {
