@@ -1,5 +1,7 @@
+const { OpenFaceitRepository } = require("../bot_modules/repository/faceit_repository.js");
 const db = require("../utils/db/dbLibrary.js");
 const Message = require("../utils/embeds/MessagesLibrary.js");
+const { info } = require("../utils/buttons/info.js");
 
 module.exports = {
     name: 'info',
@@ -18,7 +20,18 @@ module.exports = {
         } else {
             pseudo = result
         }
-        const array = await db.getAccuseInfo(pseudo);
-        interaction.reply({ embeds: [Message.accuseInfo(pseudo, array)], ephemeral: true });
+        const array = await this.worker(pseudo);
+        interaction.reply({
+            embeds: [Message.accuseInfoListCarrousel(pseudo, array, 0)],
+            components: info(array.length, pseudo, 0),
+        });
+    },
+    async worker(pseudo) {
+        const OPRepo = new OpenFaceitRepository();
+        const player = await OPRepo.getUserDatas(pseudo).catch((err) => {
+            console.log(err);
+            return interaction.reply({ embeds: [Message.error({ message: err })] });
+        });
+        return db.getAccuseInfo(player.player_id);
     }
 }

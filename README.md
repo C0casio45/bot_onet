@@ -8,19 +8,24 @@ This bot is using to handle tickets final data :
 
 We can have stats of moderator
 
-## Commands avaiable
+## Commands available
 
-`/take <ticket>` -global<br/>
-`/ban <ticket>` -autocomplete -guild<br/>
-`/close <ticket>` -autocomplete -guild<br/>
-`/unban <player>` -autocomplete -guild<br/>
+### Global
+
+`/take <ticket>`<br/>
 `/stats` <br/>
 `/stats <moderator>`<br/>
+
+### Guild
+
+`/ban <ticket>` -autocomplete<br/>
+`/close <ticket>` -autocomplete<br/>
+`/unban <player>` -autocomplete<br/>
+
 
 ## Automation
 
 Each days at 9am send a message to remember that certains player needs to be unbaned
-Each Monday at 9am, send message to specific user
 
 ## Monitor
 

@@ -1,4 +1,4 @@
-const { MessageActionRow, MessageButton } = require("discord.js");
+const { ActionRowBuilder, ButtonBuilder, ButtonStyle } = require("discord.js");
 
 module.exports = {
   name: "mp_loop_button_continue",
@@ -6,12 +6,12 @@ module.exports = {
   execute: function (interaction, client) {
     interaction.channel.send({ content: "Ajout d'un nouvel accusé" });
 
-    const row = new MessageActionRow().addComponents(
-      new MessageButton()
+    const row = new ActionRowBuilder().addComponents(
+      new ButtonBuilder()
         .setCustomId("done")
         .setLabel(`Continuer`)
-        .setStyle("SUCCESS")
-        .setDisabled("true")
+        .setStyle(ButtonStyle.Success)
+        .setDisabled(true)
     );
 
     interaction.update({ components: [row] });

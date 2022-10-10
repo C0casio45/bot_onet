@@ -1,5 +1,5 @@
 const { folder } = require("../config.json");
-const { MessageActionRow, MessageButton } = require('discord.js');
+const { ActionRowBuilder, ButtonBuilder } = require('discord.js');
 const db = require("../utils/db/dbLibrary.js");
 const Message = require("../utils/embeds/MessagesLibrary.js");
 
@@ -21,9 +21,9 @@ module.exports = {
         dp.dply(client, "0", interaction.guildId);
 
         const embed = Message.unbanLog(pseudo, interaction.user.id)
-        const link = new MessageActionRow()
+        const link = new ActionRowBuilder()
             .addComponents(
-                new MessageButton()
+                new ButtonBuilder()
                     .setURL('https://www.faceit.com/fr/hub/f3150918-521a-4664-b430-4e4713b91495/OneT%20Community/admin/bans/hub')
                     .setLabel(`Panel de banissement`)
                     .setStyle('LINK'),

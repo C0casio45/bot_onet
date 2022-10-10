@@ -1,4 +1,4 @@
-const { MessageActionRow, MessageButton } = require("discord.js");
+const { ActionRowBuilder, ButtonBuilder, ButtonStyle } = require("discord.js");
 
 module.exports = {
   name: "avertissement",
@@ -6,13 +6,13 @@ module.exports = {
   execute: function (interaction, client) {
     interaction.channel.send({ content: "Avertissement" });
 
-    const row = new MessageActionRow().addComponents(
-      new MessageButton()
+    const row = new ActionRowBuilder().addComponents(
+      new ButtonBuilder()
         .setCustomId("done")
         .setLabel(`Avertissement`)
-        .setStyle("SUCCESS")
+        .setStyle(ButtonStyle.Success)
         .setEmoji("⚠️")
-        .setDisabled("true")
+        .setDisabled(true)
     );
 
     interaction.update({ components: [row] });

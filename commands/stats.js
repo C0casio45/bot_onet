@@ -1,5 +1,7 @@
-const { MessageActionRow, MessageButton, MessageEmbed } = require('discord.js');
+const { ActionRowBuilder, ButtonBuilder, MessageEmbed } = require('discord.js');
 const db = require("../utils/db/dbLibrary.js");
+const MessageLibrary = require("../utils/embeds/MessagesLibrary.js");
+const { stats } = require("../utils/buttons/stats.js");
 
 module.exports = {
     name: 'stats',
@@ -13,18 +15,16 @@ module.exports = {
         }
     ],
     async execute(interaction) {
-        //TODO - stats for a specific user
-        //let args = interaction.options._hoistedOptions;
-
+        const rst = await this.worker();
+        return interaction.reply({ embeds: [MessageLibrary.statsModerateurList(rst[0])], components: stats(rst.length) });
+    },
+    async worker() {
         const stats = await db.getStats();
-
         let i = 0;
         let info = [];
         for (let mod in stats) {
             info.push({ "name": mod, "value": `${stats[mod]}`, "inline": false });
         }
-
-
 
         info.sort(function (a, b) {
             return b.value - a.value;
@@ -46,39 +46,6 @@ module.exports = {
             i++;
         });
 
-        const embed = new MessageEmbed()
-            .setColor('#e34c3b')
-            .setTitle('Statistiques des modérateurs')
-            .addFields(rst[0])
-            .setFooter({ text: 'Créé et hébergé par COcasio45#2406' })
-            .setTimestamp();
-        return interaction.reply({ embeds: [embed], components: btn(rst.length, rst) });
+        return rst;
     }
-}
-
-function btn(number, rst) {
-    let bt = new MessageActionRow()
-    for (let i = 0; i < number; i++) {
-        let datas = "";
-        rst[i].forEach(mod => {
-            datas += ` ${mod.name} ${mod.value}`
-        })
-        if (i == 0) {
-            bt.addComponents(
-                new MessageButton()
-                    .setCustomId(`setpage ${i}`)
-                    .setLabel(`${i}`)
-                    .setStyle('PRIMARY')
-                    .setDisabled(true),
-            );
-        } else {
-            bt.addComponents(
-                new MessageButton()
-                    .setCustomId(`setpage ${i}`)
-                    .setLabel(`${i}`)
-                    .setStyle('PRIMARY'),
-            );
-        }
-    }
-    return [bt];
-}
+};

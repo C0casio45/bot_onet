@@ -1,4 +1,4 @@
-const { MessageEmbed, MessageActionRow, MessageButton } = require("discord.js");
+const { MessageEmbed, ActionRowBuilder, ButtonBuilder } = require("discord.js");
 const fs = require("fs");
 const { faceit } = require("../config.json");
 
@@ -259,8 +259,8 @@ module.exports = {
       )
       .setFooter({ text: "Créé et hébergé par COcasio45#2406" })
       .setTimestamp();
-    let button = new MessageActionRow().addComponents(
-      new MessageButton()
+    let button = new ActionRowBuilder().addComponents(
+      new ButtonBuilder()
         .setURL(
           "https://www.faceit.com/fr/hub/f3150918-521a-4664-b430-4e4713b91495/OneT%20Community"
         )

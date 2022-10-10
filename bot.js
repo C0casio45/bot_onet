@@ -1,17 +1,17 @@
 const fs = require("fs");
 const { token } = require("./config.json");
 const sending = require(`./bot_modules/rappelUnban.js`);
-const { Client, Collection, Intents } = require("discord.js");
+const { Client, Collection, GatewayIntentBits, Partials } = require("discord.js");
 const monitor = require("./bot_modules/monitor.js");
 
 
 const client = new Client({
   intents: [
-    Intents.FLAGS.GUILDS,
-    Intents.FLAGS.GUILD_MESSAGES,
-    Intents.FLAGS.DIRECT_MESSAGES,
+    GatewayIntentBits.Guilds,
+    GatewayIntentBits.GuildMessages,
+    GatewayIntentBits.DirectMessages,
   ],
-  partials: ["MESSAGE", "CHANNEL", "REACTION"],
+  partials: [Partials.Message, Partials.Channel, Partials.Reaction],
 });
 client.commands = new Collection();
 client.buttons = new Collection();

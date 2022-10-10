@@ -4,7 +4,7 @@ const dp = require(`../bot_modules/deploy.js`);
 const { mpSanction } = require("../utils/buttons/mpSanction");
 const { mpLoop } = require("../utils/buttons/mpLoop");
 const { mpGameUrl } = require("../utils/buttons/mpGameUrl.js");
-const { FaceitRepository } = require("../bot_modules/repository/faceit_repository");
+const { OpenFaceitRepository, FaceitRepository } = require("../bot_modules/repository/faceit_repository");
 
 const Message = require("../utils/embeds/MessagesLibrary");
 const { setTimeout } = require("timers");
@@ -44,6 +44,7 @@ class Ban {
       let reason = await this.request(Message.requestRaison(this.player), this.listenBanReason.bind(this));
       this.banList[iteration] = { "gameUrl": gameUrl, "player": this.player, "duration": duration, "reason": reason };
       endTicket = await this.request(Message.requestOtherBans(iteration + 1, this.banList), this.listenEndTicket.bind(this), [mpLoop()]);
+      console.log(endTicket);
       iteration++;
     }
 
@@ -54,7 +55,7 @@ class Ban {
    * 
    * @param {EmbedMessage} message Embed message to send
    * @param {function} listener function to listen
-   * @param {MessageActionRow} btn Button row to send
+   * @param {ActionRowBuilder} btn Button row to send
    * @returns result of the listener
    */
   async request(message, listener, btn = null) {
@@ -65,7 +66,8 @@ class Ban {
         return this.request(message, listener, btn);
       });
     if (this.ticket == 0) {
-      if (listener == this.listenEndTicket.bind(this)) {
+      console.log(listener);
+      if (listener.name === "bound listenEndTicket") {
         return listener(collected.first());
       }
       return collected.first().content;
@@ -192,39 +194,28 @@ class Ban {
           });
 
         if (!isBanned) return;
+      }
 
-        let ticketName = db.closeTicket(this.ticket, ban.player, ban.gameUrl, ban.duration, ban.reason);
+      const OFRepo = new OpenFaceitRepository();
+      const player = await OFRepo.getUserDatas(ban.player);
 
-        this.user.send({
-          embeds: [
-            Message.success(`${ban.player} a été banni avec succès.`),
-          ],
+      let ticketName = db.closeTicket(this.ticket, ban.player, player.player_id, ban.gameUrl, ban.duration, ban.reason);
+
+      this.user.send({
+        embeds: [
+          Message.success(`${ban.player} a été banni avec succès.`),
+        ],
+      });
+
+      if (this.banList[this.banList.length - 1] == ban) {
+        //send message in private to user who banned the player
+        //this.user.send({ embeds: [Message.banLog(array.length, array)] });
+        //send message in discord channel
+        this.banChannel.send({
+          embeds: [Message.banLog(this.banList.length, this.banList, this.userid, this.unbanChannel, ticketName)],
         });
-
-        if (this.banList[this.banList.length - 1] == ban) {
-          //send message in private to user who banned the player
-          //this.user.send({ embeds: [Message.banLog(array.length, array)] });
-          //send message in discord channel
-          this.banChannel.send({
-            embeds: [Message.banLog(this.banList.length, this.banList, this.userid, this.unbanChannel, ticketName)],
-          });
-          //update discord cache
-          dp.dply(this.client, "0", this.guildId);
-        }
-      } else {
-        let ticketName = db.closeTicket(this.ticket, ban.player, ban.gameUrl, ban.duration, ban.reason);
-
-        this.user.send({
-          embeds: [
-            Message.success(`${ban.player} a été banni avec succès.`),
-          ],
-        });
-        if (this.banList[this.banList.length - 1] == ban) {
-          this.banChannel.send({
-            embeds: [Message.banLog(this.banList.length, this.banList, this.userid, this.unbanChannel, ticketName)],
-          });
-          dp.dply(this.client, "0", this.guildId);
-        }
+        //update discord cache
+        dp.dply(this.client, "0", this.guildId);
       }
     });
   }

@@ -28,14 +28,15 @@ class DbLibrary {
      * 
      * @param {number} ticketId - id of the ticket
      * @param {string} pseudoAccuse - name of the accused user
+     * @param {string} idFaceit - faceit id of the accused user
      * @param {string} lienPartie - link to the game
-     * @param {number} dureeJours - 0 avertissement, 99999 permanent
+     * @param {number} dureeJours - 0 avertissement, 99999 permanent, 1-99998 nombre de jours
      * @param {string} raison - ban reason
      * @returns
      */
-    static async closeTicket(ticketId, pseudoAccuse, lienPartie, dureeJours, raison) {
+    static async closeTicket(ticketId, pseudoAccuse, idAccuse, lienPartie, dureeJours, raison) {
         return new Promise((resolve, reject) => {
-            const query = `call bot_onet.close_ticket(${ticketId}, '${pseudoAccuse}', 'https://www.faceit.com/fr/players/${pseudoAccuse}', '${lienPartie}', ${dureeJours}, '${raison}', TRUE);`;
+            const query = `call bot_onet.close_ticket(${ticketId}, '${pseudoAccuse}', 'https://www.faceit.com/fr/players/${pseudoAccuse}','${idAccuse}', '${lienPartie}', ${dureeJours}, '${raison}', TRUE);`;
             return new DatabaseFactory(query, function (err, result) {
                 if (err) reject(err);
                 resolve(result);
@@ -139,12 +140,12 @@ class DbLibrary {
 
     /**
      * 
-     * @param {string} pseudo accuse pseudo
+     * @param {string} idFaceit Faceit identifier
      * @returns 
      */
-    static getAccuseInfo(pseudo) {
+    static getAccuseInfo(idFaceit) {
         return new Promise((resolve, reject) => {
-            return new DatabaseFactory(`call bot_onet.info_accuse('${pseudo}');`, function (err, result) {
+            return new DatabaseFactory(`call bot_onet.info_accuse('${idFaceit}');`, function (err, result) {
                 if (err) reject(err);
                 resolve(result[0]);
             })
