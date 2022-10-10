@@ -92,7 +92,6 @@ class Message {
      * @param {string} pseudo - pseudo de l'accuse
      * @param {list[sanction]} sanctionArray - array of sanction<duration, reason>
      * @returns embed list of sanction
-     * @deprecated
      */
     static accuseInfoList(pseudo, sanctionArray) {
         if (sanctionArray.length == 0) return new MessageFactory(`Aucune sanction n'a été enregistrée pour l'utilisateur ${pseudo}`).embed;

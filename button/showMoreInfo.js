@@ -5,17 +5,16 @@ const { worker } = require("../commands/info.js");
 const { info } = require("../utils/buttons/info.js");
 
 module.exports = {
-    name: 'setPageInfo',
-    description: "Méthode pour changer la page actuelle",
+    name: 'showMoreInfo',
+    description: "Méthode envoyer en privé la liste de toutes les infos sur un joueur",
     async execute(interaction, _client) {
 
         const param = interaction.customId.split(" ");
         const pseudo = param[1];
-        const pos = param[2];
         const array = await worker(pseudo);
-        interaction.update({
-            embeds: [Message.accuseInfoListCarrousel(pseudo, array, pos)],
-            components: info(array.length, pseudo, pos),
+        const user = interaction.user;
+        user.send({
+            embeds: [Message.accuseInfoList(pseudo, array)],
         });
     }
 }

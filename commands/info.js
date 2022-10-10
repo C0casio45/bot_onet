@@ -23,15 +23,14 @@ module.exports = {
         const array = await this.worker(pseudo);
         interaction.reply({
             embeds: [Message.accuseInfoListCarrousel(pseudo, array, 0)],
-            components: [info(array.length, pseudo, 0)],
-            ephemeral: false
+            components: info(array.length, pseudo, 0),
         });
     },
     async worker(pseudo) {
         const OPRepo = new OpenFaceitRepository();
         const player = await OPRepo.getUserDatas(pseudo).catch((err) => {
             console.log(err);
-            return interaction.reply({ embeds: [Message.error()] });
+            return interaction.reply({ embeds: [Message.error({ message: err })] });
         });
         return db.getAccuseInfo(player.player_id);
     }

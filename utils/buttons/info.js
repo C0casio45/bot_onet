@@ -10,19 +10,20 @@ const disabled_button = (i, pseudo) => {
 
 const enabled_button = (i, pseudo) => {
     return new ButtonBuilder()
-        .setCustomId(`setPageStats ${pseudo} ${i}`)
+        .setCustomId(`setPageInfo ${pseudo} ${i}`)
         .setLabel(`${i}`)
         .setStyle(ButtonStyle.Primary);
 };
 
 const show_more = (pseudo) => {
     return new ButtonBuilder()
-        .setCustomId(`show_more ${pseudo} `)
+        .setCustomId(`showMoreInfo ${pseudo} `)
         .setLabel(`Show more`)
         .setStyle(ButtonStyle.Secondary);
 };
 
 const info = (number, pseudo, pos = 0) => {
+    if (number < 2) return [];
     let btn_list = [];
     let showMore = number > 4 ? true : false;
     number = showMore ? 4 : number;
@@ -33,9 +34,9 @@ const info = (number, pseudo, pos = 0) => {
             btn_list.push(enabled_button(i, pseudo));
         }
     }
-    return new ActionRowBuilder()
+    return [new ActionRowBuilder()
         .addComponents(btn_list)
-        .addComponents(showMore ? show_more(pseudo) : null);
+        .addComponents(showMore ? show_more(pseudo) : null)];
 };
 module.exports = {
     info,
