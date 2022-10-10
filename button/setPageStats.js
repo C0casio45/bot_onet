@@ -1,22 +1,19 @@
-const { MessageEmbed } = require('discord.js');
+const { CommandInteractionOptionResolver } = require("discord.js");
 const { worker } = require("../commands/stats.js");
+const { stats } = require("../utils/buttons/stats.js");
+const MessageLibrary = require("../utils/embeds/MessagesLibrary.js");
+
 module.exports = {
     name: 'setPageStats',
     description: "Méthode changer la page actuelle",
-    execute: function (interaction) {
+    execute: async function (interaction) {
 
-        let param = interaction.customId.split(" ");
+        const param = interaction.customId.split(" ");
+        const pos = parseInt(param[1]);
 
-        const rst = worker();
+        const rst = await worker();
 
-        const embed = new MessageEmbed()
-            .setColor('#e34c3b')
-            .setTitle('Statistiques des modérateurs')
-            .addFields(rst[param[1]])
-            .setFooter({ text: 'Créé et hébergé par COcasio45#2406' })
-            .setTimestamp();
-
-        return interaction.update({ embeds: [embed], components: btnStats(rst.length, param[1]) });
+        return interaction.update({ embeds: [MessageLibrary.statsModerateurList(rst[pos])], components: stats(rst.length, pos) });
 
     }
 }

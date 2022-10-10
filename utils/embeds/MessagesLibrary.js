@@ -83,8 +83,19 @@ class Message {
         return new MessageFactory(content, title).embed;
     }
 
+    /**
+     * 
+     * @param {String} ticketName Ticket name - ticket-XXXX
+     * @returns 
+     */
     static closeTicket(ticketName) {
         return new MessageFactory(`Le ${ticketName} a bien été fermé`).embed;
+    }
+
+    static statsModerateurList(moderateurArray) {
+        return new MessageFactory("List de tout les modérateurs", 'Statistiques des modérateurs')
+            .setAddFields(moderateurArray)
+            .embed;
     }
 
     /**
@@ -101,7 +112,13 @@ class Message {
     }
 
 
-
+    /**
+     * 
+     * @param {String} pseudo - pseudo de l'accuse
+     * @param {String} sanctionArray - array of sanction<duration, reason>
+     * @param {int} position - position of the sanction in the array
+     * @returns embed saction info at pos
+     */
     static accuseInfoListCarrousel(pseudo, sanctionArray, position) {
         if (sanctionArray.length == 0) return new MessageFactory(`Aucune sanction n'a été enregistrée pour l'utilisateur ${pseudo}`).embed;
         const content = `L'utilisateur a déjà été report pour les raisons suivantes :`;
@@ -133,6 +150,11 @@ class Message {
             .embed;
     }
 
+    /**
+     * 
+     * @param {int} ban - ban duration
+     * @returns Human readable ban duration
+     */
     static textBuilder(ban) {
         if (ban == 99999) return "perm";
         if (ban == 0) return "averti";

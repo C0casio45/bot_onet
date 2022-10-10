@@ -1,6 +1,7 @@
 const { ActionRowBuilder, ButtonBuilder, MessageEmbed } = require('discord.js');
 const db = require("../utils/db/dbLibrary.js");
-const statsBtn = require("../utils/buttons/stats.js");
+const MessageLibrary = require("../utils/embeds/MessagesLibrary.js");
+const { stats } = require("../utils/buttons/stats.js");
 
 module.exports = {
     name: 'stats',
@@ -15,14 +16,7 @@ module.exports = {
     ],
     async execute(interaction) {
         const rst = await this.worker();
-
-        const embed = new MessageEmbed()
-            .setColor('#e34c3b')
-            .setTitle('Statistiques des modérateurs')
-            .addFields(rst[0])
-            .setFooter({ text: 'Créé et hébergé par COcasio45#2406' })
-            .setTimestamp();
-        return interaction.reply({ embeds: [embed], components: statsBtn(rst.length) });
+        return interaction.reply({ embeds: [MessageLibrary.statsModerateurList(rst[0])], components: stats(rst.length) });
     },
     async worker() {
         const stats = await db.getStats();
