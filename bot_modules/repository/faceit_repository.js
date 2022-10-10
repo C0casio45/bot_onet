@@ -37,7 +37,7 @@ class FaceitRepository extends BaseRepository {
             let message = await super.post(`/hubs/v1/hub/${faceit.hubId}/ban/${userId}`, data);
             message = JSON.parse(message);
             if (message.error === "invalid_token") {
-                console.log(message);
+                monitor.log("TOKEN NEEDS TO BE REFRESHED");
                 rejects("invalid token");
             }
             if (typeof message.errors !== 'undefined') {
