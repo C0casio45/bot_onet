@@ -1,4 +1,4 @@
-const { MessageActionRow, MessageButton } = require("discord.js");
+const { ActionRowBuilder, ButtonBuilder, ButtonStyle } = require("discord.js");
 
 module.exports = {
   name: "mp_loop_button_close",
@@ -6,12 +6,12 @@ module.exports = {
   execute: function (interaction, _client) {
     interaction.channel.send({ content: "Demande de fermeture du ticket..." });
 
-    const row = new MessageActionRow().addComponents(
-      new MessageButton()
+    const row = new ActionRowBuilder().addComponents(
+      new ButtonBuilder()
         .setCustomId("done")
         .setLabel(`Fermer`)
-        .setStyle("DANGER")
-        .setDisabled("true")
+        .setStyle(ButtonStyle.Danger)
+        .setDisabled(true)
     );
 
     interaction.update({ components: [row] });

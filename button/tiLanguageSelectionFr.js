@@ -1,4 +1,4 @@
-const { MessageActionRow, MessageButton } = require("discord.js");
+const { ActionRowBuilder, ButtonBuilder, ButtonStyle } = require("discord.js");
 const Message = require("../utils/embeds/MessagesLibrary.js");
 
 module.exports = {
@@ -6,16 +6,18 @@ module.exports = {
     description: "Méthode pour créer un ban permnant",
     execute: function (interaction, client) {
 
-        const row = new MessageActionRow().addComponents(
-            new MessageButton()
+        const idModo = interaction.customId.split(" ")[1];
+
+        const row = new ActionRowBuilder().addComponents(
+            new ButtonBuilder()
                 .setCustomId(`done`)
                 .setLabel("Français")
-                .setStyle("PRIMARY")
+                .setStyle(ButtonStyle.Primary)
                 .setEmoji("🇫🇷")
-                .setDisabled("true")
+                .setDisabled(true)
         );
 
 
-        interaction.update({ embeds: [Message.takeTicket(interaction.user.id, "fr")], components: [row] });
+        interaction.update({ embeds: [Message.takeTicket(idModo, "fr")], components: [row] });
     },
 };

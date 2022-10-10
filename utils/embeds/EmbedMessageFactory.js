@@ -1,4 +1,4 @@
-const { MessageEmbed, PartialWebhookMixin } = require('discord.js');
+const { EmbedBuilder } = require('discord.js');
 
 class MessageFactory {
 
@@ -11,6 +11,9 @@ class MessageFactory {
     this.description = content;
     this.author = author;
     this.color = color;
+    this.title = null;
+    this.titleUrl = null;
+    this.addFields = [];
   }
 
   /**
@@ -125,11 +128,38 @@ class MessageFactory {
     return this;
   }
 
+  /**
+  * @param title {string}
+  */
+  setTitle(title) {
+    this.title = title;
+    return this;
+  }
+
+  /**
+  * @param titleUrl {string}
+  */
+  setTitleUrl(titleUrl) {
+    this.titleUrl = titleUrl;
+    return this;
+  }
+
+  /**
+  * @param addFields {string}
+  */
+  setAddFields(addFields) {
+    this.addFields = addFields;
+    return this;
+  }
+
   get embed() {
-    return new MessageEmbed()
+    return new EmbedBuilder()
       .setColor(this.color)
       .setAuthor({ name: this.author })
+      .setTitle(this.title)
+      .setURL(this.titleUrl)
       .setDescription(this.description)
+      .addFields(this.addFields)
       .setFooter({ text: "Créé et hébergé par COcasio45#2406" })
       .setTimestamp();
   }

@@ -1,23 +1,23 @@
-const { MessageActionRow, MessageButton } = require("discord.js");
+const { ActionRowBuilder, ButtonBuilder, ButtonStyle } = require("discord.js");
 
 const button_avertissement = () => {
-  return new MessageButton()
+  return new ButtonBuilder()
     .setCustomId(`avertissement`)
     .setLabel("Avertissement")
-    .setStyle("SECONDARY")
+    .setStyle(ButtonStyle.Secondary)
     .setEmoji("⚠️");
 };
 
 const button_perm = () => {
-  return new MessageButton()
+  return new ButtonBuilder()
     .setCustomId(`perm`)
     .setLabel("Ban permanant")
-    .setStyle("DANGER")
+    .setStyle(ButtonStyle.Danger)
     .setEmoji("🚨");
 };
 
 const mpSanction = () => {
-  return new MessageActionRow()
+  return new ActionRowBuilder()
     .addComponents(button_avertissement())
     .addComponents(button_perm());
 };

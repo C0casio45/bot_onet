@@ -23,15 +23,9 @@ class Message {
 
     static requestOtherBans(nbEntreeBan, array) {
         const rawBanList = array.map(u => `${u.player},${u.duration},${u.reason}`).join("\n")
-        array.map(ban => `- Utilisateur ${ban.player} ${textBuilder(ban.duration)}`);
+        array.map(ban => `- Utilisateur ${ban.player} ${this.textBuilder(ban.duration)}`);
         const content = `Vous avez actuellement ${nbEntreeBan == 0 ? nbEntreeBan + " enregistré" : nbEntreeBan + " enregistrés"} :\n${rawBanList}\n\nVoulez vous ajouter une sanction à un autre utilisateur ?`;
-        return new MessageFactory(content);
-
-        function textBuilder(ban) {
-            if (ban == 99999) return "ban permanent";
-            if (ban == 0) return "averti";
-            return `banni pendant ${ban} jours`;
-        }
+        return new MessageFactory(content).embed;
     }
 
     static requestRaison(pseudo) {
@@ -97,19 +91,52 @@ class Message {
      * 
      * @param {string} pseudo - pseudo de l'accuse
      * @param {list[sanction]} sanctionArray - array of sanction<duration, reason>
-     * @returns 
+     * @returns embed list of sanction
      */
-    static accuseInfo(pseudo, sanctionArray) {
+    static accuseInfoList(pseudo, sanctionArray) {
         if (sanctionArray.length == 0) return new MessageFactory(`Aucune sanction n'a été enregistrée pour l'utilisateur ${pseudo}`).embed;
-        const rawSactionArray = sanctionArray.map(sanction => `- ${textBuilder(sanction.duree)} | ${sanction.raison}`).join("\n");
+        const rawSactionArray = sanctionArray.map(sanction => `- ${this.textBuilder(sanction.duree)} | ${sanction.raison}`).join("\n");
         let content = `L'utilisateur ${pseudo} a déjà été report pour les raisons suivantes :\n${rawSactionArray}`;
         return new MessageFactory(content).embed;
+    }
 
-        function textBuilder(ban) {
-            if (ban == 99999) return "perm";
-            if (ban == 0) return "averti";
-            return `${ban}j`;
+
+
+    static accuseInfoListCarrousel(pseudo, sanctionArray, position) {
+        if (sanctionArray.length == 0) return new MessageFactory(`Aucune sanction n'a été enregistrée pour l'utilisateur ${pseudo}`).embed;
+        const content = `L'utilisateur a déjà été report pour les raisons suivantes :`;
+        const sanctionDesc = [{
+            name: "Appliqué le :",
+            value: new Date(sanctionArray[position].timecode * 1000).toLocaleString(),
+        },
+        {
+            name: "Durée :",
+            value: `${this.textBuilder(sanctionArray[position].duree)}`,
+        },
+        {
+            name: "Raison :",
+            value: sanctionArray[position].raison,
+        },
+        {
+            name: "Modérateur :",
+            value: sanctionArray[position].Pseudo,
+        },
+        {
+            name: "Ticket :",
+            value: sanctionArray[position].Nom,
         }
+        ];
+        return new MessageFactory(content)
+            .setTitle(pseudo)
+            .setTitleUrl(`https://www.faceit.com/fr/players/${pseudo}`)
+            .setAddFields(sanctionDesc)
+            .embed;
+    }
+
+    static textBuilder(ban) {
+        if (ban == 99999) return "perm";
+        if (ban == 0) return "averti";
+        return `${ban}j`;
     }
 }
 module.exports = Message;

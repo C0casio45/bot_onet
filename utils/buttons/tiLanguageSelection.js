@@ -1,24 +1,24 @@
-const { MessageActionRow, MessageButton } = require("discord.js");
+const { ActionRowBuilder, ButtonBuilder, ButtonStyle } = require("discord.js");
 
-const button_fr = () => {
-    return new MessageButton()
-        .setCustomId(`fr`)
+const button_fr = (idModo) => {
+    return new ButtonBuilder()
+        .setCustomId(`fr ${idModo}`)
         .setLabel("Français")
-        .setStyle("PRIMARY")
+        .setStyle(ButtonStyle.Primary)
         .setEmoji("🇫🇷");
 };
 
-const button_en = () => {
-    return new MessageButton()
-        .setCustomId(`en`)
+const button_en = (idModo) => {
+    return new ButtonBuilder()
+        .setCustomId(`en ${idModo}`)
         .setLabel("English")
-        .setStyle("PRIMARY")
+        .setStyle(ButtonStyle.Primary)
         .setEmoji("🇬🇧");
 };
 
-const tiLanguageSelection = () => {
-    return new MessageActionRow()
-        .addComponents(button_fr())
-        .addComponents(button_en());
+const tiLanguageSelection = (idModo) => {
+    return new ActionRowBuilder()
+        .addComponents(button_fr(idModo))
+        .addComponents(button_en(idModo));
 };
 module.exports = { tiLanguageSelection };

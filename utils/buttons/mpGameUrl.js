@@ -1,14 +1,14 @@
-const { MessageActionRow, MessageButton } = require("discord.js");
+const { ActionRowBuilder, ButtonBuilder, ButtonStyle } = require("discord.js");
 
 const empty_url = () => {
-  return new MessageButton()
+  return new ButtonBuilder()
     .setCustomId(`empty_url`)
     .setLabel("Pas d'url")
-    .setStyle("DANGER");
+    .setStyle(ButtonStyle.Danger);
 };
 
 const mpGameUrl = () => {
-  return new MessageActionRow()
+  return new ActionRowBuilder()
     .addComponents(empty_url());
 };
 module.exports = {
