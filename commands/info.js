@@ -1,6 +1,7 @@
 const { OpenFaceitRepository } = require("../bot_modules/repository/faceit_repository.js");
 const db = require("../utils/db/dbLibrary.js");
 const Message = require("../utils/embeds/MessagesLibrary.js");
+const { info } = require("../utils/buttons/info.js");
 
 module.exports = {
     name: 'info',
@@ -20,7 +21,11 @@ module.exports = {
             pseudo = result
         }
         const array = await this.worker(pseudo);
-        interaction.reply({ embeds: [Message.accuseInfoListCarrousel(pseudo, array, 0)], ephemeral: true });
+        interaction.reply({
+            embeds: [Message.accuseInfoListCarrousel(pseudo, array, 0)],
+            components: [info(array.length, pseudo, 0)],
+            ephemeral: false
+        });
     },
     async worker(pseudo) {
         const OPRepo = new OpenFaceitRepository();

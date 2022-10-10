@@ -2,7 +2,7 @@ const { OpenFaceitRepository } = require("../bot_modules/repository/faceit_repos
 const db = require("../utils/db/dbLibrary.js");
 const Message = require("../utils/embeds/MessagesLibrary.js");
 const { worker } = require("../commands/info.js");
-const { stats } = require("../utils/buttons/info.js");
+const { info } = require("../utils/buttons/info.js");
 
 module.exports = {
     name: 'setPageInfo',
@@ -15,7 +15,7 @@ module.exports = {
         const array = await worker(pseudo);
         interaction.reply({
             embeds: [Message.accuseInfoListCarrousel(pseudo, array, pos)],
-            components: stats(array.length, pseudo, pos),
+            components: info(array.length, pseudo, pos),
             ephemeral: true,
         });
     }

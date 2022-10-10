@@ -15,8 +15,17 @@ const enabled_button = (i, pseudo) => {
         .setStyle(ButtonStyle.Primary);
 };
 
-const stats = (number, pseudo, pos = 0) => {
+const show_more = (pseudo) => {
+    return new ButtonBuilder()
+        .setCustomId(`show_more ${pseudo} `)
+        .setLabel(`Show more`)
+        .setStyle(ButtonStyle.Secondary);
+};
+
+const info = (number, pseudo, pos = 0) => {
     let btn_list = [];
+    let showMore = number > 4 ? true : false;
+    number = showMore ? 4 : number;
     for (let i = 0; i < number; i++) {
         if (i == pos) {
             btn_list.push(disabled_button(i, pseudo));
@@ -25,8 +34,9 @@ const stats = (number, pseudo, pos = 0) => {
         }
     }
     return new ActionRowBuilder()
-        .addComponents(btn_list);
+        .addComponents(btn_list)
+        .addComponents(showMore ? show_more(pseudo) : null);
 };
 module.exports = {
-    stats,
+    info,
 };
