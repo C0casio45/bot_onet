@@ -2,7 +2,7 @@ const { ActionRowBuilder, ButtonBuilder, ButtonStyle } = require("discord.js");
 
 const disabled_button = (i) => {
     return new ButtonBuilder()
-        .setCustomId(`setpagestats ${i}`)
+        .setCustomId(`setPageStats ${i}`)
         .setLabel(`${i}`)
         .setStyle(ButtonStyle.Primary)
         .setDisabled(true)
@@ -10,7 +10,7 @@ const disabled_button = (i) => {
 
 const enabled_button = (i) => {
     return new ButtonBuilder()
-        .setCustomId(`setpagestats ${i}`)
+        .setCustomId(`setPageStats ${i}`)
         .setLabel(`${i}`)
         .setStyle(ButtonStyle.Primary);
 };
@@ -24,8 +24,8 @@ const stats = (number, pos = 0) => {
             btn_list.push(enabled_button(i));
         }
     }
-    return new ActionRowBuilder()
-        .addComponents(btn_list);
+    return [new ActionRowBuilder()
+        .addComponents(btn_list)];
 };
 module.exports = {
     stats,
