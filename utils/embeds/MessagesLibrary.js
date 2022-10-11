@@ -5,7 +5,7 @@ class Message {
     static success(content) {
         return new MessageFactory(content).success().embed;
     }
-    static error(code = 0, message = "") {
+    static error({ code = 0, message = "" } = {}) {
         return new MessageFactory().error(code, message).embed;
     }
 

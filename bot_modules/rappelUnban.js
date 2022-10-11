@@ -37,7 +37,7 @@ module.exports = {
         const isUnbanned = new FaceitRepository().unbanPlayerByNickname(unban.Pseudo).catch((err) => {
           if (err)
             unbanChannel.send({
-              embeds: [Message.error(`${err}`)],
+              embeds: [Message.error({ message: `${err}` })],
             });
         });
 
