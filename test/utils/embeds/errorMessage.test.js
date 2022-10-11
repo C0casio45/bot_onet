@@ -18,7 +18,7 @@ test('test Message.error return success embed message', () => {
     expect(Message.error()).toEqual(sampleTest);
 });
 
-test('test Message.error return success embed message', () => {
+test('test Message.error with code return success embed message', () => {
     const sampleTest = new EmbedBuilder()
         .setColor("#E0322B")
         .setAuthor({ name: "Utilitaire de banissement" })
@@ -32,7 +32,7 @@ test('test Message.error return success embed message', () => {
     expect(Message.error({ code: 0 })).toEqual(sampleTest);
 });
 
-test('test Message.error return success embed message', () => {
+test('test Message.error with code return success embed message', () => {
     const sampleTest = new EmbedBuilder()
         .setColor("#E0322B")
         .setAuthor({ name: "Utilitaire de banissement" })
@@ -46,7 +46,7 @@ test('test Message.error return success embed message', () => {
     expect(Message.error({ code: 1 })).toEqual(sampleTest);
 });
 
-test('test Message.error return success embed message', () => {
+test('test Message.error with code return success embed message', () => {
     const sampleTest = new EmbedBuilder()
         .setColor("#E0322B")
         .setAuthor({ name: "Utilitaire de banissement" })
@@ -60,7 +60,7 @@ test('test Message.error return success embed message', () => {
     expect(Message.error({ code: 2 })).toEqual(sampleTest);
 });
 
-test('test Message.error return success embed message', () => {
+test('test Message.error with message return success embed message', () => {
     const sampleTest = new EmbedBuilder()
         .setColor("#E0322B")
         .setAuthor({ name: "Utilitaire de banissement" })
@@ -75,5 +75,5 @@ test('test Message.error return success embed message', () => {
 });
 
 test('test Message.error without content throw error', () => {
-    expect(() => { Message.success() }).toThrow();
+    expect(() => { Message.success({ code: "" }) }).toThrow();
 });
