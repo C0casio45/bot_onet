@@ -120,8 +120,8 @@ class Ban {
   async listenBanTime(message) {
     let jours = message.content;
 
-    if (!jours.match(/\d/) &&
-      jours != "Avertissement" &&
+    if (!jours.match(/\d/) ||
+      jours != "Avertissement" ||
       jours != "Banissement permanant") {
       message.reply({ content: "Format de données invalide." });
       await this.delay(300);
