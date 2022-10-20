@@ -36,20 +36,31 @@ class Ban {
 
     let iteration = 0;
     let endTicket = true;
+    let exit = false;
 
-    let gameUrl = await this.request(Message.requestGameLink(), this.listenGameUrl.bind(this), [mpGameUrl()]);
+    let gameUrl = await this.request(Message.requestGameLink(), this.listenGameUrl.bind(this), [mpGameUrl()]).catch((e) => { exitCatcher(e,this.user) });
 
     while (endTicket) {
-      this.player = await this.request(Message.requestUserLink(), this.listenPlayerUrl.bind(this));
-      let duration = await this.request(Message.requestBanDuration(this.player), this.listenBanTime.bind(this), [mpSanction()]);
-      let reason = await this.request(Message.requestRaison(this.player), this.listenBanReason.bind(this));
+      this.player = await this.request(Message.requestUserLink(), this.listenPlayerUrl.bind(this)).catch((e) => { exitCatcher(e,this.user) });
+      let duration = await this.request(Message.requestBanDuration(this.player), this.listenBanTime.bind(this), [mpSanction()]).catch((e) => { exitCatcher(e,this.user) });
+      let reason = await this.request(Message.requestRaison(this.player), this.listenBanReason.bind(this)).catch((e) => { exitCatcher(e,this.user) });
       this.banList[iteration] = { "gameUrl": gameUrl, "player": this.player, "duration": duration, "reason": reason };
-      endTicket = await this.request(Message.requestOtherBans(iteration + 1, this.banList), this.listenEndTicket.bind(this), [mpLoop()]);
-      console.log(endTicket);
+      endTicket = await this.request(Message.requestOtherBans(iteration + 1, this.banList), this.listenEndTicket.bind(this), [mpLoop()]).catch((e) => { exitCatcher(e,this.user) });
       iteration++;
     }
 
-    this.closeTickets()
+    if(!exit)this.closeTickets();
+
+    function exitCatcher(e,user) {
+      endTicket = false;
+      exit = true;
+      if (e.message == "exit") {
+        user.send({ embeds: [Message.exit()] });
+        return
+      }
+      user.send({ embeds: [Message.error()] });
+      monitor.log(e.message);
+    }
   }
 
   /**
@@ -69,12 +80,12 @@ class Ban {
         return this.request(message, listener, btn);
       });
     if (this.ticket == 0) {
-      console.log(listener);
       if (listener.name === "bound listenEndTicket") {
         return listener(collected.first());
       }
       return collected.first().content;
     } else {
+      if(collected.first().content === "exit") throw new Error("exit");
       try {
         return listener(collected.first());
       } catch (e) {
@@ -86,6 +97,7 @@ class Ban {
   /**
    * 
    * @param {Object} message message collected
+   * @param {Object} button button to display
    * @returns url of the game
    */
   async listenGameUrl(message) {
@@ -94,7 +106,7 @@ class Ban {
     if (!message.content.match(this.regexRoom)) {
       message.reply({ content: "Format de données invalide." });
       await this.delay(300);
-      content = await this.request(Message.requestGameLink(), this.listenGameUrl.bind(this));
+      content = await this.request(Message.requestGameLink(), this.listenGameUrl.bind(this),[mpGameUrl()]);
     }
     return content;
   }
@@ -223,7 +235,7 @@ class Ban {
   faceitMessageBuilder(jours) {
     return "Ban " +
       (jours == 99999 ? "perm" : jours + "j") +
-      ". Plus d'informations sur notre discord."
+      ". Plus d'informations sur notre discord.";
   }
 
   /**
@@ -246,6 +258,11 @@ module.exports = {
   description: "Méthode pour bannir les gens",
   async execute(interaction, client, test = false) {
     let ban = new Ban(interaction, client, test);
-    ban.Quizz();
+    try{
+      ban.Quizz();
+    } catch (e) {
+      
+    }
+   
   },
 };

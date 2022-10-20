@@ -5,8 +5,14 @@ class Message {
     static success(content) {
         return new MessageFactory(content).success().embed;
     }
+
     static error({ code = 0, message = "" } = {}) {
         return new MessageFactory().error(code, message).embed;
+    }
+
+    static exit() {
+        const content = 'Votre ticket a été annulé !';
+        return new MessageFactory(content).embed;
     }
 
     static requestGameLink() {
