@@ -1,6 +1,6 @@
 
 module.exports = {
-    name: 'test',
+    name: 'testCommand',
     description: "Méthode de test",
     execute(interaction, client) {
         return

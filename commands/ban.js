@@ -62,7 +62,7 @@ class Ban {
     let msg = await this.user.send({ embeds: [message], components: btn });
     let collected = await msg.channel.awaitMessages({ filter: this.filter, max: 1, time: 300000, errors: ["time"] })
       .catch(async (_e) => {
-        this.user.send({ embeds: [Message.error(1)] });
+        this.user.send({ embeds: [Message.error({ code: 1 })] });
         return this.request(message, listener, btn);
       });
     if (this.ticket == 0) {
@@ -120,8 +120,8 @@ class Ban {
   async listenBanTime(message) {
     let jours = message.content;
 
-    if (!jours.match(/\d/) &&
-      jours != "Avertissement" &&
+    if (!jours.match(/\d/) ||
+      jours != "Avertissement" ||
       jours != "Banissement permanant") {
       message.reply({ content: "Format de données invalide." });
       await this.delay(300);
@@ -186,7 +186,7 @@ class Ban {
           .catch((error) => {
             console.log(error);
             this.user.send({
-              embeds: [Message.error(0, `${error}`)],
+              embeds: [{ message: `${error}` }],
             });
             const index = this.banList.indexOf(ban);
             this.banList.splice(index, 1);

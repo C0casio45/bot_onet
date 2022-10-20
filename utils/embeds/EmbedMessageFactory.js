@@ -22,7 +22,7 @@ class MessageFactory {
    */
   error(code, message) {
     this.setColor("#E0322B");
-    if (message != "") {
+    if (message !== "") {
       this.setDescription(message);
     } else {
       switch (code) {
