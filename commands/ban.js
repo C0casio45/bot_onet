@@ -9,6 +9,7 @@ const { OpenFaceitRepository, FaceitRepository } = require("../bot_modules/repos
 const Message = require("../utils/embeds/MessagesLibrary");
 const { setTimeout } = require("timers");
 const monitor = require("../bot_modules/monitor.js");
+const { delay } = require("../utils/functions.js");
 
 class Ban {
   constructor(interaction, client, test) {
@@ -59,7 +60,9 @@ class Ban {
    * @returns result of the listener
    */
   async request(message, listener, btn = null) {
-    let msg = await this.user.send({ embeds: [message], components: btn });
+    let msg = await this.user.send({ embeds: [message] });
+    delay(1000).then(()=>{msg.edit({ embeds: [message], components: btn })});
+
     let collected = await msg.channel.awaitMessages({ filter: this.filter, max: 1, time: 300000, errors: ["time"] })
       .catch(async (_e) => {
         this.user.send({ embeds: [Message.error({ code: 1 })] });
