@@ -40,7 +40,7 @@ class Message {
     }
 
     static requestBanDuration(pseudo) {
-        const content = `Merci d'indiquer la durée du banissement de l'utilisateur : ${pseudo}\nVous pouvez utiliser les boutons pour bannir de manière permanente ou inscrire la durée`;
+        const content = `Merci d'indiquer la durée du banissement de l'utilisateur **en jours**: ${pseudo}\nVous pouvez utiliser les boutons pour bannir de manière permanente ou inscrire la durée`;
         return new MessageFactory(content).embed;
     }
 
