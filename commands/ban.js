@@ -42,13 +42,16 @@ class Ban {
 
     while (endTicket) {
       this.player = await this.request(Message.requestUserLink(), this.listenPlayerUrl.bind(this)).catch((e) => { exitCatcher(e,this.user) });
-      let duration = await this.request(Message.requestBanDuration(this.player), this.listenBanTime.bind(this), [mpSanction()]).catch((e) => { exitCatcher(e,this.user) });
+      if(exit) break;
+      let duration = await this.request(Message.requestBanDuration(this.player), this.listenBanTime.bind(this), [mpSanction()]).catch((e) => { exitCatcher(e,this.user); });
+      if(exit) break;
       let reason = await this.request(Message.requestRaison(this.player), this.listenBanReason.bind(this)).catch((e) => { exitCatcher(e,this.user) });
+      if(exit) break;
       this.banList[iteration] = { "gameUrl": gameUrl, "player": this.player, "duration": duration, "reason": reason };
       endTicket = await this.request(Message.requestOtherBans(iteration + 1, this.banList), this.listenEndTicket.bind(this), [mpLoop()]).catch((e) => { exitCatcher(e,this.user) });
+      if(exit) break;
       iteration++;
     }
-
     if(!exit)this.closeTickets();
 
     function exitCatcher(e,user) {
@@ -60,6 +63,7 @@ class Ban {
       }
       user.send({ embeds: [Message.error()] });
       monitor.log(e.message);
+      
     }
   }
 
@@ -135,8 +139,8 @@ class Ban {
   async listenBanTime(message) {
     let jours = message.content;
 
-    if (!jours.match(/\d/) ||
-      jours != "Avertissement" ||
+    if (!jours.match(/\d/) &&
+      jours != "Avertissement" &&
       jours != "Banissement permanant") {
       message.reply({ content: "Format de données invalide." });
       await this.delay(300);
@@ -258,11 +262,6 @@ module.exports = {
   description: "Méthode pour bannir les gens",
   async execute(interaction, client, test = false) {
     let ban = new Ban(interaction, client, test);
-    try{
-      ban.Quizz();
-    } catch (e) {
-      
-    }
-   
+    ban.Quizz();
   },
 };
