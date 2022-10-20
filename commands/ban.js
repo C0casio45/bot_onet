@@ -36,20 +36,35 @@ class Ban {
 
     let iteration = 0;
     let endTicket = true;
+    let exit = false;
 
-    let gameUrl = await this.request(Message.requestGameLink(), this.listenGameUrl.bind(this), [mpGameUrl()]);
+    let gameUrl = await this.request(Message.requestGameLink(), this.listenGameUrl.bind(this), [mpGameUrl()]).catch((e) => { exitCatcher(e,this.user) });
 
     while (endTicket) {
-      this.player = await this.request(Message.requestUserLink(), this.listenPlayerUrl.bind(this));
-      let duration = await this.request(Message.requestBanDuration(this.player), this.listenBanTime.bind(this), [mpSanction()]);
-      let reason = await this.request(Message.requestRaison(this.player), this.listenBanReason.bind(this));
+      this.player = await this.request(Message.requestUserLink(), this.listenPlayerUrl.bind(this)).catch((e) => { exitCatcher(e,this.user) });
+      if(exit) break;
+      let duration = await this.request(Message.requestBanDuration(this.player), this.listenBanTime.bind(this), [mpSanction()]).catch((e) => { exitCatcher(e,this.user); });
+      if(isNaN(duration) || typeof duration !== "number") exitCatcher(Error("NaN"),this.user);
+      if(exit) break;
+      let reason = await this.request(Message.requestRaison(this.player), this.listenBanReason.bind(this)).catch((e) => { exitCatcher(e,this.user) });
+      if(exit) break;
       this.banList[iteration] = { "gameUrl": gameUrl, "player": this.player, "duration": duration, "reason": reason };
-      endTicket = await this.request(Message.requestOtherBans(iteration + 1, this.banList), this.listenEndTicket.bind(this), [mpLoop()]);
-      console.log(endTicket);
+      endTicket = await this.request(Message.requestOtherBans(iteration + 1, this.banList), this.listenEndTicket.bind(this), [mpLoop()]).catch((e) => { exitCatcher(e,this.user) });
+      if(exit) break;
       iteration++;
     }
+    if(!exit)this.closeTickets();
 
-    this.closeTickets()
+    function exitCatcher(e,user) {
+      endTicket = false;
+      exit = true;
+      if (e.message == "exit") {
+        user.send({ embeds: [Message.exit()] });
+        return
+      }
+      user.send({ embeds: [Message.error()] });
+      monitor.log(e.message);
+    }
   }
 
   /**
@@ -66,15 +81,15 @@ class Ban {
     let collected = await msg.channel.awaitMessages({ filter: this.filter, max: 1, time: 300000, errors: ["time"] })
       .catch(async (_e) => {
         this.user.send({ embeds: [Message.error({ code: 1 })] });
-        return this.request(message, listener, btn);
+        return this.request(message, listener.bind(this), btn);
       });
     if (this.ticket == 0) {
-      console.log(listener);
       if (listener.name === "bound listenEndTicket") {
         return listener(collected.first());
       }
       return collected.first().content;
     } else {
+      if(collected.first().content === "exit") throw new Error("exit");
       try {
         return listener(collected.first());
       } catch (e) {
@@ -86,6 +101,7 @@ class Ban {
   /**
    * 
    * @param {Object} message message collected
+   * @param {Object} button button to display
    * @returns url of the game
    */
   async listenGameUrl(message) {
@@ -94,7 +110,7 @@ class Ban {
     if (!message.content.match(this.regexRoom)) {
       message.reply({ content: "Format de données invalide." });
       await this.delay(300);
-      content = await this.request(Message.requestGameLink(), this.listenGameUrl.bind(this));
+      content = await this.request(Message.requestGameLink(), this.listenGameUrl.bind(this),[mpGameUrl()]);
     }
     return content;
   }
@@ -122,9 +138,9 @@ class Ban {
    */
   async listenBanTime(message) {
     let jours = message.content;
-
-    if (!jours.match(/\d/) ||
-      jours != "Avertissement" ||
+    //check bind
+    if (!jours.match(/\d/) &&
+      jours != "Avertissement" &&
       jours != "Banissement permanant") {
       message.reply({ content: "Format de données invalide." });
       await this.delay(300);
@@ -231,7 +247,7 @@ class Ban {
   faceitMessageBuilder(jours) {
     return "Ban " +
       (jours == 99999 ? "perm" : jours + "j") +
-      ". Plus d'informations sur notre discord."
+      ". Plus d'informations sur notre discord.";
   }
 
   /**
