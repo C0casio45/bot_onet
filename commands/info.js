@@ -20,11 +20,16 @@ module.exports = {
         } else {
             pseudo = result
         }
-        const array = await this.worker(pseudo);
-        interaction.reply({
-            embeds: [Message.accuseInfoListCarrousel(pseudo, array, 0)],
-            components: info(array.length, pseudo, 0),
-        });
+        try{
+            const array = await this.worker(pseudo);
+            interaction.reply({
+                embeds: [Message.accuseInfoListCarrousel(pseudo, array, 0)],
+                components: info(array.length, pseudo, 0),
+            });
+        } catch (e){
+            interaction.reply({ embeds: [Message.error({code: 3})] });
+        }
+        
     },
     async worker(pseudo) {
         const OPRepo = new OpenFaceitRepository();
