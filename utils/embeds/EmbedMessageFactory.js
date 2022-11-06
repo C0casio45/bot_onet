@@ -32,6 +32,9 @@ class MessageFactory {
         case 2:
           this.setDescription(`Merci de relancer une demande d'unban en indiquant un numéro la prochaine fois`);
           break;
+        case 3:
+          this.setDescription(`Le joueur n'existe pas, merci de recommencer en recopiant le pseudo exact`);
+          break;
 
         default:
           this.setDescription(`Erreur inconnue`);

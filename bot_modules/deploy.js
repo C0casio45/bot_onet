@@ -19,7 +19,7 @@ module.exports = {
                             {
                                 "name": 'ticket',
                                 "description": 'Nom du ticket',
-                                "type": '3',
+                                "type": 3,
                                 "required": true,
                                 "choices": tickets
                             }
@@ -33,7 +33,7 @@ module.exports = {
                             {
                                 "name": 'ticket',
                                 "description": 'Nom du ticket',
-                                "type": '3',
+                                "type": 3,
                                 "required": true,
                                 "choices": tickets
                             }
@@ -47,7 +47,7 @@ module.exports = {
                             {
                                 "name": "utilisateur",
                                 "description": "Pseudo de l'utilisateur a bannir",
-                                "type": "3",
+                                "type": 3,
                                 "required": true,
                                 "choices": user
                             }
@@ -63,7 +63,7 @@ module.exports = {
                             {
                                 "name": 'ticket',
                                 "description": 'Nom du ticket',
-                                "type": '3',
+                                "type": 3,
                                 "required": true,
                                 "choices": ticketTest
                             }
@@ -84,7 +84,7 @@ module.exports = {
                             {
                                 name: 'ticket',
                                 description: 'Nom du ticket',
-                                type: '7',
+                                type: 7,
                                 required: true
                             }
                         ]
@@ -96,13 +96,13 @@ module.exports = {
                             {
                                 name: 'link',
                                 description: 'Lien de l\'accusé',
-                                type: '3',
+                                type: 3,
                                 required: false
                             },
                             {
                                 name: 'pseudo',
                                 description: 'Pseudo de l\'accusé',
-                                type: '3',
+                                type: 3,
                                 required: false
                             }
                         ]
@@ -114,7 +114,7 @@ module.exports = {
                             {
                                 "name": "moderateur",
                                 "description": "Pseudo du modérateur",
-                                "type": "6",
+                                "type": 6,
                                 "required": false
                             }
                         ]
