@@ -25,6 +25,7 @@ module.exports = {
             interaction.reply({
                 embeds: [Message.accuseInfoListCarrousel(pseudo, array, 0)],
                 components: info(array.length, pseudo, 0),
+                ephemeral: true
             });
         } catch (e){
             interaction.reply({ embeds: [Message.error({code: 3})] });
@@ -35,7 +36,7 @@ module.exports = {
         const OPRepo = new OpenFaceitRepository();
         const player = await OPRepo.getUserDatas(pseudo).catch((err) => {
             console.log(err);
-            return interaction.reply({ embeds: [Message.error({ message: err })] });
+            return interaction.reply({ embeds: [Message.error({ message: err })], ephemeral: true });
         });
         return db.getAccuseInfo(player.player_id);
     }
